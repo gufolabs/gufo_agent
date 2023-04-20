@@ -7,9 +7,8 @@ on:
     paths:
       - ".github/workflows/build-docs.yml"
       - ".requirements/docs.txt"
+      - "mkdocs.yml"
       - "docs/**"
-      - "examples/**"
-      - "src/**"
     branches:
       - master
 jobs:
