@@ -1,0 +1,19 @@
+[package]
+authors = ["Gufo Labs"]
+description = "Gufo Agent"
+edition = "2021"
+name = "agent"
+version = "0.1.0"
+
+[dependencies]
+block_io = {path = "../collectors/block_io"}
+common = {path = "../common"}
+cpu = {path = "../collectors/cpu"}
+dns = {path = "../collectors/dns"}
+gethostname = "0.4"
+log = "0.4"
+rand = "0.8"
+serde = {version = "1.0", features = ["derive"]}
+serde_yaml = "0.9"
+tokio = {version = "1.27", features = ["full"]}
+uptime = {path = "../collectors/uptime"}

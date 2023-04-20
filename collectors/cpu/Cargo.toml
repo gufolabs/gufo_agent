@@ -1,0 +1,12 @@
+[package]
+edition = "2021"
+name = "cpu"
+version = "0.1.0"
+
+[dependencies]
+async-trait = "0.1"
+common = {path = "../../common"}
+log = "0.4"
+serde = {version = "1.0", features = ["derive"]}
+systemstat = {version = "0.2"}
+tokio = {version = "1.27"}

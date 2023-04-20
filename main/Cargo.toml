@@ -1,0 +1,17 @@
+[package]
+edition = "2021"
+name = "main"
+version = "0.1.0"
+
+[[bin]]
+name = "gufo-agent"
+path = "src/main.rs"
+
+[dependencies]
+agent = {path = "../agent"}
+clap = {version = "4.2", features = ["derive"]}
+env_logger = "0.10"
+log = "0.4"
+
+[profile.release]
+strip = true

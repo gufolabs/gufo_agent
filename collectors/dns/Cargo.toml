@@ -1,0 +1,12 @@
+[package]
+edition = "2021"
+name = "dns"
+version = "0.1.0"
+
+[dependencies]
+async-trait = "0.1"
+common = {path = "../../common"}
+log = "0.4"
+serde = {version = "1.0", features = ["derive"]}
+trust-dns-proto = {version = "0.22"}
+trust-dns-resolver = {version = "0.22"}
