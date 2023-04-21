@@ -21,14 +21,15 @@ Config example:
 
 ## Collected Metrics
 
-| Metric      | Metric Type | Labels | Platform | Description |
-| ----------- | ----------- | ------ | -------- | ----------- |
-| `user`      |             | cpu    | All      |             |
-| `nice`      |             | cpu    | All      |             |
-| `system`    |             | cpu    | All      |             |
-| `interrupt` |             | cpu    | All      |             |
-| `idle`      |             | cpu    | All      |             |
-| `iowait`    |             | cpu    | Linux    |             |
+=== "OpenMetrics"
+  | Metric          | Metric Type | Labels | Platform | Description |
+  | --------------- | ----------- | ------ | -------- | ----------- |
+  | `cpu_user`      |             | cpu    | All      |             |
+  | `cpu_nice`      |             | cpu    | All      |             |
+  | `cpu_system`    |             | cpu    | All      |             |
+  | `cpu_interrupt` |             | cpu    | All      |             |
+  | `cpu_idle`      |             | cpu    | All      |             |
+  | `cpu_iowait`    |             | cpu    | Linux    |             |
 
 ## Labels
 

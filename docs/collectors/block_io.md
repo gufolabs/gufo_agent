@@ -21,19 +21,21 @@ Config example:
 
 ## Collected Metrics
 
-| Metric          | Metric Type | Labels | Description |
-| --------------- | ----------- | ------ | ----------- |
-| `read_ios`      |             | dev    |             |
-| `read_merges`   |             | dev    |             |
-| `read_sectors`  |             | dev    |             |
-| `read_ticks`    |             | dev    |             |
-| `write_ios`     |             | dev    |             |
-| `write_merges`  |             | dev    |             |
-| `write_sectors` |             | dev    |             |
-| `write_ticks`   |             | dev    |             |
-| `in_flight`     |             | dev    |             |
-| `io_ticks`      |             | dev    |             |
-| `time_in_queue` |             | dev    |             |
+=== "OpenMetrics"
+
+  | Metric                   | Metric Type | Labels | Description |
+  | ------------------------ | ----------- | ------ | ----------- |
+  | `block_io_read_ios`      |             | dev    |             |
+  | `block_io_read_merges`   |             | dev    |             |
+  | `block_io_read_sectors`  |             | dev    |             |
+  | `block_io_read_ticks`    |             | dev    |             |
+  | `block_io_write_ios`     |             | dev    |             |
+  | `block_io_write_merges`  |             | dev    |             |
+  | `block_io_write_sectors` |             | dev    |             |
+  | `block_io_write_ticks`   |             | dev    |             |
+  | `block_io_in_flight`     |             | dev    |             |
+  | `block_io_io_ticks`      |             | dev    |             |
+  | `block_io_time_in_queue` |             | dev    |             |
 
 ## Labels
 

@@ -21,9 +21,10 @@ Config example:
 
 ## Collected Metrics
 
-| Metric   | Metric Type | Description               |
-| -------- | ----------- | ------------------------- |
-| `uptime` | Counter     | System uptime, in seconds |
+=== "OpenMetrics"
+  | Metric          | Metric Type | Description               |
+  | --------------- | ----------- | ------------------------- |
+  | `uptime_uptime` | Counter     | System uptime, in seconds |
 
 ## Labels
 
