@@ -10,6 +10,7 @@ block_io = {path = "../collectors/block_io"}
 common = {path = "../common"}
 cpu = {path = "../collectors/cpu"}
 dns = {path = "../collectors/dns"}
+fs = {path = "../collectors/fs"}
 gethostname = "0.4"
 log = "0.4"
 rand = "0.8"
