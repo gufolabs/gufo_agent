@@ -49,8 +49,7 @@ theme:
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
-
-xwatch:
+watch:
   - docs/
 plugins:
   - search
