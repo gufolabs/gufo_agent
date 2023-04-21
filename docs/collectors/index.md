@@ -1,12 +1,12 @@
 # Collectors Reference
 
-This section contains formal reference of the supported
+This section contains the formal reference of the supported
 collectors, their configuration, generated metrics,
 configuration and output samples.
 
 ## Configuration
 
-All collectors share common part of configuration.
+All collectors share a common part of the configuration.
 
 | Parameter  | Type    | Description                                                              |
 | ---------- | ------- | ------------------------------------------------------------------------ |
@@ -23,7 +23,7 @@ Example:
   interval: 10
 ```
 
-`gufo-agent` allows to append user-defined labels to the collector's output. User-defined
+`gufo-agent` allows appending user-defined labels to the collector's output. User-defined
 labels are set as key-value pairs:
 
 ``` yaml
@@ -51,4 +51,5 @@ labels are set as key-value pairs:
 | [dns](dns.md)           | Perform DNS request using system resolver |
 | [fs](fs.md)             | File systems statistic                    |
 | [memory](memory.md)     | Host's memory statistics                  |
+| [network](network.md)   | Host's network interface statistics       |
 | [uptime](uptime.md)     | System uptime                             |

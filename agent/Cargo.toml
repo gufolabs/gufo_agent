@@ -14,6 +14,7 @@ fs = {path = "../collectors/fs"}
 gethostname = "0.4"
 log = "0.4"
 memory = {path = "../collectors/memory"}
+network = {path = "../collectors/network"}
 rand = "0.8"
 serde = {version = "1.0", features = ["derive"]}
 serde_yaml = "0.9"

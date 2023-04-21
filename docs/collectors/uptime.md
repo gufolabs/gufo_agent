@@ -1,6 +1,6 @@
 # uptime collector
 
-`uptime` collects host's system uptime.
+`uptime` collects the host's system uptime.
 
 ## Configuration
 
@@ -28,6 +28,6 @@ Config example:
 
 ## Labels
 
-`uptime` collector doesn't append own labels.
+`uptime` collector doesn't append its own labels.
 
 ## Sample Output

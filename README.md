@@ -34,10 +34,10 @@ We plan to cover following issues until first public release:
 * [x] dns
 * [x] fs
 * [ ] http
-* [ ] memory
+* [x] memory
 * [ ] modbus_rtu
 * [ ] modbus_tcp
-* [ ] network
+* [x] network
 * [ ] test
 * [ ] twamp_reflector
 * [ ] twamp_sender

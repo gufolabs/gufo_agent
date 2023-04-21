@@ -9,5 +9,6 @@ members = [
   "collectors/dns",
   "collectors/fs",
   "collectors/memory",
+  "collectors/network",
   "collectors/uptime",
 ]

@@ -1,6 +1,6 @@
 # block_io collector
 
-`block_io` collects host's block devices input/output statistics.
+`block_io` collects the host's block devices' input/output statistics.
 
 ## Configuration
 
@@ -25,21 +25,21 @@ Config example:
 
   | Metric                   | Metric Type | Labels | Description |
   | ------------------------ | ----------- | ------ | ----------- |
-  | `block_io_read_ios`      |             | dev    |             |
-  | `block_io_read_merges`   |             | dev    |             |
-  | `block_io_read_sectors`  |             | dev    |             |
-  | `block_io_read_ticks`    |             | dev    |             |
-  | `block_io_write_ios`     |             | dev    |             |
-  | `block_io_write_merges`  |             | dev    |             |
-  | `block_io_write_sectors` |             | dev    |             |
-  | `block_io_write_ticks`   |             | dev    |             |
-  | `block_io_in_flight`     |             | dev    |             |
-  | `block_io_io_ticks`      |             | dev    |             |
-  | `block_io_time_in_queue` |             | dev    |             |
+  | `block_io_read_ios`      | Gauge       | dev    | ???         |
+  | `block_io_read_merges`   | Gauge       | dev    | ???         |
+  | `block_io_read_sectors`  | Gauge       | dev    | ???         |
+  | `block_io_read_ticks`    | Gauge       | dev    | ???         |
+  | `block_io_write_ios`     | Gauge       | dev    | ???         |
+  | `block_io_write_merges`  | Gauge       | dev    | ???         |
+  | `block_io_write_sectors` | Gauge       | dev    | ???         |
+  | `block_io_write_ticks`   | Gauge       | dev    | ???         |
+  | `block_io_in_flight`     | Gauge       | dev    | ???         |
+  | `block_io_io_ticks`      | Gauge       | dev    | ???         |
+  | `block_io_time_in_queue` | Gauge       | dev    | ???         |
 
 ## Labels
 
-`block_io` collector appends following labels:
+`block_io` collector appends the following labels:
 
 | Label | Description       |
 | ----- | ----------------- |

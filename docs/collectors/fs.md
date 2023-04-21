@@ -1,6 +1,6 @@
 # block_io collector
 
-`fs` collects host's block devices input/output statistics.
+`fs` collects the host's block devices' input/output statistics.
 
 ## Configuration
 
@@ -25,16 +25,16 @@ Config example:
 
   | Metric               | Metric Type | Labels      | Description |
   | -------------------- | ----------- | ----------- | ----------- |
-  | `fs_files`           |             | mount, type |             |
-  | `fs_files_total`     |             | mount, type |             |
-  | `fs_files_available` |             | mount, type |             |
-  | `free`               |             | mount, type |             |
-  | `total`              |             | mount, type |             |
-  | `available`          |             | mount, type |             |
+  | `fs_files`           | Gauge       | mount, type | ???         |
+  | `fs_files_total`     | Gauge       | mount, type | ???         |
+  | `fs_files_available` | Gauge       | mount, type | ???         |
+  | `fs_free`            | Gauge       | mount, type | ???         |
+  | `fs_total`           | Gauge       | mount, type | ???         |
+  | `fs_available`       | Gauge       | mount, type | ???         |
 
 ## Labels
 
-`fs` collector appends following labels:
+`fs` collector appends the following labels:
 
 | Label   | Description                    |
 | ------- | ------------------------------ |
@@ -43,7 +43,7 @@ Config example:
 
 ## Notes
 
-fs collector ignores following file system types:
+fs collector ignores the following file system types:
 
 === "Linux"
 
@@ -53,7 +53,7 @@ fs collector ignores following file system types:
     * `proc`
     * `sysfs`
 
-It also ignores all file systems mounted besides following paths:
+It also ignores all file systems mounted besides the following paths:
 
 === "Linux"
 

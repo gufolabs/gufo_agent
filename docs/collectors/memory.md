@@ -1,6 +1,6 @@
 # cpu collector
 
-`memory` collects host's memory usage statistics.
+`memory` collects the host's memory usage statistics.
 
 ## Configuration
 
@@ -97,6 +97,6 @@ Config example:
 
 ## Labels
 
-`memory` collector doesn't append own labels.
+`memory` collector doesn't append its own labels.
 
 ## Sample Output

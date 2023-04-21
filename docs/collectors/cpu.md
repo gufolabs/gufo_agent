@@ -1,6 +1,6 @@
 # cpu collector
 
-`cpu` collects host's CPU usage statistics.
+`cpu` collects the host's CPU usage statistics.
 
 ## Configuration
 
@@ -24,16 +24,16 @@ Config example:
 === "OpenMetrics"
   | Metric          | Metric Type | Labels | Platform | Description |
   | --------------- | ----------- | ------ | -------- | ----------- |
-  | `cpu_user`      |             | cpu    | All      |             |
-  | `cpu_nice`      |             | cpu    | All      |             |
-  | `cpu_system`    |             | cpu    | All      |             |
-  | `cpu_interrupt` |             | cpu    | All      |             |
-  | `cpu_idle`      |             | cpu    | All      |             |
-  | `cpu_iowait`    |             | cpu    | Linux    |             |
+  | `cpu_user`      | Gauge       | cpu    | All      | ???         |
+  | `cpu_nice`      | Gauge       | cpu    | All      | ???         |
+  | `cpu_system`    | Gauge       | cpu    | All      | ???         |
+  | `cpu_interrupt` | Gauge       | cpu    | All      | ???         |
+  | `cpu_idle`      | Gauge       | cpu    | All      | ???         |
+  | `cpu_iowait`    | Gauge       | cpu    | Linux    | ???         |
 
 ## Labels
 
-`cpu` collector appends following labels
+`cpu` collector appends the following labels
 
 | Label | Description |
 | ----- | ----------- |

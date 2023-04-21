@@ -16,6 +16,7 @@ pub enum Collectors {
     Dns(dns::Collector),
     Fs(fs::Collector),
     Memory(memory::Collector),
+    Network(network::Collector),
     Uptime(uptime::Collector),
     // @@@}}}
 }
@@ -58,6 +59,7 @@ impl TryFrom<CollectorConfig> for Collectors {
             "dns" => Collectors::Dns(from_value(value)?),
             "fs" => Collectors::Fs(from_value(value)?),
             "memory" => Collectors::Memory(from_value(value)?),
+            "network" => Collectors::Network(from_value(value)?),
             "uptime" => Collectors::Uptime(from_value(value)?),
             // @@@}}}
             _ => return Err(AgentError::InvalidCollectorError(value.r#type.clone())),
@@ -75,6 +77,7 @@ impl Collectors {
             Collectors::Dns(_) => dns::Collector::get_name(),
             Collectors::Fs(_) => fs::Collector::get_name(),
             Collectors::Memory(_) => memory::Collector::get_name(),
+            Collectors::Network(_) => network::Collector::get_name(),
             Collectors::Uptime(_) => uptime::Collector::get_name(),
             // @@@}}}
         }
@@ -89,6 +92,7 @@ impl Collectors {
             Collectors::Dns(c) => c.collect().await,
             Collectors::Fs(c) => c.collect().await,
             Collectors::Memory(c) => c.collect().await,
+            Collectors::Network(c) => c.collect().await,
             Collectors::Uptime(c) => c.collect().await,
             // @@@}}}
         }
@@ -102,6 +106,7 @@ impl Collectors {
             "dns".to_string(),
             "fs".to_string(),
             "memory".to_string(),
+            "network".to_string(),
             "uptime".to_string(),
             // @@@}}}
         ]

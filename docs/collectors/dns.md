@@ -1,6 +1,6 @@
 # dns collector
 
-`dns` collector performs the serie of DNS queries using host's system resolver
+`dns` collector performs the series of DNS queries using the host's system resolver
 and collects query statistics.
 
 ## Configuration
@@ -44,7 +44,7 @@ n: 10
 
 ## Labels
 
-`dns` collector appends following labels
+`dns` collector appends the following labels
 
 | Label   | Description                               |
 | ------- | ----------------------------------------- |
