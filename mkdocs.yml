@@ -10,6 +10,7 @@ nav:
   - Home: index.md
   - Installation: installation.md
   - Man Pages: man.md
+  - Configuration: configuration.md
   - Collectors Reference:
       - Overview: collectors/index.md
       - block_io: collectors/block_io.md
