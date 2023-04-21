@@ -1,3 +1,13 @@
 [workspace]
 
-members = ["agent", "common", "main", "collectors/block_io", "collectors/cpu", "collectors/dns", "collectors/uptime"]
+members = [
+  "agent",
+  "common",
+  "main",
+  "collectors/block_io",
+  "collectors/cpu",
+  "collectors/dns",
+  "collectors/fs",
+  "collectors/memory",
+  "collectors/uptime",
+]

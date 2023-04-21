@@ -50,4 +50,5 @@ labels are set as key-value pairs:
 | [cpu](cpu.md)           | CPU statistics                            |
 | [dns](dns.md)           | Perform DNS request using system resolver |
 | [fs](fs.md)             | File systems statistic                    |
+| [memory](memory.md)     | Host's memory statistics                  |
 | [uptime](uptime.md)     | System uptime                             |
