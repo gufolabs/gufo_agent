@@ -51,14 +51,16 @@ macro_rules! counter {
         common::metrics::paste! {
             fn $name<$([< T $label >]: ToString),+>(
                 v: u64, $([< l_ $label>]: [< T $label >]),+
-            ) -> Measure {
+            ) -> Measure
+            where $([< T $label >]: Clone),+
+            {
                 Measure {
                     name: stringify!($name),
                     help: $help,
                     value: common::Value::Counter(v),
                     labels: common::Labels::new(
                         vec![
-                            $(common::Label::new(stringify!($label), [< l_ $label >]),)+
+                            $(common::Label::new(stringify!($label), [< l_ $label >].clone()),)+
                         ]
                     ),
                 }
@@ -112,14 +114,16 @@ macro_rules! gauge {
         common::metrics::paste! {
             fn $name<$([< T $label >]: ToString),+>(
                 v: i64, $([< l_ $label>]: [< T $label >]),+
-            ) -> Measure {
+            ) -> Measure
+            where $([< T $label >]: Clone),+
+            {
                 Measure {
                     name: stringify!($name),
                     help: $help,
                     value: common::Value::Gauge(v),
                     labels: common::Labels::new(
                         vec![
-                            $(common::Label::new(stringify!($label), [< l_ $label >]),)+
+                            $(common::Label::new(stringify!($label), [< l_ $label >].clone()),)+
                         ]
                     ),
                 }

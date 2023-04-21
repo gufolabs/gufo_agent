@@ -56,14 +56,14 @@ impl Collectable for Collector {
         let mut r = Vec::with_capacity(stats.len() * 5);
         for (i, s) in stats.iter().enumerate() {
             let cpu = format!("{}", i);
-            r.push(user((s.user * 100.0) as i64, cpu.clone()));
-            r.push(nice((s.nice * 100.0) as i64, cpu.clone()));
-            r.push(system((s.system * 100.0) as i64, cpu.clone()));
-            r.push(interrupt((s.interrupt * 100.0) as i64, cpu.clone()));
-            r.push(idle((s.idle * 100.0) as i64, cpu.clone()));
+            r.push(user((s.user * 100.0) as i64, &cpu));
+            r.push(nice((s.nice * 100.0) as i64, &cpu));
+            r.push(system((s.system * 100.0) as i64, &cpu));
+            r.push(interrupt((s.interrupt * 100.0) as i64, &cpu));
+            r.push(idle((s.idle * 100.0) as i64, &cpu));
             // Platform-dependent metrics
             #[cfg(target_os = "linux")]
-            r.push(iowait((s.platform.iowait * 100.0) as i64, cpu.clone()));
+            r.push(iowait((s.platform.iowait * 100.0) as i64, &cpu));
         }
         // Push result
         Ok(r)

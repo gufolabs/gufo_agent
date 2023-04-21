@@ -117,14 +117,15 @@ impl Collectable for Collector {
         self.success += success;
         self.failed += self.n - success;
         // Push result
+        let rt = self.record_type.to_string();
         Ok(vec![
-            requests_total(self.total, self.query.clone(), self.record_type),
-            requests_success(self.success, self.query.clone(), self.record_type),
-            requests_failed(self.failed, self.query.clone(), self.record_type),
-            min_ns(timing.min_ns, self.query.clone(), self.record_type),
-            max_ns(timing.max_ns, self.query.clone(), self.record_type),
-            avg_ns(timing.avg_ns, self.query.clone(), self.record_type),
-            jitter_ns(timing.jitter_ns, self.query.clone(), self.record_type),
+            requests_total(self.total, &self.query, &rt),
+            requests_success(self.success, &self.query, &rt),
+            requests_failed(self.failed, &self.query, &rt),
+            min_ns(timing.min_ns, &self.query, &rt),
+            max_ns(timing.max_ns, &self.query, &rt),
+            avg_ns(timing.avg_ns, &self.query, &rt),
+            jitter_ns(timing.jitter_ns, &self.query, &rt),
         ])
     }
 }

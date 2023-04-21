@@ -53,17 +53,17 @@ impl Collectable for Collector {
         }
         let mut r = Vec::with_capacity(stats.len() * 11);
         for s in stats.values() {
-            r.push(read_ios(s.read_ios as u64, s.name.clone()));
-            r.push(read_merges(s.read_merges as u64, s.name.clone()));
-            r.push(read_sectors(s.read_sectors as u64, s.name.clone()));
-            r.push(read_ticks(s.read_ticks as u64, s.name.clone()));
-            r.push(write_ios(s.write_ios as u64, s.name.clone()));
-            r.push(write_merges(s.write_merges as u64, s.name.clone()));
-            r.push(write_sectors(s.write_sectors as u64, s.name.clone()));
-            r.push(write_ticks(s.write_ticks as u64, s.name.clone()));
-            r.push(in_flight(s.in_flight as i64, s.name.clone()));
-            r.push(io_ticks(s.io_ticks as i64, s.name.clone()));
-            r.push(time_in_queue(s.time_in_queue as i64, s.name.clone()));
+            r.push(read_ios(s.read_ios as u64, &s.name));
+            r.push(read_merges(s.read_merges as u64, &s.name));
+            r.push(read_sectors(s.read_sectors as u64, &s.name));
+            r.push(read_ticks(s.read_ticks as u64, &s.name));
+            r.push(write_ios(s.write_ios as u64, &s.name));
+            r.push(write_merges(s.write_merges as u64, &s.name));
+            r.push(write_sectors(s.write_sectors as u64, &s.name));
+            r.push(write_ticks(s.write_ticks as u64, &s.name));
+            r.push(in_flight(s.in_flight as i64, &s.name));
+            r.push(io_ticks(s.io_ticks as i64, &s.name));
+            r.push(time_in_queue(s.time_in_queue as i64, &s.name));
         }
         // Push result
         Ok(r)
