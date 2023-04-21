@@ -36,7 +36,6 @@ impl TryFrom<Config> for Collector {
 // Collector implementation
 #[async_trait]
 impl Collectable for Collector {
-    // !!! Set proper name
     const NAME: &'static str = "fs";
     type Config = Config;
 
@@ -49,32 +48,20 @@ impl Collectable for Collector {
         let mut r = Vec::with_capacity(mounts.len() * 6);
         for fs in mounts.iter() {
             if !self.is_ignored_fs(&fs.fs_type, &fs.fs_mounted_on) {
-                r.push(files(fs.files as i64, &fs.fs_mounted_on, &fs.fs_type));
+                r.push(files(fs.files as u64, &fs.fs_mounted_on, &fs.fs_type));
                 r.push(files_total(
-                    fs.files_total as i64,
+                    fs.files_total as u64,
                     &fs.fs_mounted_on,
                     &fs.fs_type,
                 ));
                 r.push(files_available(
-                    fs.files_avail as i64,
+                    fs.files_avail as u64,
                     &fs.fs_mounted_on,
                     &fs.fs_type,
                 ));
-                r.push(free(
-                    fs.free.as_u64() as i64,
-                    &fs.fs_mounted_on,
-                    &fs.fs_type,
-                ));
-                r.push(available(
-                    fs.avail.as_u64() as i64,
-                    &fs.fs_mounted_on,
-                    &fs.fs_type,
-                ));
-                r.push(total(
-                    fs.total.as_u64() as i64,
-                    &fs.fs_mounted_on,
-                    &fs.fs_type,
-                ));
+                r.push(free(fs.free.as_u64(), &fs.fs_mounted_on, &fs.fs_type));
+                r.push(available(fs.avail.as_u64(), &fs.fs_mounted_on, &fs.fs_type));
+                r.push(total(fs.total.as_u64(), &fs.fs_mounted_on, &fs.fs_type));
             }
         }
         // Push result

@@ -109,7 +109,7 @@ impl Collectable for Collector {
                     log::error!("Failed to resolve: {}", e);
                 }
             }
-            timing.apply(t0.elapsed().as_nanos() as i64);
+            timing.apply(t0.elapsed());
         }
         timing.done();
         // Update state

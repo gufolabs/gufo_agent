@@ -4,6 +4,8 @@
 // Copyright (C) 2021-2023, Gufo Labs
 // ---------------------------------------------------------------------
 
+use std::time::Duration;
+
 /// Structure to calculate delay and jitter estimation for series of the tests.
 ///
 /// Jitter is calculated via first-order estimator of variance D
@@ -12,18 +14,22 @@
 /// Where D[i] = |Delay[i] - Delay[i - 1]|
 #[derive(Debug, Default)]
 pub struct Timing {
-    pub min_ns: i64,
-    pub max_ns: i64,
-    pub avg_ns: i64,
-    pub jitter_ns: i64,
-    count: i64,
-    last_ns: i64,
-    sum_ns: i64,
+    pub min_ns: u64,
+    pub max_ns: u64,
+    pub avg_ns: u64,
+    pub jitter_ns: u64,
+    count: u64,
+    last_ns: u64,
+    sum_ns: u64,
 }
 
 impl Timing {
+    #[inline]
+    pub fn apply(&mut self, delta: Duration) {
+        self.apply_ns(delta.as_nanos() as u64)
+    }
     /// Register duration
-    pub fn apply(&mut self, delta_ns: i64) {
+    pub fn apply_ns(&mut self, delta_ns: u64) {
         let diff_ns = if delta_ns > self.last_ns {
             delta_ns - self.last_ns
         } else {

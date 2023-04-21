@@ -18,7 +18,6 @@ pub struct Config;
 pub struct Collector;
 
 // Generated metrics
-// !!! Define counter! and gauge!
 gauge!(user, "???", cpu);
 gauge!(nice, "???", cpu);
 gauge!(system, "???", cpu);
@@ -39,7 +38,6 @@ impl TryFrom<Config> for Collector {
 // Collector implementation
 #[async_trait]
 impl Collectable for Collector {
-    // !!! Set proper name
     const NAME: &'static str = "cpu";
     type Config = Config;
 
@@ -56,14 +54,14 @@ impl Collectable for Collector {
         let mut r = Vec::with_capacity(stats.len() * 5);
         for (i, s) in stats.iter().enumerate() {
             let cpu = format!("{}", i);
-            r.push(user((s.user * 100.0) as i64, &cpu));
-            r.push(nice((s.nice * 100.0) as i64, &cpu));
-            r.push(system((s.system * 100.0) as i64, &cpu));
-            r.push(interrupt((s.interrupt * 100.0) as i64, &cpu));
-            r.push(idle((s.idle * 100.0) as i64, &cpu));
+            r.push(user((s.user * 100.0) as u64, &cpu));
+            r.push(nice((s.nice * 100.0) as u64, &cpu));
+            r.push(system((s.system * 100.0) as u64, &cpu));
+            r.push(interrupt((s.interrupt * 100.0) as u64, &cpu));
+            r.push(idle((s.idle * 100.0) as u64, &cpu));
             // Platform-dependent metrics
             #[cfg(target_os = "linux")]
-            r.push(iowait((s.platform.iowait * 100.0) as i64, &cpu));
+            r.push(iowait((s.platform.iowait * 100.0) as u64, &cpu));
         }
         // Push result
         Ok(r)

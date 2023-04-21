@@ -31,7 +31,6 @@ impl TryFrom<Config> for Collector {
 // Collector implementation
 #[async_trait]
 impl Collectable for Collector {
-    // !!! Set proper name
     const NAME: &'static str = "uptime";
     type Config = Config;
 

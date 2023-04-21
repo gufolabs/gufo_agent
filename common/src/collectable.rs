@@ -9,7 +9,8 @@ use async_trait::async_trait;
 #[derive(Debug, Copy, Clone)]
 pub enum Value {
     Counter(u64),
-    Gauge(i64),
+    Gauge(u64),
+    GaugeI(i64),
 }
 
 impl ToString for Value {
@@ -17,6 +18,7 @@ impl ToString for Value {
         match self {
             Value::Counter(x) => format!("{}", x),
             Value::Gauge(x) => format!("{}", x),
+            Value::GaugeI(x) => format!("{}", x),
         }
     }
 }

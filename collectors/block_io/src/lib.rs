@@ -41,7 +41,6 @@ impl TryFrom<Config> for Collector {
 // Collector implementation
 #[async_trait]
 impl Collectable for Collector {
-    // !!! Set proper name
     const NAME: &'static str = "block_io";
     type Config = Config;
 
@@ -61,9 +60,9 @@ impl Collectable for Collector {
             r.push(write_merges(s.write_merges as u64, &s.name));
             r.push(write_sectors(s.write_sectors as u64, &s.name));
             r.push(write_ticks(s.write_ticks as u64, &s.name));
-            r.push(in_flight(s.in_flight as i64, &s.name));
-            r.push(io_ticks(s.io_ticks as i64, &s.name));
-            r.push(time_in_queue(s.time_in_queue as i64, &s.name));
+            r.push(in_flight(s.in_flight as u64, &s.name));
+            r.push(io_ticks(s.io_ticks as u64, &s.name));
+            r.push(time_in_queue(s.time_in_queue as u64, &s.name));
         }
         // Push result
         Ok(r)

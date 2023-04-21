@@ -64,6 +64,7 @@ impl From<Value> for ValueType {
         match value {
             Value::Counter(_) => ValueType::Counter,
             Value::Gauge(_) => ValueType::Gauge,
+            Value::GaugeI(_) => ValueType::Gauge,
         }
     }
 }
