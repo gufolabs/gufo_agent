@@ -20,6 +20,8 @@ struct Cli {
     pub config: Option<String>,
     #[arg(long)]
     pub list_collectors: bool,
+    #[arg(long)]
+    pub dump_metrics: bool,
 }
 
 const ERR_EX_OTHER: i32 = 1;
@@ -50,6 +52,7 @@ fn main() {
     // Setup agent
     let mut agent = Agent::builder()
         .set_cert_validation(!cli.insecure)
+        .set_dump_metrics(cli.dump_metrics)
         .set_config(cli.config)
         .build();
     // Run agent and wait for complete

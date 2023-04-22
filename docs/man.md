@@ -11,11 +11,12 @@
 Usage: gufo-agent [OPTIONS]
 
 Options:
-  -q, --quiet            
-  -v, --verbose...       
-  -k, --insecure         
-  -c, --config <CONFIG>  
-      --list-collectors  
+  -q, --quiet
+  -v, --verbose...
+  -k, --insecure
+  -c, --config <CONFIG>
+      --list-collectors
+      --dump-metrics
   -h, --help             Print help
   -V, --version          Print version
 ```
@@ -38,6 +39,7 @@ The following options are available:
 * `-k`, `--insecure` - Do not check TLS certificate when fetching config over HTTPS.
 * `-c`, `--config` `<CONFIG>` - Load configuration from `<CONFIG>` path.
 * `--list-collectors` - Print list of compiled collectors and exit.
+* `--dump-metrics` - Dump metrics database state to stdout after each collector run.
 * `-h`, `--help` - Print help and exit.
 * `-V`, `--version` - Print agent version and exit.
 

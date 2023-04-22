@@ -66,7 +66,9 @@ impl Schedule {
             match self.collector.collect().await {
                 Ok(measures) => {
                     if let Err(e) = self.send(collector_name, measures, ts).await {
-                        log::error!("Failed to send: {}", e);
+                        log::error!("[{}] Failed to send: {}", self.id, e);
+                    } else {
+                        log::info!("[{}] Done", self.id);
                     }
                 }
                 Err(e) => log::error!("[{}] Crashed with: {}", self.id, e),

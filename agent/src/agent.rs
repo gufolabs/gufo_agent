@@ -17,6 +17,7 @@ pub struct Agent {
     running: HashMap<String, RunningCollector>,
     sender_tx: Option<mpsc::Sender<SenderCommand>>,
     hostname: String,
+    dump_metrics: bool,
 }
 
 pub struct RunningCollector {
@@ -33,6 +34,7 @@ impl Agent {
 #[derive(Default)]
 pub struct AgentBuilder {
     cert_validation: bool,
+    dump_metrics: bool,
     config: Option<String>,
 }
 
@@ -45,6 +47,10 @@ impl AgentBuilder {
         self.config = config;
         self
     }
+    pub fn set_dump_metrics(&mut self, status: bool) -> &mut Self {
+        self.dump_metrics = status;
+        self
+    }
     pub fn build(&self) -> Agent {
         Agent {
             resolver: ConfigResolver::builder()
@@ -54,6 +60,7 @@ impl AgentBuilder {
             running: HashMap::new(),
             sender_tx: None,
             hostname: gethostname().into_string().unwrap_or("localhost".into()),
+            dump_metrics: self.dump_metrics,
         }
     }
 }
@@ -70,6 +77,7 @@ impl Agent {
         self.resolver.bootstrap().await?;
         // Spawn sender
         let mut sender = Sender::default();
+        sender.set_dump_metrics(self.dump_metrics);
         self.sender_tx = Some(sender.get_tx());
         tokio::spawn(async move {
             sender.run().await;

@@ -29,6 +29,7 @@ pub(crate) struct Sender {
     tx: mpsc::Sender<SenderCommand>,
     metrics: BTreeMap<MetricFamilyKey, MetricFamilyData>,
     agent_labels: Labels,
+    dump_metrics: bool,
 }
 
 #[derive(Ord, PartialOrd, Eq, PartialEq, Debug, Clone)]
@@ -93,11 +94,17 @@ impl Default for Sender {
             tx,
             metrics: BTreeMap::new(),
             agent_labels: Labels::empty(),
+            dump_metrics: false,
         }
     }
 }
 
 impl Sender {
+    // Set dump_metrics status
+    pub fn set_dump_metrics(&mut self, status: bool) -> &mut Self {
+        self.dump_metrics = status;
+        self
+    }
     // Get cloned tx channel
     pub fn get_tx(&self) -> mpsc::Sender<SenderCommand> {
         self.tx.clone()
@@ -148,7 +155,9 @@ impl Sender {
                 );
             }
         }
-        self.dump();
+        if self.dump_metrics {
+            self.dump();
+        }
     }
     fn dump(&self) {
         for (family, fv) in self.metrics.iter() {
