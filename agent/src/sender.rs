@@ -6,7 +6,8 @@
 
 use common::{Labels, Measure, Value};
 use std::collections::{BTreeMap, HashMap};
-use tokio::sync::mpsc;
+use std::sync::Arc;
+use tokio::sync::{mpsc, RwLock};
 
 pub(crate) enum SenderCommand {
     Data(MetricsData),
@@ -27,7 +28,7 @@ pub(crate) struct MetricsData {
 pub(crate) struct Sender {
     rx: mpsc::Receiver<SenderCommand>,
     tx: mpsc::Sender<SenderCommand>,
-    metrics: BTreeMap<MetricFamilyKey, MetricFamilyData>,
+    metrics: Arc<RwLock<BTreeMap<MetricFamilyKey, MetricFamilyData>>>,
     agent_labels: Labels,
     dump_metrics: bool,
 }
@@ -92,7 +93,7 @@ impl Default for Sender {
         Self {
             rx,
             tx,
-            metrics: BTreeMap::new(),
+            metrics: Arc::new(RwLock::new(BTreeMap::new())),
             agent_labels: Labels::empty(),
             dump_metrics: false,
         }
@@ -114,7 +115,12 @@ impl Sender {
         log::info!("Running sender");
         while let Some(msg) = self.rx.recv().await {
             match msg {
-                SenderCommand::Data(data) => self.apply_data(&data),
+                SenderCommand::Data(data) => {
+                    self.apply_data(&data).await;
+                    if self.dump_metrics {
+                        self.dump().await;
+                    }
+                }
                 SenderCommand::SetAgentLabels(labels) => {
                     log::debug!("Set labels to: {:?}", labels);
                     self.agent_labels = labels
@@ -124,7 +130,8 @@ impl Sender {
         log::info!("Shutting down");
     }
     //
-    fn apply_data(&mut self, data: &MetricsData) {
+    async fn apply_data(&mut self, data: &MetricsData) {
+        let mut db = self.metrics.write().await;
         for measure in data.measures.iter() {
             // Check for Metric Family
             let k = MetricFamilyKey {
@@ -132,9 +139,9 @@ impl Sender {
                 name: measure.name,
             };
             // @todo: Use .get()
-            if !self.metrics.contains_key(&k) {
+            if !db.contains_key(&k) {
                 // Insert metric family info
-                self.metrics.insert(
+                db.insert(
                     k.clone(),
                     MetricFamilyData {
                         help: measure.help,
@@ -144,7 +151,7 @@ impl Sender {
                 );
             }
             //
-            if let Some(family) = self.metrics.get_mut(&k) {
+            if let Some(family) = db.get_mut(&k) {
                 family.values.insert(
                     measure.labels.clone(),
                     MetricValue {
@@ -155,12 +162,10 @@ impl Sender {
                 );
             }
         }
-        if self.dump_metrics {
-            self.dump();
-        }
     }
-    fn dump(&self) {
-        for (family, fv) in self.metrics.iter() {
+    async fn dump(&self) {
+        let db = self.metrics.read().await;
+        for (family, fv) in db.iter() {
             println!("# HELP {}_{} {}", family.collector, family.name, fv.help);
             println!(
                 "# TYPE {}_{} {}",
