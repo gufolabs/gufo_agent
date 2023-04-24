@@ -15,7 +15,23 @@ pub struct Config {
     #[serde(rename = "$type")]
     pub r#type: String,
     pub labels: LabelsConfig,
+    pub sender: SenderConfig,
     pub collectors: Vec<CollectorConfig>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct SenderConfig {
+    #[serde(default = "default_openmetrics")]
+    pub r#type: String,
+    #[serde(default = "default_pull")]
+    pub mode: String,
+    #[serde(default = "default_3000")]
+    pub listen: String,
+    #[serde(default = "default_metrics")]
+    pub path: String,
+    // tls
+    // cert_path, key_path
+    // auth
 }
 
 #[derive(Deserialize, Debug, Clone)]
@@ -51,4 +67,20 @@ impl CollectorConfig {
         self.hash(&mut hasher);
         hasher.finish()
     }
+}
+
+fn default_openmetrics() -> String {
+    "openmetrics".into()
+}
+
+fn default_pull() -> String {
+    "pull".into()
+}
+
+fn default_3000() -> String {
+    "0.0.0.0:3000".into()
+}
+
+fn default_metrics() -> String {
+    "/metrics".into()
 }

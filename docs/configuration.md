@@ -38,6 +38,59 @@ Example:
     }
     ```
 
+## sender
+
+Metrics sender configuration.
+
+Example:
+
+=== "YAML"
+
+    ``` yaml
+    sender:
+        type: openmetrics
+        mode: pull
+        listen: "0.0.0.0:3000"
+    ```
+
+=== "JSON"
+
+    ``` json
+    {
+        "sender": {
+            "type": "openmetrics",
+            "mode": "pull",
+            "listen": "0.0.0.0:3000"
+        }
+    }
+    ```
+
+### type
+
+Sender's type. Must be `openmetrics`.
+
+### mode
+
+Sender's mode of operation. Must be `pull`.
+
+### listen
+
+Address and port to listen the metrics endpoint.
+
+Example:
+
+=== "YAML"
+
+    ``` yaml
+    listen: "0.0.0.0:3000"
+    ```
+
+=== "JSON"
+
+    ``` json
+    "listen": "0.0.0.0:3000"
+    ```
+
 ## collectors
 
 List of configured collectors. Each collector has a common configuration part
@@ -123,6 +176,10 @@ the config.
     labels:
         dc: south
         zone: europe
+    sender:
+        type: openmetrics
+        mode: pull
+        listen: "0.0.0.0:3000"
     collectors:
       - id: Filesystem
         type: fs
@@ -143,6 +200,15 @@ the config.
     {
         "$version": "1.0",
         "$type": "zeroconf",
+        "labels": {
+            "dc": "south",
+            "zone": "europe"
+        },
+        "sender": {
+            "type": "openmetrics",
+            "method": "pull",
+            "listen": "0.0.0.0:3000"
+        },
         "collectors": [
             {
                 "id": "Filesystem",

@@ -4,99 +4,56 @@
 // Copyright (C) 2021-2023, Gufo Labs
 // --------------------------------------------------------------------
 
-use common::{Labels, Measure, Value};
-use std::collections::{BTreeMap, HashMap};
-use std::sync::Arc;
-use tokio::sync::{mpsc, RwLock};
+use crate::{MetricsData, MetricsDb, SenderConfig};
+use common::{AgentError, Labels};
+use std::convert::Infallible;
+use std::net::SocketAddrV4;
+use tokio::sync::mpsc;
+use warp::Filter;
+
+const CONTENT_TYPE: &'static str = "application/openmetrics-text; version=1.0.0; charset=utf-8";
 
 pub(crate) enum SenderCommand {
     Data(MetricsData),
     SetAgentLabels(Labels), // @todo: Rename to SetAgentLabels
 }
 
-#[derive(Debug)]
-pub(crate) struct MetricsData {
-    pub collector: &'static str,
-    // collector labels
-    pub labels: Labels,
-    // collector measures
-    pub measures: Vec<Measure>,
-    // Timestamp in UNIX format
-    pub ts: u64,
-}
-
 pub(crate) struct Sender {
     rx: mpsc::Receiver<SenderCommand>,
     tx: mpsc::Sender<SenderCommand>,
-    metrics: Arc<RwLock<BTreeMap<MetricFamilyKey, MetricFamilyData>>>,
-    agent_labels: Labels,
+    db: MetricsDb,
     dump_metrics: bool,
-}
-
-#[derive(Ord, PartialOrd, Eq, PartialEq, Debug, Clone)]
-struct MetricFamilyKey {
-    collector: &'static str,
-    name: &'static str,
-}
-
-#[derive(Ord, PartialOrd, Eq, PartialEq)]
-struct OutputItem {
-    labels: Labels,
-    value: String,
-    ts: u64,
-}
-
-#[derive(Debug)]
-enum ValueType {
-    Counter,
-    Gauge,
-}
-
-impl ValueType {
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            ValueType::Counter => "counter",
-            ValueType::Gauge => "gauge",
-        }
-    }
-}
-
-impl From<Value> for ValueType {
-    fn from(value: Value) -> Self {
-        match value {
-            Value::Counter(_) => ValueType::Counter,
-            Value::Gauge(_) => ValueType::Gauge,
-            Value::GaugeI(_) => ValueType::Gauge,
-        }
-    }
-}
-
-#[derive(Debug)]
-struct MetricFamilyData {
-    help: &'static str,
-    r#type: ValueType,
-    values: HashMap<Labels, MetricValue>,
-}
-
-#[derive(Debug)]
-struct MetricValue {
-    value: Value,
-    collector_labels: Labels,
-    ts: u64,
+    listen: SocketAddrV4,
 }
 
 const SENDER_CHANNEL_BUFFER: usize = 10_000;
 
-impl Default for Sender {
-    fn default() -> Self {
+impl TryFrom<&SenderConfig> for Sender {
+    type Error = AgentError;
+
+    fn try_from(value: &SenderConfig) -> Result<Self, Self::Error> {
+        if value.r#type != "openmetrics".to_string() {
+            return Err(AgentError::ConfigurationError(
+                "`sender.type` must be `openmetrics`".into(),
+            ));
+        }
+        if value.mode != "pull".to_string() {
+            return Err(AgentError::ConfigurationError(
+                "`sender.mode` must be `pull`".into(),
+            ));
+        }
+        let sock_addr: SocketAddrV4 = value
+            .listen
+            .parse()
+            .map_err(|_| AgentError::ConfigurationError("Invalid `listen`".to_string()))?;
         let (tx, rx) = mpsc::channel::<SenderCommand>(SENDER_CHANNEL_BUFFER);
-        Self {
+        Ok(Self {
             rx,
             tx,
-            metrics: Arc::new(RwLock::new(BTreeMap::new())),
-            agent_labels: Labels::empty(),
+            db: MetricsDb::default(),
             dump_metrics: false,
-        }
+            listen: sock_addr,
+        })
     }
 }
 
@@ -113,97 +70,49 @@ impl Sender {
     // Run sender message processing
     pub async fn run(&mut self) {
         log::info!("Running sender");
+        self.run_endpoint();
         while let Some(msg) = self.rx.recv().await {
             match msg {
                 SenderCommand::Data(data) => {
-                    self.apply_data(&data).await;
+                    self.db.apply_data(&data).await;
                     if self.dump_metrics {
-                        self.dump().await;
+                        match self.db.render_openmetrics().await {
+                            Ok(data) => println!("{}", data),
+                            Err(_) => {}
+                        }
                     }
                 }
                 SenderCommand::SetAgentLabels(labels) => {
                     log::debug!("Set labels to: {:?}", labels);
-                    self.agent_labels = labels
+                    self.db.set_labels(labels).await;
                 } //SenderCommand::Shutdown => break,
             }
         }
         log::info!("Shutting down");
     }
     //
-    async fn apply_data(&mut self, data: &MetricsData) {
-        let mut db = self.metrics.write().await;
-        for measure in data.measures.iter() {
-            // Check for Metric Family
-            let k = MetricFamilyKey {
-                collector: data.collector,
-                name: measure.name,
-            };
-            // @todo: Use .get()
-            if !db.contains_key(&k) {
-                // Insert metric family info
-                db.insert(
-                    k.clone(),
-                    MetricFamilyData {
-                        help: measure.help,
-                        r#type: measure.value.into(),
-                        values: HashMap::new(),
-                    },
-                );
-            }
-            //
-            if let Some(family) = db.get_mut(&k) {
-                family.values.insert(
-                    measure.labels.clone(),
-                    MetricValue {
-                        value: measure.value,
-                        collector_labels: data.labels.clone(),
-                        ts: data.ts,
-                    },
-                );
-            }
-        }
+    fn run_endpoint(&self) {
+        log::info!("Starting openmetrics endpoint");
+        let endpoint = warp::path("metrics")
+            .and(warp::get())
+            .and(Self::with_db(self.db.clone()))
+            .and_then(Self::metrics_endpoint);
+        let listen = self.listen.clone();
+        tokio::spawn(async move {
+            warp::serve(endpoint).run(listen).await;
+        });
     }
-    async fn dump(&self) {
-        let db = self.metrics.read().await;
-        for (family, fv) in db.iter() {
-            println!("# HELP {}_{} {}", family.collector, family.name, fv.help);
-            println!(
-                "# TYPE {}_{} {}",
-                family.collector,
-                family.name,
-                fv.r#type.as_str()
-            );
-            let mut items: Vec<OutputItem> = fv
-                .values
-                .iter()
-                .map(|(labels, value)| OutputItem {
-                    labels: Labels::merge_sort3(
-                        &self.agent_labels,
-                        &value.collector_labels,
-                        labels,
-                    ),
-                    value: value.value.to_string(),
-                    ts: value.ts,
-                })
-                .collect();
-            items.sort();
-            for item in items.iter() {
-                println!(
-                    "{}_{}{} {}{}",
-                    family.collector,
-                    family.name,
-                    if item.labels.is_empty() {
-                        "".into()
-                    } else {
-                        format!("{{{}}}", item.labels.to_openmetrics())
-                    },
-                    item.value,
-                    if item.ts > 0 {
-                        format!(" {}", item.ts)
-                    } else {
-                        "".to_string()
-                    }
-                )
+
+    fn with_db(db: MetricsDb) -> impl Filter<Extract = (MetricsDb,), Error = Infallible> + Clone {
+        warp::any().map(move || db.clone())
+    }
+
+    async fn metrics_endpoint(db: MetricsDb) -> Result<impl warp::Reply, Infallible> {
+        match db.render_openmetrics().await {
+            Ok(data) => Ok(data),
+            Err(e) => {
+                log::error!("Error formatting data: {}", e);
+                Ok("failed".into())
             }
         }
     }

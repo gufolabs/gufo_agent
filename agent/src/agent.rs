@@ -75,13 +75,6 @@ impl Agent {
     }
     async fn bootstrap(&mut self) -> Result<(), AgentError> {
         self.resolver.bootstrap().await?;
-        // Spawn sender
-        let mut sender = Sender::default();
-        sender.set_dump_metrics(self.dump_metrics);
-        self.sender_tx = Some(sender.get_tx());
-        tokio::spawn(async move {
-            sender.run().await;
-        });
         //
         loop {
             if let Err(e) = self.configure().await {
@@ -107,14 +100,7 @@ impl Agent {
         Ok(())
     }
     async fn apply(&mut self, cfg: Config) -> Result<(), AgentError> {
-        // Configure sender
-        if let Some(tx) = &self.sender_tx {
-            let mut labels: Labels = cfg.labels.into();
-            labels.push(Label::new("host", self.hostname.clone()));
-            if let Err(e) = tx.send(SenderCommand::SetAgentLabels(labels)).await {
-                log::error!("Failed to set labels: {}", e);
-            }
-        }
+        self.configure_sender(&cfg).await?;
         // Configure collectors
         let mut id_set = HashSet::new();
         for collector_cfg in cfg.collectors.iter() {
@@ -154,6 +140,28 @@ impl Agent {
         }
         Ok(())
     }
+    // Configure sender
+    async fn configure_sender(&mut self, cfg: &Config) -> Result<(), AgentError> {
+        if let None = self.sender_tx {
+            // Not confugured yet, run sender
+            let mut sender = Sender::try_from(&cfg.sender)?;
+            sender.set_dump_metrics(self.dump_metrics);
+            self.sender_tx = Some(sender.get_tx());
+            tokio::spawn(async move {
+                sender.run().await;
+            });
+        }
+        // Configure labels
+        if let Some(tx) = &self.sender_tx {
+            let mut labels: Labels = cfg.labels.clone().into();
+            labels.push(Label::new("host", self.hostname.clone()));
+            if let Err(e) = tx.send(SenderCommand::SetAgentLabels(labels)).await {
+                log::error!("Failed to set labels: {}", e);
+            }
+        }
+        Ok(())
+    }
+
     // Start new collector instance
     async fn spawn_collector(&mut self, config: CollectorConfig) -> Result<(), AgentError> {
         let config_id = config.id.clone();

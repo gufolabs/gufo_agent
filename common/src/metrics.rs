@@ -16,7 +16,7 @@ pub use paste::paste;
 //         name: "requests_total",
 //         help: "Total DNS requests performed",
 //         value: Value::Counter(v),
-//         labels: Labels::empty()
+//         labels: Labels::default()
 //     }
 // }
 // ```
@@ -42,7 +42,7 @@ macro_rules! counter {
                 name: stringify!($name),
                 help: $help,
                 value: common::Value::Counter(v),
-                labels: common::Labels::empty(),
+                labels: common::Labels::default(),
             }
         }
     };
@@ -79,7 +79,7 @@ macro_rules! counter {
 //         name: "requests_total",
 //         help: "Total DNS requests performed",
 //         value: Value::Gauge(v),
-//         labels: Labels::empty()
+//         labels: Labels::default()
 //     }
 // }
 // ```
@@ -105,7 +105,7 @@ macro_rules! gauge {
                 name: stringify!($name),
                 help: $help,
                 value: common::Value::Gauge(v),
-                labels: common::Labels::empty(),
+                labels: common::Labels::default(),
             }
         }
     };
@@ -142,7 +142,7 @@ macro_rules! gauge {
 //         name: "requests_total",
 //         help: "Total DNS requests performed",
 //         value: Value::GaugeI(v),
-//         labels: Labels::empty()
+//         labels: Labels::default()
 //     }
 // }
 // ```
@@ -168,7 +168,7 @@ macro_rules! gauge_i {
                 name: stringify!($name),
                 help: $help,
                 value: common::Value::GaugeI(v),
-                labels: common::Labels::empty(),
+                labels: common::Labels::default(),
             }
         }
     };

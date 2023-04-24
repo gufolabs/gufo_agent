@@ -48,4 +48,6 @@ pub enum AgentError {
     // Serialization error
     #[error("Serialization error: {0}")]
     SerializationError(String),
+    #[error("Format error: {0}")]
+    FmtError(#[from] std::fmt::Error),
 }
