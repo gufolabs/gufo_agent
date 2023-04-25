@@ -18,13 +18,13 @@ pub struct Config;
 pub struct Collector;
 
 // Generated metrics
-gauge!(user, "???", cpu);
-gauge!(nice, "???", cpu);
-gauge!(system, "???", cpu);
-gauge!(interrupt, "???", cpu);
-gauge!(idle, "???", cpu);
+gauge!(user, "CPU User time, %", cpu);
+gauge!(nice, "CPU Nice time, %", cpu);
+gauge!(system, "CPU System time, %", cpu);
+gauge!(interrupt, "CPU Interrupt time, %", cpu);
+gauge!(idle, "CPU Idle time, %", cpu);
 #[cfg(target_os = "linux")]
-gauge!(iowait, "???", cpu);
+gauge!(iowait, "CPU IOwait time, %", cpu);
 
 // Instantiate collector from given config
 impl TryFrom<Config> for Collector {

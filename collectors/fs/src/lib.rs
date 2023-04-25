@@ -17,12 +17,12 @@ pub struct Config;
 pub struct Collector;
 
 // Generated metrics
-gauge!(files, "???", mount, type);
-gauge!(files_total, "???", mount, type);
-gauge!(files_available, "???", mount, type);
-gauge!(free, "???", mount, type);
-gauge!(total, "???", mount, type);
-gauge!(available, "???", mount, type);
+gauge!(files, "Inodes used", mount, type);
+gauge!(files_total, "Total inodes count", mount, type);
+gauge!(files_available, "Inodes available", mount, type);
+gauge!(free, "Free disk space, bytes", mount, type);
+gauge!(total, "Total disk space, bytes", mount, type);
+gauge!(available, "Available disk space, bytes", mount, type);
 
 // Instantiate collector from given config
 impl TryFrom<Config> for Collector {
