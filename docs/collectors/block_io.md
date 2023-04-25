@@ -23,19 +23,19 @@ Config example:
 
 === "OpenMetrics"
 
-  | Metric                   | Metric Type | Labels | Description |
-  |--------------------------|-------------|--------|-------------|
-  | `block_io_read_ios`      | Gauge       | dev    | ???         |
-  | `block_io_read_merges`   | Gauge       | dev    | ???         |
-  | `block_io_read_sectors`  | Gauge       | dev    | ???         |
-  | `block_io_read_ticks`    | Gauge       | dev    | ???         |
-  | `block_io_write_ios`     | Gauge       | dev    | ???         |
-  | `block_io_write_merges`  | Gauge       | dev    | ???         |
-  | `block_io_write_sectors` | Gauge       | dev    | ???         |
-  | `block_io_write_ticks`   | Gauge       | dev    | ???         |
-  | `block_io_in_flight`     | Gauge       | dev    | ???         |
-  | `block_io_io_ticks`      | Gauge       | dev    | ???         |
-  | `block_io_time_in_queue` | Gauge       | dev    | ???         |
+  | Metric                   | Metric Type | Labels | Description                                      |
+  |--------------------------|-------------|--------|--------------------------------------------------|
+  | `block_io_read_ios`      | Gauge       | dev    | Number of read I/Os processed                    |
+  | `block_io_read_merges`   | Gauge       | dev    | Number of read I/Os merged with in-queue I/O     |
+  | `block_io_read_sectors`  | Gauge       | dev    | Number of sectors read                           |
+  | `block_io_read_ticks`    | Gauge       | dev    | Total wait time for read requests, ms            |
+  | `block_io_write_ios`     | Gauge       | dev    | Number of write I/Os processed                   |
+  | `block_io_write_merges`  | Gauge       | dev    | Number of write I/Os merged with in-queue I/O    |
+  | `block_io_write_sectors` | Gauge       | dev    | Number of sectors written                        |
+  | `block_io_write_ticks`   | Gauge       | dev    | Total wait time for write requests, ms           |
+  | `block_io_in_flight`     | Gauge       | dev    | Number of I/Os currently in flight, requests     |
+  | `block_io_io_ticks`      | Gauge       | dev    | Total time this block device has been active, ms |
+  | `block_io_time_in_queue` | Gauge       | dev    | Total wait time for all requests, ms             |
 
 ## Labels
 
