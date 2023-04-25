@@ -5,7 +5,7 @@
 ## Configuration
 
 | Parameter  | Type    | Default | Description                                        |
-| ---------- | ------- | ------- | -------------------------------------------------- |
+|------------|---------|---------|----------------------------------------------------|
 | `id`       | String  |         | Collector's ID. Must be unique per agent instance. |
 | `type`     | String  |         | Must be `network`                                  |
 | `interval` | Integer |         | Repetition interval in seconds                     |
@@ -36,7 +36,26 @@ Config example:
 `network` collector appends the following labels
 
 | Label   | Description    |
-| ------- | -------------- |
+|---------|----------------|
 | `iface` | Interface name |
 
 ## Sample Output
+
+=== "OpenMetrics"
+
+    ```
+    network_rx_packets{agent="gufo",host="ek-light",iface="virbr0",zone="DC1"} 0 1682413634
+    network_rx_packets{agent="gufo",host="ek-light",iface="wlo1",zone="DC1"} 4817460 1682413634
+    # HELP network_tx_errors Total number of transmit errors
+    # TYPE network_tx_errors counter
+    network_tx_errors{agent="gufo",host="ek-light",iface="virbr0",zone="DC1"} 0 1682413634
+    network_tx_errors{agent="gufo",host="ek-light",iface="wlo1",zone="DC1"} 0 1682413634
+    # HELP network_tx_octets Total number of octets sent
+    # TYPE network_tx_octets counter
+    network_tx_octets{agent="gufo",host="ek-light",iface="virbr0",zone="DC1"} 0 1682413634
+    network_tx_octets{agent="gufo",host="ek-light",iface="wlo1",zone="DC1"} 510399868 1682413634
+    # HELP network_tx_packets Total number of packets sent
+    # TYPE network_tx_packets counter
+    network_tx_packets{agent="gufo",host="ek-light",iface="virbr0",zone="DC1"} 0 1682413634
+    network_tx_packets{agent="gufo",host="ek-light",iface="wlo1",zone="DC1"} 2376071 1682413634
+    ```
