@@ -6,7 +6,7 @@ and collects query statistics.
 ## Configuration
 
 | Parameter  | Type    | Default | Description                                        |
-| ---------- | ------- | ------- | -------------------------------------------------- |
+|------------|---------|---------|----------------------------------------------------|
 | `id`       | String  |         | Collector's ID. Must be unique per agent instance. |
 | `type`     | String  |         | Must be `dns`                                      |
 | `interval` | Integer |         | Repetition interval in seconds                     |
@@ -47,7 +47,7 @@ n: 10
 `dns` collector appends the following labels
 
 | Label   | Description                               |
-| ------- | ----------------------------------------- |
+|---------|-------------------------------------------|
 | `query` | DNS query. Matches `query` in config.     |
 | `type`  | DNS query type. Matches `type` in config. |
 
