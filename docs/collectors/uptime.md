@@ -5,7 +5,7 @@
 ## Configuration
 
 | Parameter  | Type    | Default | Description                                        |
-|------------|---------|---------|----------------------------------------------------|
+| ---------- | ------- | ------- | -------------------------------------------------- |
 | `id`       | String  |         | Collector's ID. Must be unique per agent instance. |
 | `type`     | String  |         | Must be `cpu`                                      |
 | `interval` | Integer |         | Repetition interval in seconds                     |
@@ -37,5 +37,5 @@ Config example:
     ```
     # HELP uptime_uptime System uptime
     # TYPE uptime_uptime counter
-    uptime_uptime{agent="gufo",host="ek-light",zone="DC1"} 149461 1682413628
+    uptime_uptime 149461 1682413628
     ```

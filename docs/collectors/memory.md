@@ -5,7 +5,7 @@
 ## Configuration
 
 | Parameter  | Type    | Default | Description                                        |
-|------------|---------|---------|----------------------------------------------------|
+| ---------- | ------- | ------- | -------------------------------------------------- |
 | `id`       | String  |         | Collector's ID. Must be unique per agent instance. |
 | `type`     | String  |         | Must be `memory`                                   |
 | `interval` | Integer |         | Repetition interval in seconds                     |
@@ -24,7 +24,7 @@ Config example:
 === "OpenMetrics"
 
   | Metric            | Metric Type | Platform | Description                                                                                                                |
-  |-------------------|-------------|----------|----------------------------------------------------------------------------------------------------------------------------|
+  | ----------------- | ----------- | -------- | -------------------------------------------------------------------------------------------------------------------------- |
   | total             | Gauge       |          | Total memory in bytes                                                                                                      |
   | free              | Gauge       |          | Free memory in bytes                                                                                                       |
   | active            | Gauge       | Linux    | active,"Active memory, bytes                                                                                               |
@@ -107,20 +107,20 @@ Config example:
     ```
     # HELP memory_active Active memory, bytes
     # TYPE memory_active gauge
-    memory_active{agent="gufo",host="ek-light",zone="DC1"} 3230384128 1682414881
+    memory_active 3230384128 1682414881
     # HELP memory_active_anon Active anonymous memory, bytes
     # TYPE memory_active_anon gauge
-    memory_active_anon{agent="gufo",host="ek-light",zone="DC1"} 931033088 1682414881
+    memory_active_anon 931033088 1682414881
     # HELP memory_active_file Active pagecache memory, bytes
     # TYPE memory_active_file gauge
-    memory_active_file{agent="gufo",host="ek-light",zone="DC1"} 2299351040 1682414881
+    memory_active_file 2299351040 1682414881
     # HELP memory_anon_huge_pages Non-file backed huge pages mapped into userspace page tables
     # TYPE memory_anon_huge_pages gauge
-    memory_anon_huge_pages{agent="gufo",host="ek-light",zone="DC1"} 0 1682414881
+    memory_anon_huge_pages 0 1682414881
     # HELP memory_anon_pages Non-file backed pages mapped into userspace page tables
     # TYPE memory_anon_pages gauge
-    memory_anon_pages{agent="gufo",host="ek-light",zone="DC1"} 9075548160 1682414881
+    memory_anon_pages 9075548160 1682414881
     # HELP memory_bounce Memory used for block device 'bounce buffers'
     # TYPE memory_bounce gauge
-    memory_bounce{agent="gufo",host="ek-light",zone="DC1"} 0 1682414881
+    memory_bounce 0 1682414881
     ```

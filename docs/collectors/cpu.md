@@ -5,7 +5,7 @@
 ## Configuration
 
 | Parameter  | Type    | Default | Description                                        |
-|------------|---------|---------|----------------------------------------------------|
+| ---------- | ------- | ------- | -------------------------------------------------- |
 | `id`       | String  |         | Collector's ID. Must be unique per agent instance. |
 | `type`     | String  |         | Must be `cpu`                                      |
 | `interval` | Integer |         | Repetition interval in seconds                     |
@@ -36,7 +36,7 @@ Config example:
 `cpu` collector appends the following labels
 
 | Label | Description |
-|-------|-------------|
+| ----- | ----------- |
 | `cpu` | CPU number  |
 
 ## Sample Output
@@ -46,38 +46,38 @@ Config example:
     ```
     # HELP cpu_idle CPU Idle time, %
     # TYPE cpu_idle gauge
-    cpu_idle{agent="gufo",cpu="0",host="ek-light",zone="DC1"} 97 1682413626
-    cpu_idle{agent="gufo",cpu="1",host="ek-light",zone="DC1"} 93 1682413626
-    cpu_idle{agent="gufo",cpu="2",host="ek-light",zone="DC1"} 98 1682413626
-    cpu_idle{agent="gufo",cpu="3",host="ek-light",zone="DC1"} 94 1682413626
+    cpu_idle{cpu="0"} 97 1682413626
+    cpu_idle{cpu="1"} 93 1682413626
+    cpu_idle{cpu="2"} 98 1682413626
+    cpu_idle{cpu="3"} 94 1682413626
     # HELP cpu_interrupt CPU Interrupt time, %
     # TYPE cpu_interrupt gauge
-    cpu_interrupt{agent="gufo",cpu="0",host="ek-light",zone="DC1"} 0 1682413626
-    cpu_interrupt{agent="gufo",cpu="1",host="ek-light",zone="DC1"} 0 1682413626
-    cpu_interrupt{agent="gufo",cpu="2",host="ek-light",zone="DC1"} 0 1682413626
-    cpu_interrupt{agent="gufo",cpu="3",host="ek-light",zone="DC1"} 0 1682413626
+    cpu_interrupt{cpu="0"} 0 1682413626
+    cpu_interrupt{cpu="1"} 0 1682413626
+    cpu_interrupt{cpu="2"} 0 1682413626
+    cpu_interrupt{cpu="3"} 0 1682413626
     # HELP cpu_iowait CPU IOwait time, %
     # TYPE cpu_iowait gauge
-    cpu_iowait{agent="gufo",cpu="0",host="ek-light",zone="DC1"} 0 1682413626
-    cpu_iowait{agent="gufo",cpu="1",host="ek-light",zone="DC1"} 0 1682413626
-    cpu_iowait{agent="gufo",cpu="2",host="ek-light",zone="DC1"} 0 1682413626
-    cpu_iowait{agent="gufo",cpu="3",host="ek-light",zone="DC1"} 0 1682413626
+    cpu_iowait{cpu="0"} 0 1682413626
+    cpu_iowait{cpu="1"} 0 1682413626
+    cpu_iowait{cpu="2"} 0 1682413626
+    cpu_iowait{cpu="3"} 0 1682413626
     # HELP cpu_nice CPU Nice time, %
     # TYPE cpu_nice gauge
-    cpu_nice{agent="gufo",cpu="0",host="ek-light",zone="DC1"} 0 1682413626
-    cpu_nice{agent="gufo",cpu="1",host="ek-light",zone="DC1"} 0 1682413626
-    cpu_nice{agent="gufo",cpu="2",host="ek-light",zone="DC1"} 0 1682413626
-    cpu_nice{agent="gufo",cpu="3",host="ek-light",zone="DC1"} 0 1682413626
+    cpu_nice{cpu="0"} 0 1682413626
+    cpu_nice{cpu="1"} 0 1682413626
+    cpu_nice{cpu="2"} 0 1682413626
+    cpu_nice{cpu="3"} 0 1682413626
     # HELP cpu_system CPU System time, %
     # TYPE cpu_system gauge
-    cpu_system{agent="gufo",cpu="0",host="ek-light",zone="DC1"} 0 1682413626
-    cpu_system{agent="gufo",cpu="1",host="ek-light",zone="DC1"} 2 1682413626
-    cpu_system{agent="gufo",cpu="2",host="ek-light",zone="DC1"} 0 1682413626
-    cpu_system{agent="gufo",cpu="3",host="ek-light",zone="DC1"} 3 1682413626
+    cpu_system{cpu="0"} 0 1682413626
+    cpu_system{cpu="1"} 2 1682413626
+    cpu_system{cpu="2"} 0 1682413626
+    cpu_system{cpu="3"} 3 1682413626
     # HELP cpu_user CPU User time, %
     # TYPE cpu_user gauge
-    cpu_user{agent="gufo",cpu="0",host="ek-light",zone="DC1"} 2 1682413626
-    cpu_user{agent="gufo",cpu="1",host="ek-light",zone="DC1"} 5 1682413626
-    cpu_user{agent="gufo",cpu="2",host="ek-light",zone="DC1"} 1 1682413626
-    cpu_user{agent="gufo",cpu="3",host="ek-light",zone="DC1"} 2 1682413626
+    cpu_user{cpu="0"} 2 1682413626
+    cpu_user{cpu="1"} 5 1682413626
+    cpu_user{cpu="2"} 1 1682413626
+    cpu_user{cpu="3"} 2 1682413626
     ```

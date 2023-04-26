@@ -5,7 +5,7 @@
 ## Configuration
 
 | Parameter  | Type    | Default | Description                                        |
-|------------|---------|---------|----------------------------------------------------|
+| ---------- | ------- | ------- | -------------------------------------------------- |
 | `id`       | String  |         | Collector's ID. Must be unique per agent instance. |
 | `type`     | String  |         | Must be `block_io`                                 |
 | `interval` | Integer |         | Repetition interval in seconds                     |
@@ -24,7 +24,7 @@ Config example:
 === "OpenMetrics"
 
   | Metric                   | Metric Type | Labels | Description                                      |
-  |--------------------------|-------------|--------|--------------------------------------------------|
+  | ------------------------ | ----------- | ------ | ------------------------------------------------ |
   | `block_io_read_ios`      | Gauge       | dev    | Number of read I/Os processed                    |
   | `block_io_read_merges`   | Gauge       | dev    | Number of read I/Os merged with in-queue I/O     |
   | `block_io_read_sectors`  | Gauge       | dev    | Number of sectors read                           |
@@ -42,7 +42,7 @@ Config example:
 `block_io` collector appends the following labels:
 
 | Label | Description       |
-|-------|-------------------|
+| ----- | ----------------- |
 | `dev` | Block device name |
 
 ## Sample Output
@@ -52,17 +52,17 @@ Config example:
     ```
     # HELP block_io_in_flight Number of I/Os currently in flight, requests
     # TYPE block_io_in_flight gauge
-    block_io_in_flight{agent="gufo",dev="dm-0",host="ek-light",zone="DC1"} 0 1682413629
-    block_io_in_flight{agent="gufo",dev="dm-1",host="ek-light",zone="DC1"} 0 1682413629
-    block_io_in_flight{agent="gufo",dev="dm-2",host="ek-light",zone="DC1"} 0 1682413629
+    block_io_in_flight{dev="dm-0} 0 1682413629
+    block_io_in_flight{dev="dm-1} 0 1682413629
+    block_io_in_flight{dev="dm-2} 0 1682413629
     # HELP block_io_io_ticks Total time this block device has been active, ms
     # TYPE block_io_io_ticks gauge
-    block_io_io_ticks{agent="gufo",dev="dm-0",host="ek-light",zone="DC1"} 1091288 1682413629
-    block_io_io_ticks{agent="gufo",dev="dm-1",host="ek-light",zone="DC1"} 681716 1682413629
-    block_io_io_ticks{agent="gufo",dev="dm-2",host="ek-light",zone="DC1"} 577728 1682413629
+    block_io_io_ticks{dev="dm-0"} 1091288 1682413629
+    block_io_io_ticks{dev="dm-1"} 681716 1682413629
+    block_io_io_ticks{dev="dm-2"} 577728 1682413629
     # HELP block_io_read_ios Number of read I/Os processed
     # TYPE block_io_read_ios counter
-    block_io_read_ios{agent="gufo",dev="dm-0",host="ek-light",zone="DC1"} 180155 1682413629
-    block_io_read_ios{agent="gufo",dev="dm-1",host="ek-light",zone="DC1"} 17722 1682413629
-    block_io_read_ios{agent="gufo",dev="dm-2",host="ek-light",zone="DC1"} 20178 1682413629
+    block_io_read_ios{dev="dm-0"} 180155 1682413629
+    block_io_read_ios{dev="dm-1"} 17722 1682413629
+    block_io_read_ios{dev="dm-2"} 20178 1682413629
     ```
