@@ -15,6 +15,7 @@ Options:
   -v, --verbose...       
   -k, --insecure         [env: GA_INSECURE=]
   -c, --config <CONFIG>  [env: GA_CONFIG=]
+      --hostname <HOSTNAME>  [env: GA_HOSTNAME=]  
       --list-collectors  
       --dump-metrics     [env: GA_DUMP_METRICS=]
   -h, --help             Print help
@@ -38,6 +39,7 @@ The following options are available:
 
 * `-k`, `--insecure` - Do not check TLS certificate when fetching config over HTTPS.
 * <a name="opt_insecure"></a>`-c`, `--config` `<CONFIG>` - Load configuration from `<CONFIG>` path.
+* <a name="opt_hostname"></a>`--hostname` - Override agent's hostname.
 * <a name="opt_config"></a>`--list-collectors` - Print list of compiled collectors and exit.
 * <a name="opt_dump_metrics"></a>`--dump-metrics` - Dump metrics database state to stdout after each collector run.
 * `-h`, `--help` - Print help and exit.
@@ -49,6 +51,7 @@ The following environment variables affect the execution of `gufo-agent`:
 
 * `GA_CONFIG` - same as [`--config`](#opt_config) option.
 * `GA_DUMP_METRICS` - same as [`--dump-metrics`](#opt_dump_metrics) option.
+* `GA_HOSTNAME` - same as [`--hostname`](#opt_hostname) option.
 * `GA_INSECURE` - same as [`--insecure`](#opt_insecure) option.
 
 ## Exit Status

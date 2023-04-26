@@ -36,6 +36,7 @@ pub struct AgentBuilder {
     cert_validation: bool,
     dump_metrics: bool,
     config: Option<String>,
+    hostname: Option<String>,
 }
 
 impl AgentBuilder {
@@ -51,6 +52,10 @@ impl AgentBuilder {
         self.dump_metrics = status;
         self
     }
+    pub fn set_hostname(&mut self, hostname: Option<String>) -> &mut Self {
+        self.hostname = hostname;
+        self
+    }
     pub fn build(&self) -> Agent {
         Agent {
             resolver: ConfigResolver::builder()
@@ -59,7 +64,10 @@ impl AgentBuilder {
                 .build(),
             running: HashMap::new(),
             sender_tx: None,
-            hostname: gethostname().into_string().unwrap_or("localhost".into()),
+            hostname: self
+                .hostname
+                .clone()
+                .unwrap_or_else(|| gethostname().into_string().unwrap_or("localhost".into())),
             dump_metrics: self.dump_metrics,
         }
     }

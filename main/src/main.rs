@@ -18,6 +18,8 @@ struct Cli {
     pub insecure: bool,
     #[arg(short, long, env = "GA_CONFIG")]
     pub config: Option<String>,
+    #[arg(long, env = "GA_HOSTNAME")]
+    pub hostname: Option<String>,
     #[arg(long)]
     pub list_collectors: bool,
     #[arg(long, env = "GA_DUMP_METRICS")]
@@ -54,6 +56,7 @@ fn main() {
         .set_cert_validation(!cli.insecure)
         .set_dump_metrics(cli.dump_metrics)
         .set_config(cli.config)
+        .set_hostname(cli.hostname)
         .build();
     // Run agent and wait for complete
     if let Err(e) = agent.run() {
