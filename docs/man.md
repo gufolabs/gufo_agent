@@ -11,12 +11,12 @@
 Usage: gufo-agent [OPTIONS]
 
 Options:
-  -q, --quiet
-  -v, --verbose...
-  -k, --insecure
-  -c, --config <CONFIG>
-      --list-collectors
-      --dump-metrics
+  -q, --quiet            
+  -v, --verbose...       
+  -k, --insecure         [env: GA_INSECURE=]
+  -c, --config <CONFIG>  [env: GA_CONFIG=]
+      --list-collectors  
+      --dump-metrics     [env: GA_DUMP_METRICS=]
   -h, --help             Print help
   -V, --version          Print version
 ```
@@ -37,13 +37,19 @@ The following options are available:
     * `-vv` - debug.
 
 * `-k`, `--insecure` - Do not check TLS certificate when fetching config over HTTPS.
-* `-c`, `--config` `<CONFIG>` - Load configuration from `<CONFIG>` path.
-* `--list-collectors` - Print list of compiled collectors and exit.
-* `--dump-metrics` - Dump metrics database state to stdout after each collector run.
+* <a name="opt_insecure"></a>`-c`, `--config` `<CONFIG>` - Load configuration from `<CONFIG>` path.
+* <a name="opt_config"></a>`--list-collectors` - Print list of compiled collectors and exit.
+* <a name="opt_dump_metrics"></a>`--dump-metrics` - Dump metrics database state to stdout after each collector run.
 * `-h`, `--help` - Print help and exit.
 * `-V`, `--version` - Print agent version and exit.
 
 ## Environment
+
+The following environment variables affect the execution of `gufo-agent`:
+
+* `GA_CONFIG` - same as [`--config`](#opt_config) option.
+* `GA_DUMP_METRICS` - same as [`--dump-metrics`](#opt_dump_metrics) option.
+* `GA_INSECURE` - same as [`--insecure`](#opt_insecure) option.
 
 ## Exit Status
 

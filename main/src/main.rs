@@ -14,13 +14,13 @@ struct Cli {
     pub quiet: bool,
     #[arg(short, long, action = clap::ArgAction::Count)]
     pub verbose: u8,
-    #[arg(short = 'k', long)]
+    #[arg(short = 'k', long, env = "GA_INSECURE")]
     pub insecure: bool,
-    #[arg(short, long)]
+    #[arg(short, long, env = "GA_CONFIG")]
     pub config: Option<String>,
     #[arg(long)]
     pub list_collectors: bool,
-    #[arg(long)]
+    #[arg(long, env = "GA_DUMP_METRICS")]
     pub dump_metrics: bool,
 }
 
