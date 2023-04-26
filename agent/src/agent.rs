@@ -150,7 +150,7 @@ impl Agent {
     }
     // Configure sender
     async fn configure_sender(&mut self, cfg: &Config) -> Result<(), AgentError> {
-        if let None = self.sender_tx {
+        if self.sender_tx.is_none() {
             // Not confugured yet, run sender
             let mut sender = Sender::try_from(&cfg.sender)?;
             sender.set_dump_metrics(self.dump_metrics);
