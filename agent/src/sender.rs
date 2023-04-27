@@ -9,7 +9,7 @@ use common::{AgentError, Labels};
 use std::convert::Infallible;
 use std::net::SocketAddrV4;
 use tokio::sync::mpsc;
-use warp::Filter;
+use warp::{Filter, Reply};
 
 const CONTENT_TYPE: &str = "application/openmetrics-text; version=1.0.0; charset=utf-8";
 
@@ -108,10 +108,15 @@ impl Sender {
 
     async fn metrics_endpoint(db: MetricsDb) -> Result<impl warp::Reply, Infallible> {
         match db.render_openmetrics().await {
-            Ok(data) => Ok(data),
+            Ok(data) => {
+                Ok(warp::reply::with_header(data, "Content-Type", CONTENT_TYPE).into_response())
+            }
             Err(e) => {
                 log::error!("Error formatting data: {}", e);
-                Ok("failed".into())
+                Ok(
+                    warp::reply::with_status("", warp::http::StatusCode::INTERNAL_SERVER_ERROR)
+                        .into_response(),
+                )
             }
         }
     }
