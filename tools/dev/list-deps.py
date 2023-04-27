@@ -27,6 +27,7 @@ def iter_crates() -> Iterable[str]:
 
     yield from inner()
     yield from inner("collectors")
+    yield from inner("proto")
 
 
 def read_toml(crate: str) -> Crate:
@@ -43,7 +44,7 @@ def read_toml(crate: str) -> Crate:
         crate=crate,
         name=data["package"]["name"],
         ext_deps={
-            k: get_dep_version(data["dependencies"][k]) for k in data["dependencies"]
+            k: get_dep_version(data["dependencies"][k]) for k in data.get("dependencies",[])
         },
     )
 
@@ -90,8 +91,8 @@ def main() -> int:
             items = "\n    ".join(sorted(vlist[v]))
             print(f"* {name} v{v}:\n    {items}")
         else:
-            print(f"* {name}")
-            for v in sorted(versions):
+            print(f"* !!! {name}")
+            for v in sorted(vlist):
                 items = ", ".join(sorted(vlist[v]))
                 print(f"  {v}: {items}")
                 status = False

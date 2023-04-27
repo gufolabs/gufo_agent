@@ -46,6 +46,7 @@ def iter_crates() -> Iterable[str]:
 
     yield from inner()
     yield from inner(COLLECTORS_ROOT)
+    yield from inner("proto")
 
 
 def read_toml(crate: str) -> Crate:
@@ -62,7 +63,7 @@ def read_toml(crate: str) -> Crate:
         crate=crate,
         name=data["package"]["name"],
         ext_deps={
-            k: get_dep_version(data["dependencies"][k]) for k in data["dependencies"]
+            k: get_dep_version(data["dependencies"][k]) for k in data.get("dependencies", [])
         },
     )
 
@@ -148,8 +149,8 @@ def expand_workspace(crates: Iterable[Crate]) -> None:
     # if collector_members == collector_crates:
     #    return
     all_members = list(sorted(other_crates)) + list(sorted(collector_crates))
-    mlst = ", ".join(f'"{m}"' for m in all_members)
-    repl = f"members = [{mlst}]"
+    mlst = "\n".join(f'  "{m}",' for m in all_members)
+    repl = f"members = [\n{mlst}\n]"
     with open("Cargo.toml") as f:
         raw = f.read()
     r = rx_members.sub(repl, raw)
