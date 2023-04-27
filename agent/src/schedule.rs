@@ -38,10 +38,12 @@ impl Schedule {
     }
     pub async fn run(&mut self) {
         log::info!("[{}] Starting collector", self.id);
-        // Sleep random time to prevent spikes of load
-        let delay: u64 = {
+        let delay: u64 = if self.collector.is_random_offset() {
+            // Sleep random time to prevent spikes of load
             let max_delay = self.interval * 1_000_000_000;
             rand::thread_rng().gen_range(0..max_delay)
+        } else {
+            0
         };
         log::debug!(
             "[{}] Starting delay {:?} of {:?}",

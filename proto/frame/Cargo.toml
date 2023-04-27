@@ -1,0 +1,8 @@
+[package]
+edition = "2021"
+name = "frame"
+version = "0.1.0"
+
+[dependencies]
+bytes = "1.4"
+common = {path = "../../common"}

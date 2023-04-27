@@ -1,0 +1,17 @@
+[package]
+edition = "2021"
+name = "twamp_reflector"
+version = "0.1.0"
+
+[dependencies]
+async-trait = "0.1"
+bytes = "1.4"
+chrono = "0.4"
+common = {path = "../../common"}
+connection = {path = "../../proto/connection"}
+log = "0.4"
+rand = "0.8"
+serde = {version = "1.0", features = ["derive"]}
+tokio = {version = "1.27"}
+twamp = {path = "../../proto/twamp"}
+udp = {path = "../../proto/udp"}

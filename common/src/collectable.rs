@@ -37,10 +37,14 @@ where
     Self: Sized + TryFrom<Self::Config>,
 {
     const NAME: &'static str;
+    const RANDOM_OFFSET: bool = true;
     type Config;
 
     fn get_name() -> &'static str {
         Self::NAME
+    }
+    fn is_random_offset() -> bool {
+        Self::RANDOM_OFFSET
     }
     async fn collect(&mut self) -> Result<Vec<Measure>, AgentError>;
 }

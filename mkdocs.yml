@@ -19,6 +19,8 @@ nav:
       - fs: collectors/fs.md
       - memory: collectors/memory.md
       - network: collectors/network.md
+      - twamp_reflector: collectors/twamp_reflector.md
+      - twamp_sender: collectors/twamp_sender.md
       - uptime: collectors/uptime.md
   - Developers' Guide:
       - Developer's Environment: environment.md

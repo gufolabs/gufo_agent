@@ -17,6 +17,8 @@ pub enum Collectors {
     Fs(fs::Collector),
     Memory(memory::Collector),
     Network(network::Collector),
+    TwampReflector(twamp_reflector::Collector),
+    TwampSender(twamp_sender::Collector),
     Uptime(uptime::Collector),
     // @@@}}}
 }
@@ -60,6 +62,8 @@ impl TryFrom<CollectorConfig> for Collectors {
             "fs" => Collectors::Fs(from_value(value)?),
             "memory" => Collectors::Memory(from_value(value)?),
             "network" => Collectors::Network(from_value(value)?),
+            "twamp_reflector" => Collectors::TwampReflector(from_value(value)?),
+            "twamp_sender" => Collectors::TwampSender(from_value(value)?),
             "uptime" => Collectors::Uptime(from_value(value)?),
             // @@@}}}
             _ => return Err(AgentError::InvalidCollectorError(value.r#type.clone())),
@@ -78,7 +82,26 @@ impl Collectors {
             Collectors::Fs(_) => fs::Collector::get_name(),
             Collectors::Memory(_) => memory::Collector::get_name(),
             Collectors::Network(_) => network::Collector::get_name(),
+            Collectors::TwampReflector(_) => twamp_reflector::Collector::get_name(),
+            Collectors::TwampSender(_) => twamp_sender::Collector::get_name(),
             Collectors::Uptime(_) => uptime::Collector::get_name(),
+            // @@@}}}
+        }
+    }
+
+    pub fn is_random_offset(&self) -> bool {
+        match self {
+            // @@@{{{
+            // | Collectors::{ename}(_) => {name}::Collector::is_random_offset(),
+            Collectors::BlockIo(_) => block_io::Collector::is_random_offset(),
+            Collectors::Cpu(_) => cpu::Collector::is_random_offset(),
+            Collectors::Dns(_) => dns::Collector::is_random_offset(),
+            Collectors::Fs(_) => fs::Collector::is_random_offset(),
+            Collectors::Memory(_) => memory::Collector::is_random_offset(),
+            Collectors::Network(_) => network::Collector::is_random_offset(),
+            Collectors::TwampReflector(_) => twamp_reflector::Collector::is_random_offset(),
+            Collectors::TwampSender(_) => twamp_sender::Collector::is_random_offset(),
+            Collectors::Uptime(_) => uptime::Collector::is_random_offset(),
             // @@@}}}
         }
     }
@@ -93,6 +116,8 @@ impl Collectors {
             Collectors::Fs(c) => c.collect().await,
             Collectors::Memory(c) => c.collect().await,
             Collectors::Network(c) => c.collect().await,
+            Collectors::TwampReflector(c) => c.collect().await,
+            Collectors::TwampSender(c) => c.collect().await,
             Collectors::Uptime(c) => c.collect().await,
             // @@@}}}
         }
@@ -107,6 +132,8 @@ impl Collectors {
             "fs".to_string(),
             "memory".to_string(),
             "network".to_string(),
+            "twamp_reflector".to_string(),
+            "twamp_sender".to_string(),
             "uptime".to_string(),
             // @@@}}}
         ]

@@ -15,7 +15,7 @@ const CONTENT_TYPE: &str = "application/openmetrics-text; version=1.0.0; charset
 
 pub(crate) enum SenderCommand {
     Data(MetricsData),
-    SetAgentLabels(Labels), // @todo: Rename to SetAgentLabels
+    SetAgentLabels(Labels),
 }
 
 pub(crate) struct Sender {
