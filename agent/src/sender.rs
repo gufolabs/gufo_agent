@@ -76,7 +76,7 @@ impl Sender {
                 SenderCommand::Data(data) => {
                     self.db.apply_data(&data).await;
                     if self.dump_metrics {
-                        if let Ok(data) = self.db.render_openmetrics().await {
+                        if let Ok(data) = self.db.to_openmetrics_string().await {
                             println!("{}", data)
                         }
                     }
@@ -107,7 +107,7 @@ impl Sender {
     }
 
     async fn metrics_endpoint(db: MetricsDb) -> Result<impl warp::Reply, Infallible> {
-        match db.render_openmetrics().await {
+        match db.to_openmetrics_string().await {
             Ok(data) => {
                 Ok(warp::reply::with_header(data, "Content-Type", CONTENT_TYPE).into_response())
             }

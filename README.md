@@ -39,8 +39,8 @@ We plan to cover following issues until first public release:
 * [ ] modbus_tcp
 * [x] network
 * [ ] test
-* [ ] twamp_reflector
-* [ ] twamp_sender
+* [x] twamp_reflector
+* [x] twamp_sender
 * [x] uptime
 
 ## On Gufo Stack

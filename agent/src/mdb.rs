@@ -4,6 +4,7 @@
 // Copyright (C) 2021-2023, Gufo Labs
 // --------------------------------------------------------------------
 
+use bytes::BytesMut;
 use common::{AgentError, Labels, Measure, Value};
 use std::collections::{BTreeMap, HashMap};
 use std::fmt;
@@ -127,17 +128,15 @@ impl MetricsDb {
             }
         }
     }
-    // @todo: Render to buffer
-    pub async fn render_openmetrics(&self) -> Result<String, AgentError> {
-        let mut out = String::new();
+    pub async fn write_openmetrics(&self, out: &mut BytesMut) -> Result<(), AgentError> {
         let db = self.0.read().await;
         for (family, fv) in db.data.iter() {
             fmt::write(
-                &mut out,
+                out,
                 format_args!("# HELP {}_{} {}\n", family.collector, family.name, fv.help,),
             )?;
             fmt::write(
-                &mut out,
+                out,
                 format_args!(
                     "# TYPE {}_{} {}\n",
                     family.collector,
@@ -157,7 +156,7 @@ impl MetricsDb {
             items.sort();
             for item in items.iter() {
                 fmt::write(
-                    &mut out,
+                    out,
                     format_args!(
                         "{}_{}{} {}{}\n",
                         family.collector,
@@ -177,7 +176,13 @@ impl MetricsDb {
                 )?;
             }
         }
-        Ok(out)
+        Ok(())
+    }
+    pub async fn to_openmetrics_string(&self) -> Result<String, AgentError> {
+        let mut buf = BytesMut::with_capacity(16 * 1024);
+        self.write_openmetrics(&mut buf).await?;
+        Ok(String::from_utf8(buf[..].to_vec())
+            .map_err(|e| AgentError::InternalError(e.to_string()))?)
     }
 }
 
