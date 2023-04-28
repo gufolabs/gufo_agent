@@ -63,18 +63,24 @@ const IMIX_ROUND: u64 =
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::proto::pktmodel::{GetPacket, ModelConfig, PacketModels};
+    use crate::pkt::{GetPacket, PacketModel};
+    use crate::Config;
 
     #[test]
     fn test_imix_model() {
-        let model = PacketModels::try_from(ModelConfig::Imix(ImixModelConfig {
-            bandwidth: 12_252_000,
-        }))
-        .unwrap();
+        let yaml = r###"
+        reflector: "127.0.0.1"
+        n_packets: 100
+        model: cbr
+        badwidth: 12252000
+        "###;
+        let cfg = serde_yaml::from_str::<Config>(yaml).unwrap();
+        let model = PacketModel::try_from(cfg).unwrap();
         for seq in 0..IMIX_SAMPLE_COUNT {
-            let pkt = model.get_packet(seq);
+            let s = seq as u64;
+            let pkt = model.get_packet(s);
             let expected = Packet {
-                seq,
+                seq: s,
                 size: IMIX_SAMPLE[seq % IMIX_SAMPLE_COUNT],
                 next_ns: 233_648,
             };

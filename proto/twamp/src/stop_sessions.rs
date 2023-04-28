@@ -86,8 +86,8 @@ impl FrameWriter for StopSessions {
 #[cfg(test)]
 mod tests {
     use super::StopSessions;
-    use crate::proto::frame::{FrameReader, FrameWriter};
     use bytes::{Buf, BytesMut};
+    use frame::{FrameReader, FrameWriter};
 
     static STOP_SESSIONS: &[u8] = &[
         0x03, // Command

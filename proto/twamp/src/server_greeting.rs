@@ -107,9 +107,9 @@ impl FrameWriter for ServerGreeting {
 #[cfg(test)]
 mod tests {
     use super::ServerGreeting;
-    use crate::proto::frame::{FrameReader, FrameWriter};
-    use crate::proto::twamp::MODE_UNAUTHENTICATED;
+    use crate::MODE_UNAUTHENTICATED;
     use bytes::{Buf, Bytes, BytesMut};
+    use frame::{FrameReader, FrameWriter};
 
     static SERVER_GREETING1: &[u8] = &[
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,

@@ -66,8 +66,8 @@ impl FrameWriter for StartAck {
 #[cfg(test)]
 mod tests {
     use super::StartAck;
-    use crate::proto::frame::{FrameReader, FrameWriter};
     use bytes::{Buf, BytesMut};
+    use frame::{FrameReader, FrameWriter};
 
     static START_ACK: &[u8] = &[
         0x00, // Accept

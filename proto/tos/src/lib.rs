@@ -157,7 +157,7 @@ pub fn tos_to_dscp(tos: u8) -> Option<&'static str> {
 
 #[cfg(test)]
 mod tests {
-    use crate::proto::tos::dscp_to_tos;
+    use super::dscp_to_tos;
 
     #[test]
     fn test_dscp_to_tos() {

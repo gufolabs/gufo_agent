@@ -50,15 +50,20 @@ impl GetPacket for CbrModel {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::proto::pktmodel::{GetPacket, ModelConfig, PacketModels};
+    use crate::pkt::{GetPacket, PacketModel};
+    use crate::Config;
 
     #[test]
     fn test_cbr_model() {
-        let model = PacketModels::try_from(ModelConfig::Cbr(CbrModelConfig {
-            bandwidth: 8_000_000,
-            size: 100,
-        }))
-        .unwrap();
+        let yaml = r###"
+        reflector: "127.0.0.1"
+        n_packets: 100
+        model: cbr
+        badwidth: 8000000
+        size: 100
+        "###;
+        let cfg = serde_yaml::from_str::<Config>(yaml).unwrap();
+        let model = PacketModel::try_from(cfg).unwrap();
         let pkt = model.get_packet(0);
         let expected = Packet {
             seq: 0,

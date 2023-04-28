@@ -270,9 +270,9 @@ impl FrameWriter for RequestTwSession {
 #[cfg(test)]
 mod tests {
     use super::{IpVn, RequestTwSession};
-    use crate::proto::frame::{FrameReader, FrameWriter};
     use bytes::{Buf, BytesMut};
     use chrono::{TimeZone, Utc};
+    use frame::{FrameReader, FrameWriter};
     use std::net::{IpAddr, Ipv4Addr};
 
     static REQUEST_TW_SESSION1: &[u8] = &[
@@ -309,7 +309,7 @@ mod tests {
             sender_address: IpAddr::V4(Ipv4Addr::UNSPECIFIED),
             receiver_address: IpAddr::V4(Ipv4Addr::UNSPECIFIED),
             padding_length: 0,
-            start_time: Utc.ymd(2021, 2, 12).and_hms(10, 0, 0),
+            start_time: Utc.with_ymd_and_hms(2021, 2, 12, 10, 0, 0).unwrap(),
             timeout: 255,
             type_p: 46,
             octets_reflected: 0,

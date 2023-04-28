@@ -67,8 +67,8 @@ impl FrameWriter for StartSessions {
 #[cfg(test)]
 mod tests {
     use super::StartSessions;
-    use crate::proto::frame::{FrameReader, FrameWriter};
     use bytes::{Buf, BytesMut};
+    use frame::{FrameReader, FrameWriter};
 
     static START_SESSIONS: &[u8] = &[
         0x02, // Command

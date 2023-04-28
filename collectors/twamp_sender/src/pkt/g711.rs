@@ -40,10 +40,18 @@ impl GetPacket for G711Model {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::pkt::{GetPacket, PacketModel};
+    use crate::Config;
 
     #[test]
     fn test_g711_model() {
-        let model = PacketModels::try_from(ModelConfig::G711(G711ModelConfig {})).unwrap();
+        let yaml = r###"
+        reflector: "127.0.0.1"
+        n_packets: 100
+        model: g711
+        "###;
+        let cfg = serde_yaml::from_str::<Config>(yaml).unwrap();
+        let model = PacketModel::try_from(cfg).unwrap();
         let pkt = model.get_packet(0);
         let expected = Packet {
             seq: 0,

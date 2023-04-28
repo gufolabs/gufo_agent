@@ -92,9 +92,9 @@ impl FrameWriter for TestRequest {
 #[cfg(test)]
 mod tests {
     use super::TestRequest;
-    use crate::proto::frame::{FrameReader, FrameWriter};
     use bytes::{Buf, BytesMut};
     use chrono::{TimeZone, Utc};
+    use frame::{FrameReader, FrameWriter};
 
     static TEST_REQUEST: &[u8] = &[
         0x00, 0x00, 0x04, 0x00, // Sequence, 4 octets
@@ -106,7 +106,7 @@ mod tests {
     fn get_test_request() -> TestRequest {
         TestRequest {
             seq: 1024,
-            timestamp: Utc.ymd(2021, 2, 12).and_hms(10, 0, 0),
+            timestamp: Utc.with_ymd_and_hms(2021, 2, 12, 10, 0, 0).unwrap(),
             err_estimate: 15,
             pad_to: 20,
         }

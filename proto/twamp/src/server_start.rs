@@ -95,9 +95,9 @@ impl FrameWriter for ServerStart {
 #[cfg(test)]
 mod tests {
     use super::ServerStart;
-    use crate::proto::frame::{FrameReader, FrameWriter};
     use bytes::{Buf, Bytes, BytesMut};
     use chrono::{TimeZone, Utc};
+    use frame::{FrameReader, FrameWriter};
 
     static SERVER_START: &[u8] = &[
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -118,7 +118,7 @@ mod tests {
         ServerStart {
             accept: 0,
             server_iv: Bytes::from_static(SERVER_IV),
-            start_time: Utc.ymd(2021, 2, 12).and_hms(10, 0, 0),
+            start_time: Utc.with_ymd_and_hms(2021, 2, 12, 10, 0, 0).unwrap(),
         }
     }
 
