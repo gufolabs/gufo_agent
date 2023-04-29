@@ -20,8 +20,6 @@
 
 We plan to cover following issues until first public release:
 
-* [ ] OpenMetrics endpoint
-
 ### Packaging
 
 * [ ] rpm
@@ -33,12 +31,11 @@ We plan to cover following issues until first public release:
 * [x] cpu
 * [x] dns
 * [x] fs
-* [ ] http
+* [x] http
 * [x] memory
 * [ ] modbus_rtu
 * [ ] modbus_tcp
 * [x] network
-* [ ] test
 * [x] twamp_reflector
 * [x] twamp_sender
 * [x] uptime

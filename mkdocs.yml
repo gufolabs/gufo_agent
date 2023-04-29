@@ -17,6 +17,7 @@ nav:
       - cpu: collectors/cpu.md
       - dns: collectors/dns.md
       - fs: collectors/fs.md
+      - http: collectors/http.md
       - memory: collectors/memory.md
       - network: collectors/network.md
       - twamp_reflector: collectors/twamp_reflector.md

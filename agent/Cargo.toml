@@ -13,6 +13,7 @@ cpu = {path = "../collectors/cpu"}
 dns = {path = "../collectors/dns"}
 fs = {path = "../collectors/fs"}
 gethostname = "0.4"
+http = {path = "../collectors/http"}
 log = "0.4"
 memory = {path = "../collectors/memory"}
 network = {path = "../collectors/network"}

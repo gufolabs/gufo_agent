@@ -13,6 +13,7 @@ members = [
   "collectors/cpu",
   "collectors/dns",
   "collectors/fs",
+  "collectors/http",
   "collectors/memory",
   "collectors/network",
   "collectors/twamp_reflector",
