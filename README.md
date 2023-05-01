@@ -14,31 +14,46 @@
 
 ---
 
-## Work in progress
+`Gufo Agent` is a lightweight software for collecting and exposing system metrics 
+and performing QoS and SLA checks. We implement it in the Rust language with correctness,
+performance, and low system resource usage in mind.
+The `Gufo Agent` is built around four cornerstones:
 
-!!! WARNING: Work in a progress
+* Zeroconf configuration system allows plain YAML configuration files
+  in simple cases while allowing the flexible config resolution process 
+  for the centralized management in more complex ones.
+* The collector plugins, perform the measurements and collect the metrics.
+  The API is developer-friendly, enforces correctness, and allows a rapid development process.
+* Internal scheduler which runs the collectors as defined in the config.
+* The sender exposes the collected metrics. The openmetrics endpoint is available out-of-the-box,
+  allowing seamless Prometheus integration.
 
-We plan to cover following issues until first public release:
+The Rust language's unique properties allowed us to build an agent which can be used 
+not only for the trivial system metrics collection but for performing high-precision measurements
+as well.
 
-### Packaging
+## Compatibility
 
-* [ ] rpm
-* [ ] deb
-* [ ] windows
+Work in progress
 
-### Port collectors
-* [x] block_io
-* [x] cpu
-* [x] dns
-* [x] fs
-* [x] http
-* [x] memory
-* [ ] modbus_rtu
-* [ ] modbus_tcp
-* [x] network
-* [x] twamp_reflector
-* [x] twamp_sender
-* [x] uptime
+## Obtaining the Gufo Agent
+
+Work in progress
+
+## Available Collectors
+
+| Type              | Description                               |
+| ----------------- | ----------------------------------------- |
+| `block_io`        | Block I/O devices statistics              |
+| `cpu`             | CPU statistics                            |
+| `dns`             | Perform DNS request using system resolver |
+| `fs`              | File systems statistic                    |
+| `http`            | Perform HTTP request                      |
+| `memory`          | Host's memory statistics                  |
+| `network`         | Host's network interface statistics       |
+| `twamp_reflector` | TWAMP reflector for SLA probing           |
+| `twamp_sender`    | TWAMP sender for SLA probing              |
+| `uptime`          | System uptime                             |
 
 ## On Gufo Stack
 

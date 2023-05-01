@@ -44,15 +44,15 @@ labels are set as key-value pairs:
 
 ## Collectors
 
-| Type                                                         | Description                               |
-| ------------------------------------------------------------ | ----------------------------------------- |
-| [block_io](block_io.md)                                      | Block I/O devices statistics              |
-| [cpu](cpu.md)                                                | CPU statistics                            |
-| [dns](dns.md)                                                | Perform DNS request using system resolver |
-| [fs](fs.md)                                                  | File systems statistic                    |
-| [http](http.md)                                              | Perform HTTP request                      |
-| [memory](memory.md)                                          | Host's memory statistics                  |
-| [network](network.md)                                        | Host's network interface statistics       |
-| [twamp_reflector](twamp_reflector.md)                        | TWAMP reflector for SLA probing           |
-| [twamp_sender](twamp_sender.md) TWAMP sender for SLA probing |
-| [uptime](uptime.md)                                          | System uptime                             |
+| Type                                  | Description                               |
+| ------------------------------------- | ----------------------------------------- |
+| [block_io](block_io.md)               | Block I/O devices statistics              |
+| [cpu](cpu.md)                         | CPU statistics                            |
+| [dns](dns.md)                         | Perform DNS request using system resolver |
+| [fs](fs.md)                           | File systems statistic                    |
+| [http](http.md)                       | Perform HTTP request                      |
+| [memory](memory.md)                   | Host's memory statistics                  |
+| [network](network.md)                 | Host's network interface statistics       |
+| [twamp_reflector](twamp_reflector.md) | TWAMP reflector for SLA probing           |
+| [twamp_sender](twamp_sender.md)       | TWAMP sender for SLA probing              |
+| [uptime](uptime.md)                   | System uptime                             |
