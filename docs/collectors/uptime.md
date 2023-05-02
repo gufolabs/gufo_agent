@@ -7,7 +7,7 @@
 | Parameter  | Type    | Default | Description                                        |
 | ---------- | ------- | ------- | -------------------------------------------------- |
 | `id`       | String  |         | Collector's ID. Must be unique per agent instance. |
-| `type`     | String  |         | Must be `cpu`                                      |
+| `type`     | String  |         | Must be `uptime`                                   |
 | `interval` | Integer |         | Repetition interval in seconds                     |
 | `labels`   | Object  |         | Additional collector-level labels                  |
 

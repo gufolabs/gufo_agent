@@ -5,9 +5,9 @@
 ## Configuration
 
 | Parameter  | Type    | Default | Description                                        |
-|------------|---------|---------|----------------------------------------------------|
+| ---------- | ------- | ------- | -------------------------------------------------- |
 | `id`       | String  |         | Collector's ID. Must be unique per agent instance. |
-| `type`     | String  |         | Must be `block_io`                                 |
+| `type`     | String  |         | Must be `fs`                                       |
 | `interval` | Integer |         | Repetition interval in seconds                     |
 | `labels`   | Object  |         | Additional collector-level labels                  |
 
@@ -24,7 +24,7 @@ Config example:
 === "OpenMetrics"
 
   | Metric               | Metric Type | Labels      | Description                 |
-  |----------------------|-------------|-------------|-----------------------------|
+  | -------------------- | ----------- | ----------- | --------------------------- |
   | `fs_files`           | Gauge       | mount, type | Inodes used                 |
   | `fs_files_total`     | Gauge       | mount, type | Total inodes count          |
   | `fs_files_available` | Gauge       | mount, type | Inodes available            |
@@ -37,7 +37,7 @@ Config example:
 `fs` collector appends the following labels:
 
 | Label   | Description                    |
-|---------|--------------------------------|
+| ------- | ------------------------------ |
 | `mount` | File system mount point        |
 | `type`  | File system type (i.e. `ext4`) |
 

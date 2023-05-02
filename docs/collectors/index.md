@@ -53,6 +53,7 @@ labels are set as key-value pairs:
 | [http](http.md)                       | Perform HTTP request                      |
 | [memory](memory.md)                   | Host's memory statistics                  |
 | [network](network.md)                 | Host's network interface statistics       |
+| [sockets](sockets.md)                 | Host's sockets statistics                 |
 | [twamp_reflector](twamp_reflector.md) | TWAMP reflector for SLA probing           |
 | [twamp_sender](twamp_sender.md)       | TWAMP sender for SLA probing              |
 | [uptime](uptime.md)                   | System uptime                             |

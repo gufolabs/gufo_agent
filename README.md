@@ -51,6 +51,7 @@ Work in progress
 | `http`            | Perform HTTP request                      |
 | `memory`          | Host's memory statistics                  |
 | `network`         | Host's network interface statistics       |
+| `sockets`         | Host's sockets statistics                 |
 | `twamp_reflector` | TWAMP reflector for SLA probing           |
 | `twamp_sender`    | TWAMP sender for SLA probing              |
 | `uptime`          | System uptime                             |

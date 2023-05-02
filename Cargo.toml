@@ -16,6 +16,7 @@ members = [
   "collectors/http",
   "collectors/memory",
   "collectors/network",
+  "collectors/sockets",
   "collectors/twamp_reflector",
   "collectors/twamp_sender",
   "collectors/uptime",
