@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------
 
 use bytes::BytesMut;
-use common::{AgentError, Labels, Measure, Value};
+use common::{AgentError, Label, Labels, Measure, Value};
 use std::collections::{BTreeMap, HashMap};
 use std::fmt;
 use std::sync::Arc;
@@ -131,24 +131,22 @@ impl MetricsDb {
     pub async fn write_openmetrics(&self, out: &mut BytesMut) -> Result<(), AgentError> {
         let db = self.0.read().await;
         for (family, fv) in db.data.iter() {
+            fmt::write(out, format_args!("# HELP {} {}\n", family.name, fv.help,))?;
             fmt::write(
                 out,
-                format_args!("# HELP {}_{} {}\n", family.collector, family.name, fv.help,),
+                format_args!("# TYPE {} {}\n", family.name, fv.r#type.as_str(),),
             )?;
-            fmt::write(
-                out,
-                format_args!(
-                    "# TYPE {}_{} {}\n",
-                    family.collector,
-                    family.name,
-                    fv.r#type.as_str(),
-                ),
-            )?;
+            let collector_label = Labels::new(vec![Label::new("collector", family.collector)]);
             let mut items: Vec<OutputItem> = fv
                 .values
                 .iter()
                 .map(|(labels, value)| OutputItem {
-                    labels: Labels::merge_sort3(&db.labels, &value.collector_labels, labels),
+                    labels: Labels::merge_sort4(
+                        &db.labels,
+                        &collector_label,
+                        &value.collector_labels,
+                        labels,
+                    ),
                     value: value.value.to_string(),
                     ts: value.ts,
                 })
@@ -158,8 +156,7 @@ impl MetricsDb {
                 fmt::write(
                     out,
                     format_args!(
-                        "{}_{}{} {}{}\n",
-                        family.collector,
+                        "{}{} {}{}\n",
                         family.name,
                         if item.labels.is_empty() {
                             "".into()
@@ -181,8 +178,7 @@ impl MetricsDb {
     pub async fn to_openmetrics_string(&self) -> Result<String, AgentError> {
         let mut buf = BytesMut::with_capacity(16 * 1024);
         self.write_openmetrics(&mut buf).await?;
-        String::from_utf8(buf[..].to_vec())
-            .map_err(|e| AgentError::InternalError(e.to_string()))
+        String::from_utf8(buf[..].to_vec()).map_err(|e| AgentError::InternalError(e.to_string()))
     }
 }
 
