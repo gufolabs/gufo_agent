@@ -34,6 +34,8 @@ def define_env(env):
         with open(path) as f:
             data = f.read()
         collector = path.split(os.sep)[1]
+        if collector == "_template":
+            return
         for match in rx_counter.finditer(data):
             if match.group(4):
                 labels = [x.strip() for x in match.group(4).split(",") if x.strip()]
