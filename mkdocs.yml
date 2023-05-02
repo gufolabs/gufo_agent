@@ -24,6 +24,7 @@ nav:
       - twamp_reflector: collectors/twamp_reflector.md
       - twamp_sender: collectors/twamp_sender.md
       - uptime: collectors/uptime.md
+  - Metrics Reference: metrics.md
   - Developers' Guide:
       - Developer's Environment: environment.md
       - Building and Testing: testing.md
@@ -64,6 +65,8 @@ plugins:
   - literate-nav:
       nav_file: SUMMARY.md
   - section-index
+  - macros:
+      module_name: macros
 markdown_extensions:
   - toc:
       permalink: True

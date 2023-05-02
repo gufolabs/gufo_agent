@@ -35,7 +35,7 @@ Traffic models define the profile of outgoing packets and mimics the usage
 of the real-world traffic. The following traffic models are supported:
 
 * `g711` - G.711 codec.
-* `g729` - G.720 codec.
+* `g729` - G.729 codec.
 * `cbr` - Constant bitrate.
 * `imix` - IMIX profile.
 
