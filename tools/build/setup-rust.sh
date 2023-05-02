@@ -35,6 +35,9 @@ curl -s --tlsv1.2 https://sh.rustup.rs \
         -y --no-modify-path --profile minimal \
         --default-toolchain ${RUST_VERSION} \
         --default-host ${RUST_ARCH}
+# Add components
+rustup component add rustfmt
+rustup component add clippy
 # Check
 cargo --version
 rustc --version
