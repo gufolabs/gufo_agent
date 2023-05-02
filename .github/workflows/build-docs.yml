@@ -9,6 +9,7 @@ on:
       - ".requirements/docs.txt"
       - "mkdocs.yml"
       - "docs/**"
+      - "macros.py"
     branches:
       - master
 jobs:
