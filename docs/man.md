@@ -1,4 +1,4 @@
-# Agent Man Page
+# Gufo Agent Man Page
 
 ## Name
 

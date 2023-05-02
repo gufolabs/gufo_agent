@@ -20,6 +20,7 @@ nav:
       - http: collectors/http.md
       - memory: collectors/memory.md
       - network: collectors/network.md
+      - sockets: collectors/sockets.md
       - twamp_reflector: collectors/twamp_reflector.md
       - twamp_sender: collectors/twamp_sender.md
       - uptime: collectors/uptime.md

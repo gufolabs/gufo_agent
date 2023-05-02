@@ -40,6 +40,31 @@ Work in progress
 
 Work in progress
 
+## Running
+
+```
+Usage: gufo-agent [OPTIONS]
+
+Options:
+  -q, --quiet            
+  -v, --verbose...       
+  -k, --insecure         [env: GA_INSECURE=]
+  -c, --config <CONFIG>  [env: GA_CONFIG=]
+      --hostname <HOSTNAME>  [env: GA_HOSTNAME=]  
+      --list-collectors  
+      --dump-metrics     [env: GA_DUMP_METRICS=]
+  -h, --help             Print help
+  -V, --version          Print version
+```
+
+Example:
+
+```
+gufo-agent -vv --config=/etc/gufo-agent/config.yml
+```
+
+See "Gufo Agent Man Page" for details.
+
 ## Available Collectors
 
 | Type              | Description                               |
