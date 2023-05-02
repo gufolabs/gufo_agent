@@ -181,8 +181,8 @@ impl MetricsDb {
     pub async fn to_openmetrics_string(&self) -> Result<String, AgentError> {
         let mut buf = BytesMut::with_capacity(16 * 1024);
         self.write_openmetrics(&mut buf).await?;
-        Ok(String::from_utf8(buf[..].to_vec())
-            .map_err(|e| AgentError::InternalError(e.to_string()))?)
+        String::from_utf8(buf[..].to_vec())
+            .map_err(|e| AgentError::InternalError(e.to_string()))
     }
 }
 
