@@ -60,6 +60,7 @@ theme:
         name: Switch to dark mode
 watch:
   - docs/
+  - macros.py
 plugins:
   - search
   - literate-nav:

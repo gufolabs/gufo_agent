@@ -24,7 +24,7 @@ class Metric(object):
 
 
 rx_counter = re.compile(
-    r"^\s*(counter|gauge)!\(\s*(\S+)\s*,\s*\"([^\"]+)\"(\s*,.+?)?\);",
+    r"^\s*(counter|gauge|gauge_i|gauge_f)!\(\s*(\S+)\s*,\s*\"([^\"]+)\"(\s*,.+?)?\);",
     re.DOTALL | re.MULTILINE,
 )
 
@@ -44,7 +44,7 @@ def define_env(env):
             yield Metric(
                 name=match.group(2),
                 collector=collector,
-                type=match.group(1),
+                type=match.group(1).split("_")[0].capitalize(),
                 help=match.group(3),
                 labels=labels,
             )
@@ -64,6 +64,6 @@ def define_env(env):
         ]
         for m in sorted(iter_metrics(), key=operator.attrgetter("name")):
             r.append(
-                f"| {m.name} | {m.type.capitalize()} | [{m.collector}](collectors/{m.collector}.md) | {', '.join(m.labels)} | {m.help} |"
+                f"| {m.name} | {m.type} | [{m.collector}](collectors/{m.collector}.md) | {', '.join(m.labels)} | {m.help} |"
             )
         return "\n".join(r)
