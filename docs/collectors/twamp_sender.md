@@ -55,6 +55,8 @@ Config example:
     model: g711
 ```
 
+Selecting `g711` model enables [MOS calculation](#mos-calculation).
+
 ### g729
 
 `g729` traffic model mimics the VoIP RTP stream of the G.729 codec. It doesn't requre an additional
@@ -70,6 +72,8 @@ Config example:
     n_packets: 100
     model: g729
 ```
+
+Selecting `g729` model enables [MOS calculation](#mos-calculation).
 
 ### cbr
 
@@ -151,12 +155,14 @@ Config example:
 | `in_avg_delay_ns`  | Gauge | Average inbound delay in nanoseconds          |
 | `in_jitter_ns`     | Gauge | Jitter of the inbound delay in nanoseconds    |
 | `in_loss`          | Gauge | Packet loss in inbound direction              |
+| `in_mos`           | Gauge | eMOS for local end                            |
 | **Outbound**       |       |                                               |
 | `out_min_delay_ns` | Gauge | Minimum outbound delay in nanoseconds         |
 | `out_max_delay_ns` | Gauge | Maximum outbound delay in nanoseconds         |
 | `out_avg_delay_ns` | Gauge | Average outbound delay in nanoseconds         |
 | `out_jitter_ns`    | Gauge | Jitter of the outbound delay in nanoseconds   |
 | `out_loss`         | Gauge | Packet loss in outbound direction             |
+| `out_mos`          | Gauge | eMOS for remote end                           |
 | **Round-trip**     |       |                                               |
 | `rt_min_delay_ns`  | Gauge | Minimum round-trip delay in nanoseconds       |
 | `rt_max_delay_ns`  | Gauge | Maximum round-trip delay in nanoseconds       |
@@ -168,6 +174,19 @@ Config example:
 
 `twamp_sender` collector doesn't append its labels, though they can be configured
 via `labels` option.
+
+## MOS Calculation
+
+Gufo Agent automatically calculates the Mean-Opinion Score (MOS) for VoIP packet models.
+MOS calculated according to ITU-T G.107 recommendations using default conditions.
+
+MOS calculated for both directions:
+
+* `in_mos` is for inbound traffic and means the voice quality expectation for the user
+  at the TWAMP sender's side.
+* `out_mos` is for outbound traffic and shows the voice quality expectation from the user
+  at the TWAMP reflector's side.
+
 
 ## Configuring Reflectors
 
@@ -268,6 +287,9 @@ ip sla responder twamp
     # HELP twamp_sender_in_min_delay Minimum inbound delay in nanoseconds
     # TYPE twamp_sender_in_min_delay gauge
     twamp_sender_in_min_delay 18112 1682595808
+    # HELP in_mos eMOS for local end
+    # TYPE in_mos gauge
+    in_mos 4.4043684 1682595808    
     # HELP twamp_sender_out_avg_delay Average outbound delay in nanoseconds
     # TYPE twamp_sender_out_avg_delay gauge
     twamp_sender_out_avg_delay 90004 1682595808
@@ -283,8 +305,11 @@ ip sla responder twamp
     # HELP twamp_sender_out_min_delay Minimum outbound delay in nanoseconds
     # TYPE twamp_sender_out_min_delay gauge
     twamp_sender_out_min_delay 29212 1682595808
+    # HELP out_mos eMOS for remote end
+    # TYPE out_mos gauge
+    out_mos 4.4043336 1682595808    
     # HELP twamp_sender_rt_avg_delay Average round-trip delay in nanoseconds
-    # TYPE twamp_sender_rt_avg_delay gauge
+    # TYPE twamp_sender_rt_avg_delay gauge    
     twamp_sender_rt_avg_delay 127884 1682595808
     # HELP twamp_sender_rt_jitter Jitter of the round-trip delay in nanoseconds
     # TYPE twamp_sender_rt_jitter gauge
