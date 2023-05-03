@@ -12,7 +12,7 @@ pub(crate) mod resolver;
 pub(crate) mod schedule;
 pub(crate) mod sender;
 
-pub use agent::{Agent, AgentBuilder};
+pub use crate::agent::{Agent, AgentBuilder};
 pub(crate) use config::{CollectorConfig, Config, SenderConfig};
 pub(crate) use mdb::{MetricsData, MetricsDb};
 pub use registry::Collectors;

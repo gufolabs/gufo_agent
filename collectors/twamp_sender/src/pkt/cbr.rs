@@ -12,9 +12,7 @@ use std::hash::Hash;
 
 #[derive(Deserialize, Debug, Clone, Hash)]
 pub struct Config {
-    #[serde(rename = "model_bandwidth")]
     pub bandwidth: usize,
-    #[serde(rename = "model_size")]
     pub size: usize,
 }
 
@@ -59,7 +57,7 @@ mod tests {
         reflector: "127.0.0.1"
         n_packets: 100
         model: cbr
-        badwidth: 8000000
+        bandwidth: 8000000
         size: 100
         "###;
         let cfg = serde_yaml::from_str::<Config>(yaml).unwrap();

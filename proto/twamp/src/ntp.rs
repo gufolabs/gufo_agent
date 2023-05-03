@@ -56,7 +56,7 @@ mod tests {
     use chrono::{Duration, TimeZone, Utc};
 
     fn get_utc_timestamp() -> UtcDateTime {
-        Utc.with_ymd_and_hms(2021, 2, 12, 10, 0, 0).unwrap()
+        Utc.timestamp_millis_opt(1613124000500).unwrap()
     }
 
     fn get_ntp_timestamp() -> NtpTimeStamp {
