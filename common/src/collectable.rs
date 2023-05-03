@@ -11,14 +11,16 @@ pub enum Value {
     Counter(u64),
     Gauge(u64),
     GaugeI(i64),
+    GaugeF(f32),
 }
 
 impl ToString for Value {
     fn to_string(&self) -> String {
         match self {
-            Value::Counter(x) => format!("{}", x),
-            Value::Gauge(x) => format!("{}", x),
-            Value::GaugeI(x) => format!("{}", x),
+            Value::Counter(x) => x.to_string(),
+            Value::Gauge(x) => x.to_string(),
+            Value::GaugeI(x) => x.to_string(),
+            Value::GaugeF(x) => x.to_string(),
         }
     }
 }

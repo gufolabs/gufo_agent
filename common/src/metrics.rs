@@ -132,7 +132,7 @@ macro_rules! gauge {
     };
 }
 
-// Define siged gauge
+// Define signed gauge
 // Example:
 // `gauge_i!(my_gauge, "Help string");`
 // expands to
@@ -184,6 +184,68 @@ macro_rules! gauge_i {
                     name: stringify!($name),
                     help: $help,
                     value: common::Value::GaugeI(v),
+                    labels: common::Labels::new(
+                        vec![
+                            $(common::Label::new(stringify!($label), [< l_ $label >].clone()),)+
+                        ]
+                    ),
+                }
+            }
+        }
+    };
+}
+// Define float gauge
+// Example:
+// `gauge_f!(my_gauge, "Help string");`
+// expands to
+// ```
+// fn my_gauge(v: f32) -> Measure {
+//     Measure {
+//         name: "requests_total",
+//         help: "Total DNS requests performed",
+//         value: Value::GaugeF(v),
+//         labels: Labels::default()
+//     }
+// }
+// ```
+// Example:
+// `gauge_f!(my_gauge, "Help string", query);`
+// expands to
+// ```
+// fn my_gauge<K1: ToString>(v: f32, l_query: K1) -> Measure {
+//     Measure {
+//         name: "requests_total",
+//         help: "Total DNS requests performed",
+//         value: Value::GaugeF(v),
+//         labels: vec![Labels::new("query", l_query)]
+//     }
+// }
+// ```
+#[macro_export]
+macro_rules! gauge_f {
+    // Without labels
+    ($name:ident, $help:expr) => {
+        fn $name(v: f32) -> Measure {
+            Measure {
+                name: stringify!($name),
+                help: $help,
+                value: common::Value::GaugeF(v),
+                labels: common::Labels::default(),
+            }
+        }
+    };
+    // With labels
+    ($name:ident, $help:literal, $($label:ident),+) => {
+        common::metrics::paste! {
+            fn $name<$([< T $label >]: ToString),+>(
+                v: f32, $([< l_ $label>]: [< T $label >]),+
+            ) -> Measure
+            where $([< T $label >]: Clone),+
+            {
+                Measure {
+                    name: stringify!($name),
+                    help: $help,
+                    value: common::Value::GaugeF(v),
                     labels: common::Labels::new(
                         vec![
                             $(common::Label::new(stringify!($label), [< l_ $label >].clone()),)+
