@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------
 
 use async_trait::async_trait;
-use common::{gauge, AgentError, Collectable, Measure};
+use common::{gauge_f, AgentError, Collectable, Measure};
 use serde::Deserialize;
 use systemstat::{Platform, System};
 use tokio::time::{sleep, Duration};
@@ -18,13 +18,13 @@ pub struct Config;
 pub struct Collector;
 
 // Generated metrics
-gauge!(user, "CPU User time, %", cpu);
-gauge!(nice, "CPU Nice time, %", cpu);
-gauge!(system, "CPU System time, %", cpu);
-gauge!(interrupt, "CPU Interrupt time, %", cpu);
-gauge!(idle, "CPU Idle time, %", cpu);
+gauge_f!(cpu_user, "CPU User time, %", cpu);
+gauge_f!(cpu_nice, "CPU Nice time, %", cpu);
+gauge_f!(cpu_system, "CPU System time, %", cpu);
+gauge_f!(cpu_interrupt, "CPU Interrupt time, %", cpu);
+gauge_f!(cpu_idle, "CPU Idle time, %", cpu);
 #[cfg(target_os = "linux")]
-gauge!(iowait, "CPU IOwait time, %", cpu);
+gauge_f!(cpu_iowait, "CPU IOwait time, %", cpu);
 
 // Instantiate collector from given config
 impl TryFrom<Config> for Collector {
@@ -53,15 +53,15 @@ impl Collectable for Collector {
             .map_err(|e| AgentError::InternalError(e.to_string()))?;
         let mut r = Vec::with_capacity(stats.len() * 5);
         for (i, s) in stats.iter().enumerate() {
-            let cpu = format!("{}", i);
-            r.push(user((s.user * 100.0) as u64, &cpu));
-            r.push(nice((s.nice * 100.0) as u64, &cpu));
-            r.push(system((s.system * 100.0) as u64, &cpu));
-            r.push(interrupt((s.interrupt * 100.0) as u64, &cpu));
-            r.push(idle((s.idle * 100.0) as u64, &cpu));
+            let cpu = i.to_string();
+            r.push(cpu_user(s.user * 100.0, &cpu));
+            r.push(cpu_nice(s.nice * 100.0, &cpu));
+            r.push(cpu_system(s.system * 100.0, &cpu));
+            r.push(cpu_interrupt(s.interrupt * 100.0, &cpu));
+            r.push(cpu_idle(s.idle * 100.0, &cpu));
             // Platform-dependent metrics
             #[cfg(target_os = "linux")]
-            r.push(iowait((s.platform.iowait * 100.0) as u64, &cpu));
+            r.push(cpu_iowait(s.platform.iowait * 100.0, &cpu));
         }
         // Push result
         Ok(r)
