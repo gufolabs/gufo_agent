@@ -10,7 +10,7 @@ use crate::pkt::{GetPacket, PacketModel};
 use async_trait::async_trait;
 use bytes::{Bytes, BytesMut};
 use chrono::Utc;
-use common::{counter, gauge, AgentError, Collectable, Measure, Timing};
+use common::{counter, gauge, gauge_f, AgentError, Collectable, Measure, Timing};
 use connection::Connection;
 use frame::{FrameReader, FrameWriter};
 use serde::Deserialize;
@@ -70,12 +70,14 @@ gauge!(in_max_delay, "Maximum inbound delay in nanoseconds");
 gauge!(in_avg_delay, "Average inbound delay in nanoseconds");
 gauge!(in_jitter, "itter of the inbound delay in nanoseconds");
 gauge!(in_loss, "Packet loss in inbound direction");
+gauge_f!(in_mos, "eMOS for local end");
 // Outbound
 gauge!(out_min_delay, "Minimum outbound delay in nanoseconds");
 gauge!(out_max_delay, "Maximum outbound delay in nanoseconds");
 gauge!(out_avg_delay, "Average outbound delay in nanoseconds");
 gauge!(out_jitter, "Jitter of the outbound delay in nanoseconds");
 gauge!(out_loss, "Packet loss in outbound direction");
+gauge_f!(out_mos, "eMOS for remote end");
 // Round-trip
 gauge!(rt_min_delay, "Minimum round-trip delay in nanoseconds");
 gauge!(rt_max_delay, "Maximum round-trip delay in nanoseconds");
@@ -647,7 +649,7 @@ impl TestSession {
             jitter = Self::humanize_ns(r_stats.rt_timing.jitter_ns),
             loss = (r_stats.rt_loss as f64) * 100.0 / total,
         );
-        vec![
+        let mut r = vec![
             tx_packets(s_stats.pkt_sent),
             rx_packets(r_stats.pkt_received),
             tx_bytes(s_stats.out_octets),
@@ -675,7 +677,21 @@ impl TestSession {
             rt_avg_delay(r_stats.rt_timing.avg_ns),
             rt_jitter(r_stats.rt_timing.jitter_ns),
             rt_loss(r_stats.rt_loss),
-        ]
+        ];
+        // Apply MOS if available
+        if let Some(emodel) = self.model.get_emodel() {
+            r.push(in_mos(emodel.get_mos(
+                (r_stats.in_loss as f32) * 100.0 / total as f32,
+                r_stats.in_timing.avg_ns as f32 / 1_000_000.0,
+                r_stats.in_timing.jitter_ns as f32 / 1_000_000.0,
+            )));
+            r.push(out_mos(emodel.get_mos(
+                (r_stats.out_loss as f32) * 100.0 / total as f32,
+                r_stats.out_timing.avg_ns as f32 / 1_000_000.0,
+                r_stats.out_timing.jitter_ns as f32 / 1_000_000.0,
+            )));
+        }
+        r
     }
 }
 

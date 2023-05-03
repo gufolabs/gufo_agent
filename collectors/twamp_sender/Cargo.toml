@@ -9,6 +9,8 @@ bytes = "1.4"
 chrono = "0.4"
 common = {path = "../../common"}
 connection = {path = "../../proto/connection"}
+emodel = {path = "../../proto/emodel"}
+enum_dispatch = "0.3"
 frame = {path = "../../proto/frame"}
 log = "0.4"
 serde = {version = "1.0", features = ["derive"]}

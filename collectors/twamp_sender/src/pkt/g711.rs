@@ -7,6 +7,7 @@
 
 use super::{GetPacket, Packet, NS};
 use common::AgentError;
+use emodel::{CodecEModel, G711_CODEC_EMODEL};
 use serde::Deserialize;
 use std::convert::TryFrom;
 use std::hash::Hash;
@@ -34,6 +35,9 @@ impl GetPacket for G711Model {
             size: 20 + 8 + 12 + 160,
             next_ns: NS / 50,
         }
+    }
+    fn get_emodel(&self) -> Option<&'static CodecEModel> {
+        Some(&G711_CODEC_EMODEL)
     }
 }
 

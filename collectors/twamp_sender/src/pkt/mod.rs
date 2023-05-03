@@ -11,6 +11,8 @@ mod imix;
 use super::Config;
 use cbr::CbrModel;
 use common::AgentError;
+use emodel::CodecEModel;
+use enum_dispatch::enum_dispatch;
 use g711::G711Model;
 use g729::G729Model;
 use imix::ImixModel;
@@ -27,6 +29,7 @@ pub struct Packet {
 pub(crate) const NS: u64 = 1_000_000_000;
 
 #[derive(Clone)]
+#[enum_dispatch(GetPacket)]
 pub enum PacketModel {
     G711(G711Model),
     G729(G729Model),
@@ -34,18 +37,11 @@ pub enum PacketModel {
     Imix(ImixModel),
 }
 
+#[enum_dispatch]
 pub trait GetPacket {
     fn get_packet(&self, seq: u64) -> Packet;
-}
-
-impl GetPacket for PacketModel {
-    fn get_packet(&self, seq: u64) -> Packet {
-        match self {
-            PacketModel::G711(model) => model.get_packet(seq),
-            PacketModel::G729(model) => model.get_packet(seq),
-            PacketModel::Cbr(model) => model.get_packet(seq),
-            PacketModel::Imix(model) => model.get_packet(seq),
-        }
+    fn get_emodel(&self) -> Option<&'static CodecEModel> {
+        None
     }
 }
 

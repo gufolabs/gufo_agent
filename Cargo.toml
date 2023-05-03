@@ -5,6 +5,7 @@ members = [
   "common",
   "main",
   "proto/connection",
+  "proto/emodel",
   "proto/frame",
   "proto/tos",
   "proto/twamp",
