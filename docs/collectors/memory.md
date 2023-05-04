@@ -23,78 +23,78 @@ Config example:
 
 === "OpenMetrics"
 
-  | Metric            | Metric Type | Platform | Description                                                                                                                |
-  | ----------------- | ----------- | -------- | -------------------------------------------------------------------------------------------------------------------------- |
-  | total             | Gauge       |          | Total memory in bytes                                                                                                      |
-  | free              | Gauge       |          | Free memory in bytes                                                                                                       |
-  | active            | Gauge       | Linux    | active,"Active memory, bytes                                                                                               |
-  | active_anon       | Gauge       | Linux    | active_anon,"Active anonymous memory, bytes                                                                                |
-  | active_file       | Gauge       | Linux    | active_file,"Active pagecache memory, bytes                                                                                |
-  | anon_huge_pages   | Gauge       | Linux    | anon_huge_pages,"Non-file backed huge pages mapped into userspace page tables                                              |
-  | anon_pages        | Gauge       | Linux    | anon_pages,"Non-file backed pages mapped into userspace page tables                                                        |
-  | bounce            | Gauge       | Linux    | bounce,"Memory used for block device 'bounce buffers'                                                                      |
-  | buffers           | Gauge       | Linux    | buffers,"Memory in buffer cache                                                                                            |
-  | cached            | Gauge       | Linux    | cached,"Memory in the pagecache                                                                                            |
-  | commit_limit      | Gauge       | Linux    | commit_limit,"Total amount of memory currently available to be allocated on the system                                     |
-  | committed_as      | Gauge       | Linux    | committed_as," The amount of memory presently allocated on the system                                                      |
-  | direct_map_1g     | Gauge       | Linux    | direct_map_1g,"The amount of memory being mapped into the kernel space with 1GB size pages                                 |
-  | direct_map_2m     | Gauge       | Linux    | direct_map_2m,"The amount of memory being mapped into the kernel space with 2MB size pages                                 |
-  | direct_map_4k     | Gauge       | Linux    | direct_map_4k,"The amount of memory being mapped into the kernel space with 4k size pages                                  |
-  | dirty             | Gauge       | Linux    | dirty,"Memory waiting to be written back to disk                                                                           |
-  | file_huge_pages   | Gauge       | Linux    | file_huge_pages,"Memory used for filesystem data (page cache) allocated with huge pages                                    |
-  | file_pmd_mapped   | Gauge       | Linux    | file_pmd_mapped,"Page cache mapped into userspace with huge pages                                                          |
-  | huge_page_size    | Gauge       | Linux    | huge_page_size,"default hugepage size (in kB)                                                                              |
-  | huge_tlb          | Gauge       | Linux    | huge_tlb,"total amount of memory (in kB), consumed by huge pages of all sizes                                              |
-  | inactive          | Gauge       | Linux    | inactive,"Memory which has been less recently used                                                                         |
-  | inactive_anon     | Gauge       | Linux    | inactive_anon,"Anonymous memory that has not been used recently and can be swapped out                                     |
-  | inactive_file     | Gauge       | Linux    | inactive_file,"Pagecache memory that can be reclaimed without huge performance impact                                      |
-  | k_reclaimable     | Gauge       | Linux    | k_reclaimable,"Kernel allocations that the kernel will attempt to reclaim under memory pressure                            |
-  | kernel_stack      | Gauge       | Linux    | kernel_stack,"Memory consumed by the kernel stacks of all tasks                                                            |
-  | mapped            | Gauge       | Linux    | mapped,"files which have been mmaped, such as libraries                                                                    |
-  | mem_available     | Gauge       | Linux    | mem_available,"estimate of how much memory is available for starting new applications                                      |
-  | mem_free          | Gauge       | Linux    | mem_free,"Total free RAM                                                                                                   |
-  | mem_total         | Gauge       | Linux    | mem_total,"Total usable RAM                                                                                                |
-  | m_locked          | Gauge       | Linux    | m_locked,"Memory locked with mlock()                                                                                       |
-  | nfs_unstable      | Gauge       | Linux    | nfs_unstable,"Always zero. Previous counted pages which had been written to the server, but has not been commit to storage |
-  | page_tables       | Gauge       | Linux    | page_tables,"Memory consumed by userspace page tables                                                                      |
-  | per_cpu           | Gauge       | Linux    | per_cpu,"Memory allocated to the percpu allocator used to back percpu allocations. This stat excludes the cost a           |
-  | s_reclaimable     | Gauge       | Linux    | s_reclaimable,"Part of Slab, that might be reclaimed, such as caches                                                       |
-  | s_unreclaim       | Gauge       | Linux    | s_unreclaim,"Part of Slab, that cannot be reclaimed on memory pressure                                                     |
-  | sh_mem            | Gauge       | Linux    | sh_mem,"Total memory used by shared memory (shmem) and tmpfs                                                               |
-  | sh_mem_huge_pages | Gauge       | Linux    | sh_mem_huge_pages,"Memory used by shared memory (shmem) and tmpfs allocated with huge pages                                |
-  | sh_mem_pmd_mapped | Gauge       | Linux    | sh_mem_pmd_mapped,"Shared memory mapped into userspace with huge pages                                                     |
-  | slab              | Gauge       | Linux    | slab,"in-kernel data structures cache                                                                                      |
-  | swap_cached       | Gauge       | Linux    | swap_cached,"Memory that once was swapped out, is swapped back in but still also is in the swapfile                        |
-  | swap_free         | Gauge       | Linux    | swap_free,"Memory which has been evicted from RAM, and is temporarily on the disk                                          |
-  | swap_total        | Gauge       | Linux    | swap_total,"total amount of swap space available                                                                           |
-  | unevictable       | Gauge       | Linux    | unevictable,"Memory allocated for userspace which cannot be reclaimed                                                      |
-  | vmalloc_chunk     | Gauge       | Linux    | vmalloc_chunk,"largest contiguous block of vmalloc area which is free                                                      |
-  | vmalloc_total     | Gauge       | Linux    | vmalloc_total,"total size of vmalloc virtual address space                                                                 |
-  | vmalloc_used      | Gauge       | Linux    | vmalloc_used,"amount of vmalloc area which is used                                                                         |
-  | writeback         | Gauge       | Linux    | writeback,"Memory which is actively being written back to the disk                                                         |
-  | writeback_tmp     | Gauge       | Linux    | writeback_tmp,"Memory used by FUSE for temporary writeback buffers                                                         |
-  | load              | Gauge       | Windows  | ???                                                                                                                        |
-  | total_phys        | Gauge       | Windows  | ???                                                                                                                        |
-  | avail_phys        | Gauge       | Windows  | ???                                                                                                                        |
-  | total_pagefile    | Gauge       | Windows  | ???                                                                                                                        |
-  | avail_pagefile    | Gauge       | Windows  | ???                                                                                                                        |
-  | total_virt        | Gauge       | Windows  | ???                                                                                                                        |
-  | avail_virt        | Gauge       | Windows  | ???                                                                                                                        |
-  | avail_ext         | Gauge       | Windows  | ???                                                                                                                        |
-  | active            | Gauge       | FreeBSD  | ???                                                                                                                        |
-  | inactive          | Gauge       | FreeBSD  | ???                                                                                                                        |
-  | wired             | Gauge       | FreeBSD  | ???                                                                                                                        |
-  | cache             | Gauge       | FreeBSD  | ???                                                                                                                        |
-  | zfs_arc           | Gauge       | FreeBSD  | ???                                                                                                                        |
-  | active            | Gauge       | OpenBSD  | ???                                                                                                                        |
-  | inactive          | Gauge       | OpenBSD  | ???                                                                                                                        |
-  | wired             | Gauge       | OpenBSD  | ???                                                                                                                        |
-  | cache             | Gauge       | OpenBSD  | ???                                                                                                                        |
-  | paging            | Gauge       | OpenBSD  | ???                                                                                                                        |
-  | active            | Gauge       | OS X     | ???                                                                                                                        |
-  | inactive          | Gauge       | OS X     | ???                                                                                                                        |
-  | wired             | Gauge       | OS X     | ???                                                                                                                        |
-  | cache             | Gauge       | OS X     | ???                                                                                                                        |
+  | Metric                | Metric Type | Platform | Description                                                                                                  |
+  | --------------------- | ----------- | -------- | ------------------------------------------------------------------------------------------------------------ |
+  | mem_total             | Gauge       |          | Total mem ory in bytes                                                                                       |
+  | mem_free              | Gauge       |          | Free memory in bytes                                                                                         |
+  | mem_active            | Gauge       | Linux    | Active memory, bytes                                                                                         |
+  | mem_active_anon       | Gauge       | Linux    | Active anonymous memory, bytes                                                                               |
+  | mem_active_file       | Gauge       | Linux    | Active pagecache memory, bytes                                                                               |
+  | mem_anon_huge_pages   | Gauge       | Linux    | Non-file backed huge pages mapped into userspace page tables                                                 |
+  | mem_anon_pages        | Gauge       | Linux    | Non-file backed pages mapped into userspace page tables                                                      |
+  | mem_bounce            | Gauge       | Linux    | Memory used for block device 'bounce buffers'                                                                |
+  | mem_buffers           | Gauge       | Linux    | Memory in buffer cache                                                                                       |
+  | mem_cached            | Gauge       | Linux    | Memory in the pagecache                                                                                      |
+  | mem_commit_limit      | Gauge       | Linux    | Total amount of memory currently available to be allocated on the system                                     |
+  | mem_committed_as      | Gauge       | Linux    | The amount of memory presently allocated on the system                                                       |
+  | mem_direct_map_1g     | Gauge       | Linux    | The amount of memory being mapped into the kernel space with 1GB size pages                                  |
+  | mem_direct_map_2m     | Gauge       | Linux    | The amount of memory being mapped into the kernel space with 2MB size pages                                  |
+  | mem_direct_map_4k     | Gauge       | Linux    | The amount of memory being mapped into the kernel space with 4k size pages                                   |
+  | mem_dirty             | Gauge       | Linux    | Memory waiting to be written back to disk                                                                    |
+  | mem_file_huge_pages   | Gauge       | Linux    | Memory used for filesystem data (page cache) allocated with huge pages                                       |
+  | mem_file_pmd_mapped   | Gauge       | Linux    | Page cache mapped into userspace with huge pages                                                             |
+  | mem_huge_page_size    | Gauge       | Linux    | default hugepage size (in kB)                                                                                |
+  | mem_huge_tlb          | Gauge       | Linux    | total amount of memory (in kB), consumed by huge pages of all sizes                                          |
+  | mem_inactive          | Gauge       | Linux    | Memory which has been less recently used                                                                     |
+  | mem_inactive_anon     | Gauge       | Linux    | Anonymous memory that has not been used recently and can be swapped out                                      |
+  | mem_inactive_file     | Gauge       | Linux    | Pagecache memory that can be reclaimed without huge performance impact                                       |
+  | mem_k_reclaimable     | Gauge       | Linux    | Kernel allocations that the kernel will attempt to reclaim under memory pressure                             |
+  | mem_kernel_stack      | Gauge       | Linux    | Memory consumed by the kernel stacks of all tasks                                                            |
+  | mem_mapped            | Gauge       | Linux    | files which have been mmaped, such as libraries                                                              |
+  | mem_mem_available     | Gauge       | Linux    | estimate of how much memory is available for starting new applications                                       |
+  | mem_mem_free          | Gauge       | Linux    | Total free RAM                                                                                               |
+  | mem_mem_total         | Gauge       | Linux    | Total usable RAM                                                                                             |
+  | mem_m_locked          | Gauge       | Linux    | Memory locked with mlock()                                                                                   |
+  | mem_nfs_unstable      | Gauge       | Linux    | Always zero. Previous counted pages which had been written to the server, but has not been commit to storage |
+  | mem_page_tables       | Gauge       | Linux    | Memory consumed by userspace page tables                                                                     |
+  | mem_per_cpu           | Gauge       | Linux    | Memory allocated to the percpu allocator used to back percpu allocations. This stat excludes the cost a      |
+  | mem_s_reclaimable     | Gauge       | Linux    | Part of Slab, that might be reclaimed, such as caches                                                        |
+  | mem_s_unreclaim       | Gauge       | Linux    | Part of Slab, that cannot be reclaimed on memory pressure                                                    |
+  | mem_sh_mem            | Gauge       | Linux    | Total memory used by shared memory (shmem) and tmpfs                                                         |
+  | mem_sh_mem_huge_pages | Gauge       | Linux    | Memory used by shared memory (shmem) and tmpfs allocated with huge pages                                     |
+  | mem_sh_mem_pmd_mapped | Gauge       | Linux    | Shared memory mapped into userspace with huge pages                                                          |
+  | mem_slab              | Gauge       | Linux    | in-kernel data structures cache                                                                              |
+  | swap_cached           | Gauge       | Linux    | Memory that once was swapped out, is swapped back in but still also is in the swapfile                       |
+  | swap_free             | Gauge       | Linux    | Memory which has been evicted from RAM, and is temporarily on the disk                                       |
+  | swap_total            | Gauge       | Linux    | total amount of swap space available                                                                         |
+  | mem_unevictable       | Gauge       | Linux    | Memory allocated for userspace which cannot be reclaimed                                                     |
+  | mem_vmalloc_chunk     | Gauge       | Linux    | largest contiguous block of vmalloc area which is free                                                       |
+  | mem_vmalloc_total     | Gauge       | Linux    | total size of vmalloc virtual address space                                                                  |
+  | mem_vmalloc_used      | Gauge       | Linux    | amount of vmalloc area which is used                                                                         |
+  | mem_writeback         | Gauge       | Linux    | Memory which is actively being written back to the disk                                                      |
+  | mem_writeback_tmp     | Gauge       | Linux    | Memory used by FUSE for temporary writeback buffers                                                          |
+  | mem_load              | Gauge       | Windows  | ???                                                                                                          |
+  | mem_total_phys        | Gauge       | Windows  | ???                                                                                                          |
+  | mem_avail_phys        | Gauge       | Windows  | ???                                                                                                          |
+  | mem_total_pagefile    | Gauge       | Windows  | ???                                                                                                          |
+  | mem_avail_pagefile    | Gauge       | Windows  | ???                                                                                                          |
+  | mem_total_virt        | Gauge       | Windows  | ???                                                                                                          |
+  | mem_avail_virt        | Gauge       | Windows  | ???                                                                                                          |
+  | mem_avail_ext         | Gauge       | Windows  | ???                                                                                                          |
+  | mem_active            | Gauge       | FreeBSD  | ???                                                                                                          |
+  | mem_inactive          | Gauge       | FreeBSD  | ???                                                                                                          |
+  | mem_wired             | Gauge       | FreeBSD  | ???                                                                                                          |
+  | mem_cache             | Gauge       | FreeBSD  | ???                                                                                                          |
+  | mem_zfs_arc           | Gauge       | FreeBSD  | ???                                                                                                          |
+  | mem_active            | Gauge       | OpenBSD  | ???                                                                                                          |
+  | mem_inactive          | Gauge       | OpenBSD  | ???                                                                                                          |
+  | mem_wired             | Gauge       | OpenBSD  | ???                                                                                                          |
+  | mem_cache             | Gauge       | OpenBSD  | ???                                                                                                          |
+  | mem_paging            | Gauge       | OpenBSD  | ???                                                                                                          |
+  | mem_active            | Gauge       | OS X     | ???                                                                                                          |
+  | mem_inactive          | Gauge       | OS X     | ???                                                                                                          |
+  | mem_wired             | Gauge       | OS X     | ???                                                                                                          |
+  | mem_cache             | Gauge       | OS X     | ???                                                                                                          |
 
 ## Labels
 

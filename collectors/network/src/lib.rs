@@ -17,12 +17,12 @@ pub struct Config;
 pub struct Collector;
 
 // Generated metrics
-counter!(rx_octets, "Total number of octets received", iface);
-counter!(tx_octets, "Total number of octets sent", iface);
-counter!(rx_packets, "Total number of packets received", iface);
-counter!(tx_packets, "Total number of packets sent", iface);
-counter!(rx_errors, "Total number of receive errors", iface);
-counter!(tx_errors, "Total number of transmit errors", iface);
+counter!(net_rx_octets, "Total number of octets received", iface);
+counter!(net_tx_octets, "Total number of octets sent", iface);
+counter!(net_rx_packets, "Total number of packets received", iface);
+counter!(net_tx_packets, "Total number of packets sent", iface);
+counter!(net_rx_errors, "Total number of receive errors", iface);
+counter!(net_tx_errors, "Total number of transmit errors", iface);
 
 // Instantiate collector from given config
 impl TryFrom<Config> for Collector {
@@ -50,12 +50,12 @@ impl Collectable for Collector {
             let stats = sys
                 .network_stats(&iface.name)
                 .map_err(|e| AgentError::InternalError(e.to_string()))?;
-            r.push(rx_octets(stats.rx_bytes.as_u64(), &iface.name));
-            r.push(tx_octets(stats.tx_bytes.as_u64(), &iface.name));
-            r.push(rx_packets(stats.rx_packets, &iface.name));
-            r.push(tx_packets(stats.tx_packets, &iface.name));
-            r.push(rx_errors(stats.rx_errors, &iface.name));
-            r.push(tx_errors(stats.tx_errors, &iface.name));
+            r.push(net_rx_octets(stats.rx_bytes.as_u64(), &iface.name));
+            r.push(net_tx_octets(stats.tx_bytes.as_u64(), &iface.name));
+            r.push(net_rx_packets(stats.rx_packets, &iface.name));
+            r.push(net_tx_packets(stats.tx_packets, &iface.name));
+            r.push(net_rx_errors(stats.rx_errors, &iface.name));
+            r.push(net_tx_errors(stats.tx_errors, &iface.name));
         }
         // Push result
         Ok(r)
