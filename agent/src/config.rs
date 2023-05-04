@@ -4,11 +4,11 @@
 // Copyright (C) 2021-2023, Gufo Labs
 // --------------------------------------------------------------------
 use common::LabelsConfig;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Serialize)]
 pub struct Config {
     #[serde(rename = "$version")]
     pub version: String,
@@ -19,7 +19,7 @@ pub struct Config {
     pub collectors: Vec<CollectorConfig>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Serialize)]
 pub struct SenderConfig {
     #[serde(default = "default_openmetrics")]
     pub r#type: String,
@@ -34,13 +34,14 @@ pub struct SenderConfig {
     // auth
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct CollectorConfig {
     pub id: String,
     pub r#type: String,
     pub interval: u64,
     #[serde(default)]
     pub disabled: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub labels: LabelsConfig,
     #[serde(flatten)]
     pub config: serde_yaml::Value,

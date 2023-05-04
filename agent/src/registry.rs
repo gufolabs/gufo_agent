@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------
 
 use crate::config::CollectorConfig;
-use common::{AgentError, Collectable, Measure};
+use common::{AgentError, Collectable, ConfigDiscoveryOpts, ConfigItem, Measure};
 use serde::Deserialize;
 
 pub enum Collectors {
@@ -149,5 +149,85 @@ impl Collectors {
             "uptime".to_string(),
             // @@@}}}
         ]
+    }
+    pub fn discover_config(
+        opts: &ConfigDiscoveryOpts,
+    ) -> Result<Vec<(&'static str, Vec<ConfigItem>)>, AgentError> {
+        let mut r = Vec::new();
+        // @@@{{{
+        // | if !opts.is_disabled("{name}") {
+        // |     let x = {name}::Collector::discover_config(opts)?;
+        // |     if !x.is_empty() {
+        // |         r.push(({name}::Collector::get_name(), x));
+        // |     }
+        // | }
+        if !opts.is_disabled("block_io") {
+            let x = block_io::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((block_io::Collector::get_name(), x));
+            }
+        }
+        if !opts.is_disabled("cpu") {
+            let x = cpu::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((cpu::Collector::get_name(), x));
+            }
+        }
+        if !opts.is_disabled("dns") {
+            let x = dns::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((dns::Collector::get_name(), x));
+            }
+        }
+        if !opts.is_disabled("fs") {
+            let x = fs::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((fs::Collector::get_name(), x));
+            }
+        }
+        if !opts.is_disabled("http") {
+            let x = http::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((http::Collector::get_name(), x));
+            }
+        }
+        if !opts.is_disabled("memory") {
+            let x = memory::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((memory::Collector::get_name(), x));
+            }
+        }
+        if !opts.is_disabled("network") {
+            let x = network::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((network::Collector::get_name(), x));
+            }
+        }
+        if !opts.is_disabled("sockets") {
+            let x = sockets::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((sockets::Collector::get_name(), x));
+            }
+        }
+        if !opts.is_disabled("twamp_reflector") {
+            let x = twamp_reflector::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((twamp_reflector::Collector::get_name(), x));
+            }
+        }
+        if !opts.is_disabled("twamp_sender") {
+            let x = twamp_sender::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((twamp_sender::Collector::get_name(), x));
+            }
+        }
+        if !opts.is_disabled("uptime") {
+            let x = uptime::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((uptime::Collector::get_name(), x));
+            }
+        }
+        // @@@}}}
+        Ok(r)
     }
 }

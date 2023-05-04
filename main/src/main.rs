@@ -3,8 +3,9 @@
 // --------------------------------------------------------------------
 // Copyright (C) 2021-2023, Gufo Labs
 // --------------------------------------------------------------------
-use agent::{Agent, Collectors};
+use agent::{config_from_discovery, Agent, Collectors};
 use clap::Parser;
+use common::ConfigDiscoveryOpts;
 use std::process;
 
 #[derive(Parser, Debug)]
@@ -24,6 +25,10 @@ struct Cli {
     pub list_collectors: bool,
     #[arg(long, env = "GA_DUMP_METRICS")]
     pub dump_metrics: bool,
+    #[arg(long)]
+    pub config_discovery: bool,
+    #[arg(long, env = "GA_CONFIG_DISCOVERY_OPTS")]
+    pub config_discovery_opts: Option<String>,
 }
 
 const ERR_EX_OTHER: i32 = 1;
@@ -38,6 +43,29 @@ fn main() {
             println!("{}", name);
         }
         return;
+    }
+    // --config-discovery
+    if cli.config_discovery {
+        let opts = match cli.config_discovery_opts {
+            Some(x) => match ConfigDiscoveryOpts::try_from(x) {
+                Ok(x) => x,
+                Err(e) => {
+                    println!("Error: {:?}", e);
+                    process::exit(ERR_EX_OTHER);
+                }
+            },
+            None => ConfigDiscoveryOpts::default(),
+        };
+        match config_from_discovery(&opts) {
+            Ok(r) => {
+                println!("{}", r);
+                return;
+            }
+            Err(e) => {
+                println!("Error: {:?}", e);
+                process::exit(ERR_EX_OTHER);
+            }
+        }
     }
     // Setup logging
     env_logger::builder()

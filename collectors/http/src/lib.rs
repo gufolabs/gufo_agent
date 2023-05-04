@@ -66,7 +66,7 @@ impl Collectable for Collector {
             bytes(uncompressed),
             compressed_bytes(match &resp.content_length() {
                 Some(x) => *x,
-                None => uncompressed as u64,
+                None => uncompressed,
             }),
         ])
     }

@@ -42,28 +42,21 @@ Work in progress
 
 ## Running
 
-```
-Usage: gufo-agent [OPTIONS]
-
-Options:
-  -q, --quiet            
-  -v, --verbose...       
-  -k, --insecure         [env: GA_INSECURE=]
-  -c, --config <CONFIG>  [env: GA_CONFIG=]
-      --hostname <HOSTNAME>  [env: GA_HOSTNAME=]  
-      --list-collectors  
-      --dump-metrics     [env: GA_DUMP_METRICS=]
-  -h, --help             Print help
-  -V, --version          Print version
-```
-
-Example:
+To generate the default configuration use:
 
 ```
-gufo-agent -vv --config=/etc/gufo-agent/config.yml
+gufo-agent --config-discovery > config.yml
 ```
 
-See "Gufo Agent Man Page" for details.
+See "Config Discovery" for details.
+
+Then run the Gufo Agent:
+
+```
+gufo-agent --config=config.yml
+```
+
+See "Gufo Agent Man Pages" for details.
 
 ## Available Collectors
 

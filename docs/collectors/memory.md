@@ -100,6 +100,15 @@ Config example:
 
 `memory` collector doesn't append its own labels.
 
+## Config Discovery
+
+`memory` collector supports the [Config Discovery](../config_discovery.md) by default.
+To disable a particular block use the `--config-discovery-opts` option:
+
+``` shell
+gufo-agent --config-discovery --config-discovery-opts=-memory
+```
+
 ## Sample Output
 
 === "OpenMetrics"

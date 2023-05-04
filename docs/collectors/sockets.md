@@ -29,11 +29,18 @@ Config example:
   | udp4_sockets_used | Gauge       | Total amount of IPv4 UDP sockets used |
   | udp6_sockets_used | Gauge       | Total amount of IPv6 UDP sockets used |
 
-
-
 ## Labels
 
 `sockets` collector doesn't append its own labels.
+
+## Config Discovery
+
+`sockets` collector supports the [Config Discovery](../config_discovery.md) by default.
+To disable a particular block use the `--config-discovery-opts` option:
+
+``` shell
+gufo-agent --config-discovery --config-discovery-opts=-sockets
+```
 
 ## Sample Output
 

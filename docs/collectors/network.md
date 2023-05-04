@@ -39,6 +39,15 @@ Config example:
 | ------- | -------------- |
 | `iface` | Interface name |
 
+## Config Discovery
+
+`network` collector supports the [Config Discovery](../config_discovery.md) by default.
+To disable a particular block use the `--config-discovery-opts` option:
+
+``` shell
+gufo-agent --config-discovery --config-discovery-opts=-network
+```
+
 ## Sample Output
 
 === "OpenMetrics"

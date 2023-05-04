@@ -18,6 +18,8 @@ Options:
       --hostname <HOSTNAME>  [env: GA_HOSTNAME=]  
       --list-collectors  
       --dump-metrics     [env: GA_DUMP_METRICS=]
+      --config-discovery                               
+      --config-discovery-opts <CONFIG_DISCOVERY_OPTS>  [env: GA_CONFIG_DISCOVERY_OPTS=]      
   -h, --help             Print help
   -V, --version          Print version
 ```
@@ -42,7 +44,9 @@ The following options are available:
 * <a name="opt_hostname"></a>`--hostname` - Override agent's hostname.
 * <a name="opt_config"></a>`--list-collectors` - Print list of compiled collectors and exit.
 * <a name="opt_dump_metrics"></a>`--dump-metrics` - Dump metrics database state to stdout after each collector run.
-* `-h`, `--help` - Print help and exit.
+* <a name="opt_config_discovery"></a>`--config-discovery` - Run config discovery, dump resulting config to stdout and exit. See [Config Discovery](config_discovery.md) for details.
+* <a name="opt_config_discovery_opts"></a>`--config-discovery-opts` - Optional config discovery configuration. See [Config Discovery](config_discovery.md) for details.
+* * `-h`, `--help` - Print help and exit.
 * `-V`, `--version` - Print agent version and exit.
 
 ## Environment
@@ -53,6 +57,7 @@ The following environment variables affect the execution of `gufo-agent`:
 * `GA_DUMP_METRICS` - same as [`--dump-metrics`](#opt_dump_metrics) option.
 * `GA_HOSTNAME` - same as [`--hostname`](#opt_hostname) option.
 * `GA_INSECURE` - same as [`--insecure`](#opt_insecure) option.
+* `GA_CONFIG_DISCOVERY_OPTS` - same as [`--config-discovery-opts`](#opt_config_discovery_opts) option.
 
 ## Exit Status
 
@@ -79,6 +84,12 @@ block_io
 cpu
 dns
 uptime
+```
+
+Generate config:
+
+```
+$ gufo-agent --config-discovery > config.yml
 ```
 
 Run:

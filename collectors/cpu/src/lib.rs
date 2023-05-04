@@ -5,13 +5,13 @@
 // --------------------------------------------------------------------
 
 use async_trait::async_trait;
-use common::{gauge_f, AgentError, Collectable, Measure};
-use serde::Deserialize;
+use common::{gauge_f, AgentError, Collectable, ConfigDiscoveryOpts, ConfigItem, Measure};
+use serde::{Deserialize, Serialize};
 use systemstat::{Platform, System};
 use tokio::time::{sleep, Duration};
 
 // Collector config
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct Config;
 
 // Collector structure
@@ -65,5 +65,9 @@ impl Collectable for Collector {
         }
         // Push result
         Ok(r)
+    }
+    fn discover_config(_: &ConfigDiscoveryOpts) -> Result<Vec<ConfigItem>, AgentError> {
+        let cfg = Config;
+        Ok(vec![ConfigItem::from_config(cfg)?])
     }
 }

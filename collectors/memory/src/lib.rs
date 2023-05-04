@@ -6,12 +6,12 @@
 
 use async_trait::async_trait;
 use cfg_if::cfg_if;
-use common::{gauge, AgentError, Collectable, Measure};
-use serde::Deserialize;
+use common::{gauge, AgentError, Collectable, ConfigDiscoveryOpts, ConfigItem, Measure};
+use serde::{Deserialize, Serialize};
 use systemstat::{Platform, PlatformMemory, System};
 
 // Collector config
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct Config;
 
 // Collector structure
@@ -123,6 +123,10 @@ impl Collectable for Collector {
         Self::apply_platform(&mut r, &memory.platform_memory);
         // Push result
         Ok(r)
+    }
+    fn discover_config(_: &ConfigDiscoveryOpts) -> Result<Vec<ConfigItem>, AgentError> {
+        let cfg = Config;
+        Ok(vec![ConfigItem::from_config(cfg)?])
     }
 }
 

@@ -5,11 +5,11 @@
 // --------------------------------------------------------------------
 
 use async_trait::async_trait;
-use common::{counter, gauge, AgentError, Collectable, Measure};
-use serde::Deserialize;
+use common::{counter, gauge, AgentError, Collectable, Measure,ConfigDiscoveryOpts, ConfigItem};
+use serde::{Deserialize, Serialize};
 
 // Collector config
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct Config {
     // !!! Define configuration fields
 }
@@ -47,4 +47,9 @@ impl Collectable for Collector {
             mymetric(0),
         ])
     }
+    // !!! Uncomment for config discovery
+    // fn discover_config(_: &ConfigDiscoveryOpts) -> Result<Vec<ConfigItem>, AgentError> {
+    //     let cfg = Config;
+    //     Ok(vec![ConfigItem::from_config(cfg)?])
+    // }
 }

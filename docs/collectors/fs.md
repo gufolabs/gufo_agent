@@ -18,6 +18,14 @@ Config example:
   type: fs
   interval: 10
 ```
+## Config Discovery
+
+`fs` collector supports the [Config Discovery](../config_discovery.md) by default.
+To disable a particular block use the `--config-discovery-opts` option:
+
+``` shell
+gufo-agent --config-discovery --config-discovery-opts=-fs
+```
 
 ## Collected Metrics
 

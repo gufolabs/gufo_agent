@@ -6,6 +6,7 @@
 
 pub(crate) mod agent;
 pub(crate) mod config;
+pub(crate) mod discovery;
 pub(crate) mod mdb;
 pub(crate) mod registry;
 pub(crate) mod resolver;
@@ -14,6 +15,7 @@ pub(crate) mod sender;
 
 pub use crate::agent::{Agent, AgentBuilder};
 pub(crate) use config::{CollectorConfig, Config, SenderConfig};
+pub use discovery::config_from_discovery;
 pub(crate) use mdb::{MetricsData, MetricsDb};
 pub use registry::Collectors;
 pub(crate) use resolver::ConfigResolver;

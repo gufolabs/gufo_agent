@@ -45,6 +45,15 @@ Config example:
 | ----- | ----------------- |
 | `dev` | Block device name |
 
+## Config Discovery
+
+`block_io` collector supports the [Config Discovery](../config_discovery.md) by default.
+To disable a particular block use the `--config-discovery-opts` option:
+
+``` shell
+gufo-agent --config-discovery --config-discovery-opts=-block_io
+```
+
 ## Sample Output
 
 === "OpenMetrics"

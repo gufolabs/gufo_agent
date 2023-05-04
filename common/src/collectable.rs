@@ -3,7 +3,7 @@
 // --------------------------------------------------------------------
 // Copyright (C) 2021-2023, Gufo Labs
 // --------------------------------------------------------------------
-use crate::{AgentError, Labels};
+use crate::{AgentError, ConfigDiscoveryOpts, ConfigItem, Labels};
 use async_trait::async_trait;
 
 #[derive(Debug, Copy, Clone)]
@@ -49,4 +49,8 @@ where
         Self::RANDOM_OFFSET
     }
     async fn collect(&mut self) -> Result<Vec<Measure>, AgentError>;
+    #[allow(unused_variables)]
+    fn discover_config(opts: &ConfigDiscoveryOpts) -> Result<Vec<ConfigItem>, AgentError> {
+        Ok(Vec::new())
+    }
 }

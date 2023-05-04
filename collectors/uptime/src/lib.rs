@@ -5,12 +5,12 @@
 // --------------------------------------------------------------------
 
 use async_trait::async_trait;
-use common::{counter, AgentError, Collectable, Measure};
-use serde::Deserialize;
+use common::{counter, AgentError, Collectable, ConfigDiscoveryOpts, ConfigItem, Measure};
+use serde::{Deserialize, Serialize};
 use systemstat::{Platform, System};
 
 // Collector config
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct Config;
 
 // Collector structure
@@ -42,5 +42,9 @@ impl Collectable for Collector {
             .map_err(|e| AgentError::InternalError(e.to_string()))?;
         // Push result
         Ok(vec![uptime(v.as_secs())])
+    }
+    fn discover_config(_: &ConfigDiscoveryOpts) -> Result<Vec<ConfigItem>, AgentError> {
+        let cfg = Config;
+        Ok(vec![ConfigItem::from_config(cfg)?])
     }
 }
