@@ -22,11 +22,22 @@ as well.
 
 ## Compatibility
 
-Work in progress
+Supported platforms:
+
+| OS    |       | Arch  |
+| ----- | ----- | ----- |
+| Linux | glibc | amd64 |
 
 ## Obtaining the Gufo Agent
 
-Work in progress
+View the [CHANGELOG](CHANGELOG.md) for the latest updates
+and changes by version.
+
+### Binary Downloads
+
+The binary downloads are available from each of the
+[Github Releases](https://github.com/gufolabs/gufo_agent/releases)
+page in the "Assets" section.
 
 ## Running
 
