@@ -17,12 +17,18 @@ pub struct Config;
 pub struct Collector;
 
 // Generated metrics
-gauge!(files, "Inodes used", mount, type);
-gauge!(files_total, "Total inodes count", mount, type);
-gauge!(files_available, "Inodes available", mount, type);
-gauge!(free, "Free disk space, bytes", mount, type);
-gauge!(total, "Total disk space, bytes", mount, type);
-gauge!(available, "Available disk space, bytes", mount, type);
+gauge!(fs_inodes, "Inodes used", dev, mount, type);
+gauge!(fs_inodes_total, "Total inodes count", dev, mount, type);
+gauge!(fs_inodes_available, "Inodes available", dev, mount, type);
+gauge!(fs_free, "Free disk space, bytes", dev, mount, type);
+gauge!(fs_total, "Total disk space, bytes", dev, mount, type);
+gauge!(
+    fs_available,
+    "Available disk space, bytes",
+    dev,
+    mount,
+    type
+);
 
 // Instantiate collector from given config
 impl TryFrom<Config> for Collector {
@@ -48,20 +54,42 @@ impl Collectable for Collector {
         let mut r = Vec::with_capacity(mounts.len() * 6);
         for fs in mounts.iter() {
             if !self.is_ignored_fs(&fs.fs_type, &fs.fs_mounted_on) {
-                r.push(files(fs.files as u64, &fs.fs_mounted_on, &fs.fs_type));
-                r.push(files_total(
+                r.push(fs_inodes(
+                    fs.files as u64,
+                    &fs.fs_mounted_from,
+                    &fs.fs_mounted_on,
+                    &fs.fs_type,
+                ));
+                r.push(fs_inodes_total(
                     fs.files_total as u64,
+                    &fs.fs_mounted_from,
                     &fs.fs_mounted_on,
                     &fs.fs_type,
                 ));
-                r.push(files_available(
+                r.push(fs_inodes_available(
                     fs.files_avail as u64,
+                    &fs.fs_mounted_from,
                     &fs.fs_mounted_on,
                     &fs.fs_type,
                 ));
-                r.push(free(fs.free.as_u64(), &fs.fs_mounted_on, &fs.fs_type));
-                r.push(available(fs.avail.as_u64(), &fs.fs_mounted_on, &fs.fs_type));
-                r.push(total(fs.total.as_u64(), &fs.fs_mounted_on, &fs.fs_type));
+                r.push(fs_free(
+                    fs.free.as_u64(),
+                    &fs.fs_mounted_from,
+                    &fs.fs_mounted_on,
+                    &fs.fs_type,
+                ));
+                r.push(fs_available(
+                    fs.avail.as_u64(),
+                    &fs.fs_mounted_from,
+                    &fs.fs_mounted_on,
+                    &fs.fs_type,
+                ));
+                r.push(fs_total(
+                    fs.total.as_u64(),
+                    &fs.fs_mounted_from,
+                    &fs.fs_mounted_on,
+                    &fs.fs_type,
+                ));
             }
         }
         // Push result

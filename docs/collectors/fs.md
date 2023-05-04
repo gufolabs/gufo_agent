@@ -31,14 +31,14 @@ gufo-agent --config-discovery --config-discovery-opts=-fs
 
 === "OpenMetrics"
 
-  | Metric               | Metric Type | Labels      | Description                 |
-  | -------------------- | ----------- | ----------- | --------------------------- |
-  | `fs_files`           | Gauge       | mount, type | Inodes used                 |
-  | `fs_files_total`     | Gauge       | mount, type | Total inodes count          |
-  | `fs_files_available` | Gauge       | mount, type | Inodes available            |
-  | `fs_free`            | Gauge       | mount, type | Free disk space, bytes      |
-  | `fs_total`           | Gauge       | mount, type | Total disk space, bytes     |
-  | `fs_available`       | Gauge       | mount, type | Available disk space, bytes |
+  | Metric                | Metric Type | Labels      | Description                 |
+  | --------------------- | ----------- | ----------- | --------------------------- |
+  | `fs_inodes`           | Gauge       | mount, type | Inodes used                 |
+  | `fs_inodes_total`     | Gauge       | mount, type | Total inodes count          |
+  | `fs_inodes_available` | Gauge       | mount, type | Inodes available            |
+  | `fs_free`             | Gauge       | mount, type | Free disk space, bytes      |
+  | `fs_total`            | Gauge       | mount, type | Total disk space, bytes     |
+  | `fs_available`        | Gauge       | mount, type | Available disk space, bytes |
 
 ## Labels
 
@@ -46,6 +46,7 @@ gufo-agent --config-discovery --config-discovery-opts=-fs
 
 | Label   | Description                    |
 | ------- | ------------------------------ |
+| `dev`   | Device path                    |
 | `mount` | File system mount point        |
 | `type`  | File system type (i.e. `ext4`) |
 
