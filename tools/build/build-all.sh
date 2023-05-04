@@ -10,6 +10,8 @@ echo "Building gufo-agent ${VERSION}"
 # Create dist
 [ -d dist/ ] || mkdir dist
 # Define build function
+# $1 - rust target
+# $2 - distribution platform name
 build_target_tgz()
 {
     rustup target add $1
@@ -17,7 +19,7 @@ build_target_tgz()
     (
         cd target/$1/release \
         && tar cfz gufo-agent.tgz gufo-agent \
-        && mv gufo-agent.tgz ../../../dist/gufo-agent_XXX_$2.tgz
+        && mv gufo-agent.tgz ../../../dist/gufo-agent-${VERSION}_$2.tgz
     )
 }
 # Build x86_64-unknown-linux-gnu
