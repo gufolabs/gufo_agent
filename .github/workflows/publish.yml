@@ -1,9 +1,13 @@
 name: Publish Releasee
-on: release
+on:
+  release:
+    types: [published]
 jobs:
   build:
     name: Build and upload assets
     runs-on: ubuntu-20.04
+    env:
+      RUST_ARCH: x86_64-unknown-linux-gnu
     steps:
       - name: Setup Environment
         run: |

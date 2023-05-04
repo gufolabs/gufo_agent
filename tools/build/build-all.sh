@@ -6,11 +6,13 @@ if [ -z "$VERSION" ]; then
     echo "VERSION is not set"
     exit 1
 fi
+echo "Building gufo-agent ${VERSION}"
 # Create dist
 [ -d dist/ ] || mkdir dist
 # Define build function
 build_target_tgz()
 {
+    rustup target add $1
     cargo build --release --target $1
     (
         cd target/$1/release \
