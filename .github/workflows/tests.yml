@@ -22,11 +22,6 @@ jobs:
       - name: Install Rust
         run: ./tools/build/setup-rust.sh
 
-      - name: Install Rust Components
-        run: |
-          rustup component add rustfmt
-          rustup component add clippy
-
       - name: Check Rust Format
         run: cargo fmt --check
 

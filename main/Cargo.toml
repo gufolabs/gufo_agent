@@ -15,4 +15,4 @@ env_logger = "0.10"
 log = "0.4"
 
 [profile.release]
-strip = "symbols"
+strip = "debuginfo"

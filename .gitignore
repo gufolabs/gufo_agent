@@ -1,5 +1,5 @@
 syntax:glob
 target/
 Cargo.lock
-dist/docs/
+dist/
 **.pyc
