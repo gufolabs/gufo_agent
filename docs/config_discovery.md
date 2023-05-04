@@ -17,7 +17,7 @@ gufo-agent --config-discovery > config.yml
 
 The config discovery is the collaborative  process and includes phases:
 
-* Collector-level: Each built-in collector decides does it is worth
+* Built-in: Each built-in collector decides does it is worth
   contributing to the config. 
 * Custom scripts: Custom scripts are provided in specified locations to analyze
   the system's environment and to provide appropriate parts of the config.
@@ -26,4 +26,10 @@ To disable parts of discovery use the `--config-discovery-opts` option. i.e. to 
 
 ```
 gufo-agent --config-discovery --config-discovery-opts=-uptime,-sockets
+```
+
+To disable all built-in collectors except the explicitly set (`cpu` and `memory` in our case):
+
+```
+gufo-agent --config-discovery --config-discovery-opts=-builtins,+cpu,+memory
 ```

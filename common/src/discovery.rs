@@ -24,13 +24,19 @@ impl ConfigItem {
 
 #[derive(Debug, Default)]
 pub struct ConfigDiscoveryOpts {
+    disable_builtins: bool,
     disabled: HashSet<String>,
+    explicitly_enabled: HashSet<String>,
 }
 
 impl ConfigDiscoveryOpts {
     // Check if the key is disabled
     pub fn is_disabled<T: ToString>(&self, v: T) -> bool {
-        self.disabled.contains(&v.to_string())
+        if self.disable_builtins {
+            !self.explicitly_enabled.contains(&v.to_string())
+        } else {
+            self.disabled.contains(&v.to_string())
+        }
     }
     #[allow(unused_variables)]
     pub fn get_interval<T: ToString>(name: T) -> u64 {
@@ -44,8 +50,17 @@ impl TryFrom<String> for ConfigDiscoveryOpts {
     fn try_from(value: String) -> Result<Self, Self::Error> {
         let mut r = Self::default();
         for opt in value.to_string().split(",") {
+            if opt == "-builtins" {
+                r.disable_builtins = true;
+                continue;
+            }
             if opt.starts_with("-") {
                 r.disabled.insert(opt[1..].to_string());
+                continue;
+            }
+            if opt.starts_with("+") {
+                r.explicitly_enabled.insert(opt[1..].to_string());
+                continue;
             }
         }
         Ok(r)
@@ -62,6 +77,23 @@ mod tests {
         assert!(!opts.is_disabled("foo"));
         assert!(opts.is_disabled("bar"));
         assert!(!opts.is_disabled("baz".to_string()));
+        assert!(opts.is_disabled("done".to_string()));
+    }
+
+    #[test]
+    fn test_try_disable_builtins() {
+        let opts = ConfigDiscoveryOpts::try_from("foo,-bar,-builtins".to_string()).unwrap();
+        assert!(opts.is_disabled("foo"));
+        assert!(opts.is_disabled("bar"));
+        assert!(opts.is_disabled("baz".to_string()));
+        assert!(opts.is_disabled("done".to_string()));
+    }
+    #[test]
+    fn test_try_explicit_enable() {
+        let opts = ConfigDiscoveryOpts::try_from("foo,+bar,-builtins".to_string()).unwrap();
+        assert!(opts.is_disabled("foo"));
+        assert!(!opts.is_disabled("bar"));
+        assert!(opts.is_disabled("baz".to_string()));
         assert!(opts.is_disabled("done".to_string()));
     }
 }
