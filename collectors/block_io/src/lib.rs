@@ -17,24 +17,28 @@ pub struct Config;
 pub struct Collector;
 
 // Generated metrics
-counter!(read_ios, "Number of read I/Os processed", dev);
+counter!(io_read_ios, "Number of read I/Os processed", dev);
 counter!(
-    read_merges,
+    io_read_merges,
     "Number of read I/Os merged with in-queue I/O",
     dev
 );
-counter!(read_sectors, "Number of sectors read", dev);
-counter!(read_ticks, "Total wait time for read requests, ms", dev);
-counter!(write_ios, "Number of write I/Os processed", dev);
+counter!(io_read_sectors, "Number of sectors read", dev);
+counter!(io_read_ticks, "Total wait time for read requests, ms", dev);
+counter!(io_write_ios, "Number of write I/Os processed", dev);
 counter!(
-    write_merges,
+    io_write_merges,
     "Number of write I/Os merged with in-queue I/O",
     dev
 );
-counter!(write_sectors, "Number of sectors written", dev);
-counter!(write_ticks, "Total wait time for write requests, ms", dev);
+counter!(io_write_sectors, "Number of sectors written", dev);
+counter!(
+    io_write_ticks,
+    "Total wait time for write requests, ms",
+    dev
+);
 gauge!(
-    in_flight,
+    io_in_flight,
     "Number of I/Os currently in flight, requests",
     dev
 );
@@ -43,7 +47,11 @@ gauge!(
     "Total time this block device has been active, ms",
     dev
 );
-gauge!(time_in_queue, "Total wait time for all requests, ms", dev);
+gauge!(
+    io_time_in_queue,
+    "Total wait time for all requests, ms",
+    dev
+);
 
 // Instantiate collector from given config
 impl TryFrom<Config> for Collector {
@@ -68,17 +76,17 @@ impl Collectable for Collector {
         }
         let mut r = Vec::with_capacity(stats.len() * 11);
         for s in stats.values() {
-            r.push(read_ios(s.read_ios as u64, &s.name));
-            r.push(read_merges(s.read_merges as u64, &s.name));
-            r.push(read_sectors(s.read_sectors as u64, &s.name));
-            r.push(read_ticks(s.read_ticks as u64, &s.name));
-            r.push(write_ios(s.write_ios as u64, &s.name));
-            r.push(write_merges(s.write_merges as u64, &s.name));
-            r.push(write_sectors(s.write_sectors as u64, &s.name));
-            r.push(write_ticks(s.write_ticks as u64, &s.name));
-            r.push(in_flight(s.in_flight as u64, &s.name));
+            r.push(io_read_ios(s.read_ios as u64, &s.name));
+            r.push(io_read_merges(s.read_merges as u64, &s.name));
+            r.push(io_read_sectors(s.read_sectors as u64, &s.name));
+            r.push(io_read_ticks(s.read_ticks as u64, &s.name));
+            r.push(io_write_ios(s.write_ios as u64, &s.name));
+            r.push(io_write_merges(s.write_merges as u64, &s.name));
+            r.push(io_write_sectors(s.write_sectors as u64, &s.name));
+            r.push(io_write_ticks(s.write_ticks as u64, &s.name));
+            r.push(io_in_flight(s.in_flight as u64, &s.name));
             r.push(io_ticks(s.io_ticks as u64, &s.name));
-            r.push(time_in_queue(s.time_in_queue as u64, &s.name));
+            r.push(io_time_in_queue(s.time_in_queue as u64, &s.name));
         }
         // Push result
         Ok(r)
