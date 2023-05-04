@@ -7,7 +7,9 @@ The `Gufo Agent` is built around four cornerstones:
 
 * Zeroconf configuration system allows plain [YAML configuration files](configuration.md)
   in simple cases while allowing the flexible config resolution process 
-  for the centralized management in more complex ones.
+  for the centralized management in more complex ones. 
+  The sophisticated [Config Discovery](config_discovery.md)
+  allows the automatic generation of config in most cases.
 * The collector plugins, perform the measurements and collect the metrics.
   The API is developer-friendly, enforces correctness, and allows a rapid development process.
 * Internal scheduler which runs the collectors as defined in the config.
