@@ -15,7 +15,7 @@ echo "Building gufo-agent ${VERSION}"
 build_target_tgz()
 {
     rustup target add $1
-    cargo build --release --target $1
+    cross build --release --target $1
     (
         cd target/$1/release \
         && tar cfz gufo-agent.tgz gufo-agent \
