@@ -14,7 +14,6 @@ echo "Building gufo-agent ${VERSION}"
 # $2 - distribution platform name
 build_target_tgz()
 {
-    rustup target add $1
     cross build --release --target $1
     (
         cd target/$1/release \
@@ -23,4 +22,4 @@ build_target_tgz()
     )
 }
 # Build x86_64-unknown-linux-gnu
-build_target_tgz x86_64-unknown-linux-gnu linux_amd64
+build_target_tgz x86_64-unknown-linux-gnu:centos linux_amd64
