@@ -19,12 +19,14 @@ The code base of the project has following structure:
 * `collectors/` - Built-in collectors' implementation crates.
 * `common/` - `common` crate shared between all collectors and agent.
 * `docs/` - [Mkdocs][Mkdocs] documentation.
+* `examples/` - Various examples.
 * `main/` - Main crate. Parses command-line and runs agent. Compiles to binary.
 * `proto/` - Various protocols implementation which can be shared between collectors.
 
     * `connection` - `Connection` struct. A wrapper of TCP Connection, input, and output buffers.
     * `emodel` - G.107 E-Model calculations and constants.
     * `frame` - `FrameReader` and `FrameWriter` traits.
+    * `openmetrics` - OpenMetrics parser.
     * `tos` - DSCP/ToS constants.
     * `twamp` - TWAMP protocol frames.
     * `udp` - `UdpConnection` wrapper.

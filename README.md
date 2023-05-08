@@ -72,19 +72,20 @@ See "Gufo Agent Man Pages" for details.
 
 ## Available Collectors
 
-| Type              | Description                               |
-| ----------------- | ----------------------------------------- |
-| `block_io`        | Block I/O devices statistics              |
-| `cpu`             | CPU statistics                            |
-| `dns`             | Perform DNS request using system resolver |
-| `fs`              | File systems statistic                    |
-| `http`            | Perform HTTP request                      |
-| `memory`          | Host's memory statistics                  |
-| `network`         | Host's network interface statistics       |
-| `sockets`         | Host's sockets statistics                 |
-| `twamp_reflector` | TWAMP reflector for SLA probing           |
-| `twamp_sender`    | TWAMP sender for SLA probing              |
-| `uptime`          | System uptime                             |
+| Type              | Description                                       |
+| ----------------- | ------------------------------------------------- |
+| `block_io`        | Block I/O devices statistics                      |
+| `cpu`             | CPU statistics                                    |
+| `dns`             | Perform DNS request using system resolver         |
+| `fs`              | File systems statistic                            |
+| `http`            | Perform HTTP request                              |
+| `memory`          | Host's memory statistics                          |
+| `network`         | Host's network interface statistics               |
+| `sockets`         | Host's sockets statistics                         |
+| `spool`           | Read files in openmetrics format from a directory |
+| `twamp_reflector` | TWAMP reflector for SLA probing                   |
+| `twamp_sender`    | TWAMP sender for SLA probing                      |
+| `uptime`          | System uptime                                     |
 
 ## On Gufo Stack
 

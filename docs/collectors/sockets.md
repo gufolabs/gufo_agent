@@ -1,4 +1,4 @@
-# uptime collector
+# sockets collector
 
 `sockets` collects the host's sockets statistics.
 

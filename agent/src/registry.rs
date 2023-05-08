@@ -19,6 +19,7 @@ pub enum Collectors {
     Memory(memory::Collector),
     Network(network::Collector),
     Sockets(sockets::Collector),
+    Spool(spool::Collector),
     TwampReflector(twamp_reflector::Collector),
     TwampSender(twamp_sender::Collector),
     Uptime(uptime::Collector),
@@ -66,6 +67,7 @@ impl TryFrom<CollectorConfig> for Collectors {
             "memory" => Collectors::Memory(from_value(value)?),
             "network" => Collectors::Network(from_value(value)?),
             "sockets" => Collectors::Sockets(from_value(value)?),
+            "spool" => Collectors::Spool(from_value(value)?),
             "twamp_reflector" => Collectors::TwampReflector(from_value(value)?),
             "twamp_sender" => Collectors::TwampSender(from_value(value)?),
             "uptime" => Collectors::Uptime(from_value(value)?),
@@ -88,6 +90,7 @@ impl Collectors {
             Collectors::Memory(_) => memory::Collector::get_name(),
             Collectors::Network(_) => network::Collector::get_name(),
             Collectors::Sockets(_) => sockets::Collector::get_name(),
+            Collectors::Spool(_) => spool::Collector::get_name(),
             Collectors::TwampReflector(_) => twamp_reflector::Collector::get_name(),
             Collectors::TwampSender(_) => twamp_sender::Collector::get_name(),
             Collectors::Uptime(_) => uptime::Collector::get_name(),
@@ -107,6 +110,7 @@ impl Collectors {
             Collectors::Memory(_) => memory::Collector::is_random_offset(),
             Collectors::Network(_) => network::Collector::is_random_offset(),
             Collectors::Sockets(_) => sockets::Collector::is_random_offset(),
+            Collectors::Spool(_) => spool::Collector::is_random_offset(),
             Collectors::TwampReflector(_) => twamp_reflector::Collector::is_random_offset(),
             Collectors::TwampSender(_) => twamp_sender::Collector::is_random_offset(),
             Collectors::Uptime(_) => uptime::Collector::is_random_offset(),
@@ -126,6 +130,7 @@ impl Collectors {
             Collectors::Memory(c) => c.collect().await,
             Collectors::Network(c) => c.collect().await,
             Collectors::Sockets(c) => c.collect().await,
+            Collectors::Spool(c) => c.collect().await,
             Collectors::TwampReflector(c) => c.collect().await,
             Collectors::TwampSender(c) => c.collect().await,
             Collectors::Uptime(c) => c.collect().await,
@@ -144,6 +149,7 @@ impl Collectors {
             "memory".to_string(),
             "network".to_string(),
             "sockets".to_string(),
+            "spool".to_string(),
             "twamp_reflector".to_string(),
             "twamp_sender".to_string(),
             "uptime".to_string(),
@@ -207,6 +213,12 @@ impl Collectors {
             let x = sockets::Collector::discover_config(opts)?;
             if !x.is_empty() {
                 r.push((sockets::Collector::get_name(), x));
+            }
+        }
+        if !opts.is_disabled("spool") {
+            let x = spool::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((spool::Collector::get_name(), x));
             }
         }
         if !opts.is_disabled("twamp_reflector") {

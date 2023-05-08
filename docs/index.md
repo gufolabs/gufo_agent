@@ -59,19 +59,20 @@ See [Gufo Agent Man Pages](man.md) for details.
 
 ## Available Collectors
 
-| Type                                             | Description                               |
-| ------------------------------------------------ | ----------------------------------------- |
-| [block_io](collectors/block_io.md)               | Block I/O devices statistics              |
-| [cpu](collectors/cpu.md)                         | CPU statistics                            |
-| [dns](collectors/dns.md)                         | Perform DNS request using system resolver |
-| [fs](collectors/fs.md)                           | File systems statistic                    |
-| [http](collectors/http.md)                       | Perform HTTP request                      |
-| [memory](collectors/memory.md)                   | Host's memory statistics                  |
-| [network](collectors/network.md)                 | Host's network interface statistics       |
-| [sockets](collectors/sockets.md)                 | Host's sockets statistics                 |
-| [twamp_reflector](collectors/twamp_reflector.md) | TWAMP reflector for SLA probing           |
-| [twamp_sender](collectors/twamp_sender.md)       | TWAMP sender for SLA probing              |
-| [uptime](collectors/uptime.md)                   | System uptime                             |
+| Type                                             | Description                                       |
+| ------------------------------------------------ | ------------------------------------------------- |
+| [block_io](collectors/block_io.md)               | Block I/O devices statistics                      |
+| [cpu](collectors/cpu.md)                         | CPU statistics                                    |
+| [dns](collectors/dns.md)                         | Perform DNS request using system resolver         |
+| [fs](collectors/fs.md)                           | File systems statistic                            |
+| [http](collectors/http.md)                       | Perform HTTP request                              |
+| [memory](collectors/memory.md)                   | Host's memory statistics                          |
+| [network](collectors/network.md)                 | Host's network interface statistics               |
+| [sockets](collectors/sockets.md)                 | Host's sockets statistics                         |
+| [spool](collectors/spool.md)                     | Read files in openmetrics format from a directory |
+| [twamp_reflector](collectors/twamp_reflector.md) | TWAMP reflector for SLA probing                   |
+| [twamp_sender](collectors/twamp_sender.md)       | TWAMP sender for SLA probing                      |
+| [uptime](collectors/uptime.md)                   | System uptime                                     |
 
 ## On Gufo Stack
 

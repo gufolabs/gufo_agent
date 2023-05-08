@@ -173,8 +173,8 @@ impl MetricsDb {
                     ),
                 )?;
             }
-            fmt::write(out, format_args!("# EOF\n"))?;
         }
+        fmt::write(out, format_args!("# EOF\n"))?;
         Ok(())
     }
     pub async fn to_openmetrics_string(&self) -> Result<String, AgentError> {
