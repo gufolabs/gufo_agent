@@ -32,12 +32,12 @@ pub(crate) struct MetricsData {
 #[derive(Ord, PartialOrd, Eq, PartialEq, Debug, Clone)]
 struct MetricFamilyKey {
     collector: &'static str,
-    name: &'static str,
+    name: String,
 }
 
 #[derive(Debug)]
 struct MetricFamilyData {
-    help: &'static str,
+    help: String,
     r#type: ValueType,
     values: HashMap<Labels, MetricValue>,
 }
@@ -102,7 +102,7 @@ impl MetricsDb {
             // Check for Metric Family
             let k = MetricFamilyKey {
                 collector: data.collector,
-                name: measure.name,
+                name: measure.name.clone(),
             };
             // @todo: Use .get()
             if !db.data.contains_key(&k) {
@@ -110,7 +110,7 @@ impl MetricsDb {
                 db.data.insert(
                     k.clone(),
                     MetricFamilyData {
-                        help: measure.help,
+                        help: measure.help.clone(),
                         r#type: measure.value.into(),
                         values: HashMap::new(),
                     },

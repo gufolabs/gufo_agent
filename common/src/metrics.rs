@@ -13,8 +13,8 @@ pub use paste::paste;
 // ```
 // fn my_counter(v: u64) -> Measure {
 //     Measure {
-//         name: "requests_total",
-//         help: "Total DNS requests performed",
+//         name: "my_counter".to_string(),
+//         help: "Help string".to_string(),
 //         value: Value::Counter(v),
 //         labels: Labels::default()
 //     }
@@ -26,8 +26,8 @@ pub use paste::paste;
 // ```
 // fn my_counter<K1: ToString>(v: u64, l_query: K1) -> Measure {
 //     Measure {
-//         name: "requests_total",
-//         help: "Total DNS requests performed",
+//         name: "my_counter".to_string(),
+//         help: "Help string".to_string(),
 //         value: Value::Counter(v),
 //         labels: vec![Labels::new("query", l_query)]
 //     }
@@ -39,8 +39,8 @@ macro_rules! counter {
     ($name:ident, $help:literal) => {
         fn $name(v: u64) -> Measure {
             Measure {
-                name: stringify!($name),
-                help: $help,
+                name: stringify!($name).to_string(),
+                help: $help.to_string(),
                 value: common::Value::Counter(v),
                 labels: common::Labels::default(),
             }
@@ -55,8 +55,8 @@ macro_rules! counter {
             where $([< T $label >]: Clone),+
             {
                 Measure {
-                    name: stringify!($name),
-                    help: $help,
+                    name: stringify!($name).to_string(),
+                    help: $help.to_string(),
                     value: common::Value::Counter(v),
                     labels: common::Labels::new(
                         vec![
@@ -76,8 +76,8 @@ macro_rules! counter {
 // ```
 // fn my_gauge(v: u64) -> Measure {
 //     Measure {
-//         name: "requests_total",
-//         help: "Total DNS requests performed",
+//         name: "my_gauge".to_string(),
+//         help: "Help string".to_string(),
 //         value: Value::Gauge(v),
 //         labels: Labels::default()
 //     }
@@ -89,8 +89,8 @@ macro_rules! counter {
 // ```
 // fn my_gauge<K1: ToString>(v: u64, l_query: K1) -> Measure {
 //     Measure {
-//         name: "requests_total",
-//         help: "Total DNS requests performed",
+//         name: "my_gauge".to_string(),
+//         help: "Help string".to_string(),
 //         value: Value::Gauge(v),
 //         labels: vec![Labels::new("query", l_query)]
 //     }
@@ -102,8 +102,8 @@ macro_rules! gauge {
     ($name:ident, $help:expr) => {
         fn $name(v: u64) -> Measure {
             Measure {
-                name: stringify!($name),
-                help: $help,
+                name: stringify!($name).to_string(),
+                help: $help.to_string(),
                 value: common::Value::Gauge(v),
                 labels: common::Labels::default(),
             }
@@ -118,8 +118,8 @@ macro_rules! gauge {
             where $([< T $label >]: Clone),+
             {
                 Measure {
-                    name: stringify!($name),
-                    help: $help,
+                    name: stringify!($name).to_string(),
+                    help: $help.to_string(),
                     value: common::Value::Gauge(v),
                     labels: common::Labels::new(
                         vec![
@@ -139,8 +139,8 @@ macro_rules! gauge {
 // ```
 // fn my_gauge(v: i64) -> Measure {
 //     Measure {
-//         name: "requests_total",
-//         help: "Total DNS requests performed",
+//         name: "my_gauge".to_string(),
+//         help: "Help string".to_string(),
 //         value: Value::GaugeI(v),
 //         labels: Labels::default()
 //     }
@@ -152,8 +152,8 @@ macro_rules! gauge {
 // ```
 // fn my_gauge<K1: ToString>(v: i64, l_query: K1) -> Measure {
 //     Measure {
-//         name: "requests_total",
-//         help: "Total DNS requests performed",
+//         name: "my_gauge".to_string(),
+//         help: "Help string".to_string(),
 //         value: Value::GaugeI(v),
 //         labels: vec![Labels::new("query", l_query)]
 //     }
@@ -165,8 +165,8 @@ macro_rules! gauge_i {
     ($name:ident, $help:expr) => {
         fn $name(v: i64) -> Measure {
             Measure {
-                name: stringify!($name),
-                help: $help,
+                name: stringify!($name).to_string(),
+                help: $help.to_string(),
                 value: common::Value::GaugeI(v),
                 labels: common::Labels::default(),
             }
@@ -181,8 +181,8 @@ macro_rules! gauge_i {
             where $([< T $label >]: Clone),+
             {
                 Measure {
-                    name: stringify!($name),
-                    help: $help,
+                    name: stringify!($name).to_string(),
+                    help: $help.to_string(),
                     value: common::Value::GaugeI(v),
                     labels: common::Labels::new(
                         vec![
@@ -201,8 +201,8 @@ macro_rules! gauge_i {
 // ```
 // fn my_gauge(v: f32) -> Measure {
 //     Measure {
-//         name: "requests_total",
-//         help: "Total DNS requests performed",
+//         name: "requests_total".to_string(),
+//         help: "Total DNS requests performed".to_string(),
 //         value: Value::GaugeF(v),
 //         labels: Labels::default()
 //     }
@@ -214,8 +214,8 @@ macro_rules! gauge_i {
 // ```
 // fn my_gauge<K1: ToString>(v: f32, l_query: K1) -> Measure {
 //     Measure {
-//         name: "requests_total",
-//         help: "Total DNS requests performed",
+//         name: "requests_total".to_string(),
+//         help: "Total DNS requests performed".to_string(),
 //         value: Value::GaugeF(v),
 //         labels: vec![Labels::new("query", l_query)]
 //     }
@@ -227,8 +227,8 @@ macro_rules! gauge_f {
     ($name:ident, $help:expr) => {
         fn $name(v: f32) -> Measure {
             Measure {
-                name: stringify!($name),
-                help: $help,
+                name: stringify!($name).to_string(),
+                help: $help.to_string(),
                 value: common::Value::GaugeF(v),
                 labels: common::Labels::default(),
             }
@@ -243,8 +243,8 @@ macro_rules! gauge_f {
             where $([< T $label >]: Clone),+
             {
                 Measure {
-                    name: stringify!($name),
-                    help: $help,
+                    name: stringify!($name).to_string(),
+                    help: $help.to_string(),
                     value: common::Value::GaugeF(v),
                     labels: common::Labels::new(
                         vec![

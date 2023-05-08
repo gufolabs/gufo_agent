@@ -27,8 +27,8 @@ impl ToString for Value {
 
 #[derive(Debug)]
 pub struct Measure {
-    pub name: &'static str,
-    pub help: &'static str,
+    pub name: String,
+    pub help: String,
     pub value: Value,
     pub labels: Labels,
 }
