@@ -32,7 +32,7 @@ nav:
       - Creating New Collector: creating_new_collector.md
       - Common Tasks: devcommon.md
       #- Code Quality: codequality.md
-      #- Code Base: codebase.md
+      - Code Base: codebase.md
       - Contributing Guide: CONTRIBUTING.md
       - Code of Conduct: CODE_OF_CONDUCT.md
   - FAQ: faq.md
