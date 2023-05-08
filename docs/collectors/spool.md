@@ -1,8 +1,8 @@
 # spool collector
 
-`spool` reads files in openmetrics format from a directory and
-exposes collected data. The files are removed after being processed
-successfully, unless the `dry_run` option is set. See 
+`spool` reads files in [OpenMetrics](../openmetrics.md) format from a directory and
+exposes collected data. The files are scanned in alphabetical order, parsed, 
+and removed (unless the `dry_run` option is set). See 
 [OpenMetrics Format Specification](../openmetrics.md) for the recognized
 file format.
 

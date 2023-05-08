@@ -65,17 +65,22 @@ impl Collectable for Collector {
     async fn collect(&mut self) -> Result<Vec<Measure>, AgentError> {
         // Collect data
         log::info!("Scanning directory {}", self.path);
-        let paths = read_dir(&self.path).map_err(|e| AgentError::InternalError(e.to_string()))?;
-        //
-        let mut r = vec![];
-        for path in paths {
-            let entry = match path {
-                Ok(e) => e,
+        // List directory
+        let mut paths = Vec::new();
+        for rd in read_dir(&self.path).map_err(|e| AgentError::InternalError(e.to_string()))? {
+            match rd {
+                Ok(e) => paths.push(e),
                 Err(e) => {
                     log::error!("Cannot list file: {}", e);
                     continue;
                 }
-            };
+            }
+        }
+        // Sort result
+        paths.sort_by_key(|dir| dir.path());
+        //
+        let mut r = vec![];
+        for entry in paths {
             self.spool_jobs += 1;
             match self.process_file(entry.path().as_path()) {
                 Ok(mut sr) => {
