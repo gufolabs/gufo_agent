@@ -173,6 +173,7 @@ impl MetricsDb {
                     ),
                 )?;
             }
+            fmt::write(out, format_args!("# EOF\n"))?;
         }
         Ok(())
     }
