@@ -21,14 +21,8 @@ impl Label {
     }
 }
 
-#[derive(Debug, Hash, Eq, PartialEq, Clone, Ord, PartialOrd)]
+#[derive(Debug, Hash, Eq, PartialEq, Clone, Ord, PartialOrd, Default)]
 pub struct Labels(Option<Vec<Label>>);
-
-impl Default for Labels {
-    fn default() -> Self {
-        Labels(None)
-    }
-}
 
 impl Labels {
     pub fn new(v: Vec<Label>) -> Self {

@@ -49,17 +49,17 @@ impl TryFrom<String> for ConfigDiscoveryOpts {
 
     fn try_from(value: String) -> Result<Self, Self::Error> {
         let mut r = Self::default();
-        for opt in value.to_string().split(",") {
+        for opt in value.split(',') {
             if opt == "-builtins" {
                 r.disable_builtins = true;
                 continue;
             }
-            if opt.starts_with("-") {
-                r.disabled.insert(opt[1..].to_string());
+            if let Some(stripped) = opt.strip_prefix('-') {
+                r.disabled.insert(stripped.to_string());
                 continue;
             }
-            if opt.starts_with("+") {
-                r.explicitly_enabled.insert(opt[1..].to_string());
+            if let Some(stripped) = opt.strip_prefix('+') {
+                r.explicitly_enabled.insert(stripped.to_string());
                 continue;
             }
         }

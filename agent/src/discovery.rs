@@ -34,5 +34,5 @@ pub fn config_from_discovery(opts: &ConfigDiscoveryOpts) -> Result<String, Agent
             });
         }
     }
-    Ok(serde_yaml::to_string(&r).map_err(|e| AgentError::ConfigurationError(e.to_string()))?)
+    serde_yaml::to_string(&r).map_err(|e| AgentError::ConfigurationError(e.to_string()))
 }
