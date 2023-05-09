@@ -64,6 +64,7 @@ See [Gufo Agent Man Pages](man.md) for details.
 | [block_io](collectors/block_io.md)               | Block I/O devices statistics                      |
 | [cpu](collectors/cpu.md)                         | CPU statistics                                    |
 | [dns](collectors/dns.md)                         | Perform DNS request using system resolver         |
+| [exec](collectors/exec.md)                       | Execute command and read output                   |
 | [fs](collectors/fs.md)                           | File systems statistic                            |
 | [http](collectors/http.md)                       | Perform HTTP request                              |
 | [memory](collectors/memory.md)                   | Host's memory statistics                          |

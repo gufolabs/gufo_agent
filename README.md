@@ -77,6 +77,7 @@ See "Gufo Agent Man Pages" for details.
 | `block_io`        | Block I/O devices statistics                      |
 | `cpu`             | CPU statistics                                    |
 | `dns`             | Perform DNS request using system resolver         |
+| `exec`            | Execute command and read output                   |
 | `fs`              | File systems statistic                            |
 | `http`            | Perform HTTP request                              |
 | `memory`          | Host's memory statistics                          |

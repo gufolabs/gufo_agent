@@ -49,6 +49,7 @@ labels are set as key-value pairs:
 | [block_io](block_io.md)               | Block I/O devices statistics                      |
 | [cpu](cpu.md)                         | CPU statistics                                    |
 | [dns](dns.md)                         | Perform DNS request using system resolver         |
+| [exec](exec.md)                       | Execute command and read output                   |
 | [fs](fs.md)                           | File systems statistic                            |
 | [http](http.md)                       | Perform HTTP request                              |
 | [memory](memory.md)                   | Host's memory statistics                          |

@@ -4,6 +4,6 @@ job_success{dc="east",dept="business"} 12
 job_success{dc="west",dept="tech"} 12
 # HELP job_failed Failed job
 # TYPE job_failed counter
-job_faileed{dc="east",dept="business"} 1
-job_faileed{dc="west",dept="tech"} 4
+job_failed{dc="east",dept="business"} 1
+job_failed{dc="west",dept="tech"} 4
 # EOF

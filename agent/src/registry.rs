@@ -14,6 +14,7 @@ pub enum Collectors {
     BlockIo(block_io::Collector),
     Cpu(cpu::Collector),
     Dns(dns::Collector),
+    Exec(exec::Collector),
     Fs(fs::Collector),
     Http(http::Collector),
     Memory(memory::Collector),
@@ -62,6 +63,7 @@ impl TryFrom<CollectorConfig> for Collectors {
             "block_io" => Collectors::BlockIo(from_value(value)?),
             "cpu" => Collectors::Cpu(from_value(value)?),
             "dns" => Collectors::Dns(from_value(value)?),
+            "exec" => Collectors::Exec(from_value(value)?),
             "fs" => Collectors::Fs(from_value(value)?),
             "http" => Collectors::Http(from_value(value)?),
             "memory" => Collectors::Memory(from_value(value)?),
@@ -85,6 +87,7 @@ impl Collectors {
             Collectors::BlockIo(_) => block_io::Collector::get_name(),
             Collectors::Cpu(_) => cpu::Collector::get_name(),
             Collectors::Dns(_) => dns::Collector::get_name(),
+            Collectors::Exec(_) => exec::Collector::get_name(),
             Collectors::Fs(_) => fs::Collector::get_name(),
             Collectors::Http(_) => http::Collector::get_name(),
             Collectors::Memory(_) => memory::Collector::get_name(),
@@ -105,6 +108,7 @@ impl Collectors {
             Collectors::BlockIo(_) => block_io::Collector::is_random_offset(),
             Collectors::Cpu(_) => cpu::Collector::is_random_offset(),
             Collectors::Dns(_) => dns::Collector::is_random_offset(),
+            Collectors::Exec(_) => exec::Collector::is_random_offset(),
             Collectors::Fs(_) => fs::Collector::is_random_offset(),
             Collectors::Http(_) => http::Collector::is_random_offset(),
             Collectors::Memory(_) => memory::Collector::is_random_offset(),
@@ -125,6 +129,7 @@ impl Collectors {
             Collectors::BlockIo(c) => c.collect().await,
             Collectors::Cpu(c) => c.collect().await,
             Collectors::Dns(c) => c.collect().await,
+            Collectors::Exec(c) => c.collect().await,
             Collectors::Fs(c) => c.collect().await,
             Collectors::Http(c) => c.collect().await,
             Collectors::Memory(c) => c.collect().await,
@@ -144,6 +149,7 @@ impl Collectors {
             "block_io".to_string(),
             "cpu".to_string(),
             "dns".to_string(),
+            "exec".to_string(),
             "fs".to_string(),
             "http".to_string(),
             "memory".to_string(),
@@ -183,6 +189,12 @@ impl Collectors {
             let x = dns::Collector::discover_config(opts)?;
             if !x.is_empty() {
                 r.push((dns::Collector::get_name(), x));
+            }
+        }
+        if !opts.is_disabled("exec") {
+            let x = exec::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((exec::Collector::get_name(), x));
             }
         }
         if !opts.is_disabled("fs") {

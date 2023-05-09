@@ -17,6 +17,7 @@ nav:
       - block_io: collectors/block_io.md
       - cpu: collectors/cpu.md
       - dns: collectors/dns.md
+      - exec: collectors/exec.md
       - fs: collectors/fs.md
       - http: collectors/http.md
       - memory: collectors/memory.md

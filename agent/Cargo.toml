@@ -11,6 +11,7 @@ bytes = "1.4"
 common = {path = "../common"}
 cpu = {path = "../collectors/cpu"}
 dns = {path = "../collectors/dns"}
+exec = {path = "../collectors/exec"}
 fs = {path = "../collectors/fs"}
 gethostname = "0.4"
 http = {path = "../collectors/http"}
