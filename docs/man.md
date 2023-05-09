@@ -11,15 +11,16 @@
 Usage: gufo-agent [OPTIONS]
 
 Options:
-  -q, --quiet            
-  -v, --verbose...       
+  -q, --quiet
+  -v, --verbose...
   -k, --insecure         [env: GA_INSECURE=]
   -c, --config <CONFIG>  [env: GA_CONFIG=]
-      --hostname <HOSTNAME>  [env: GA_HOSTNAME=]  
-      --list-collectors  
+      --hostname <HOSTNAME>  [env: GA_HOSTNAME=]
+      --list-collectors
       --dump-metrics     [env: GA_DUMP_METRICS=]
-      --config-discovery                               
-      --config-discovery-opts <CONFIG_DISCOVERY_OPTS>  [env: GA_CONFIG_DISCOVERY_OPTS=]      
+      --config-discovery
+      --config-discovery-opts <CONFIG_DISCOVERY_OPTS>  [env: GA_CONFIG_DISCOVERY_OPTS=]
+      --config-scripts <CONFIG_SCRIPTS>
   -h, --help             Print help
   -V, --version          Print version
 ```
@@ -46,6 +47,8 @@ The following options are available:
 * <a name="opt_dump_metrics"></a>`--dump-metrics` - Dump metrics database state to stdout after each collector run.
 * <a name="opt_config_discovery"></a>`--config-discovery` - Run config discovery, dump resulting config to stdout and exit. See [Config Discovery](config_discovery.md) for details.
 * <a name="opt_config_discovery_opts"></a>`--config-discovery-opts` - Optional config discovery configuration. See [Config Discovery](config_discovery.md) for details.
+* <a name="opt_config_scripts"></a>`--config-scripts` - A path to the directory containing
+  config discovery scripts. See [Config Discovery](config_discovery.md) for details.
 * * `-h`, `--help` - Print help and exit.
 * `-V`, `--version` - Print agent version and exit.
 
@@ -58,6 +61,7 @@ The following environment variables affect the execution of `gufo-agent`:
 * `GA_HOSTNAME` - same as [`--hostname`](#opt_hostname) option.
 * `GA_INSECURE` - same as [`--insecure`](#opt_insecure) option.
 * `GA_CONFIG_DISCOVERY_OPTS` - same as [`--config-discovery-opts`](#opt_config_discovery_opts) option.
+* `GA_CONFIG_SCRIPTS` - a colon-sparated list of directories, containing discovery scripts.
 
 ## Exit Status
 

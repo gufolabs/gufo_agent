@@ -6,6 +6,7 @@
 use agent::{config_from_discovery, Agent, Collectors};
 use clap::Parser;
 use common::ConfigDiscoveryOpts;
+use std::env;
 use std::process;
 
 #[derive(Parser, Debug)]
@@ -29,6 +30,8 @@ struct Cli {
     pub config_discovery: bool,
     #[arg(long, env = "GA_CONFIG_DISCOVERY_OPTS")]
     pub config_discovery_opts: Option<String>,
+    #[arg(long)]
+    pub config_scripts: Vec<String>,
 }
 
 const ERR_EX_OTHER: i32 = 1;
@@ -46,7 +49,7 @@ fn main() {
     }
     // --config-discovery
     if cli.config_discovery {
-        let opts = match cli.config_discovery_opts {
+        let mut opts = match cli.config_discovery_opts {
             Some(x) => match ConfigDiscoveryOpts::try_from(x) {
                 Ok(x) => x,
                 Err(e) => {
@@ -56,6 +59,17 @@ fn main() {
             },
             None => ConfigDiscoveryOpts::default(),
         };
+        // Parse environment
+        if let Ok(v) = env::var("GA_CONFIG_SCRIPTS") {
+            for item in v.split(':') {
+                opts.script_path(item);
+            }
+        }
+        // Command line arguments
+        for item in cli.config_scripts {
+            opts.script_path(item)
+        }
+        //
         match config_from_discovery(&opts) {
             Ok(r) => {
                 println!("{}", r);

@@ -33,3 +33,52 @@ To disable all built-in collectors except the explicitly set (`cpu` and `memory`
 ```
 gufo-agent --config-discovery --config-discovery-opts=-builtins,+cpu,+memory
 ```
+
+## Config Discovery Scripts
+
+Gufo Agent allows using third-party scripts to generate default config. 
+The agent looks at:
+
+* `GA_CONFIG_SCRIPTS` environment variable, which contains colon-separated paths (Just like the PATH variable)
+* `--config-scripts` command line option, which may be used multiple times.
+  
+Then, the agent runs each script found and parses its output in YAML format. Each script may emit a config for one or more collector instances. Then the agent checks and collect all configs together.
+
+### Examples
+
+Script, generating a single instance of collector:
+
+``` txt title="examples/scripts/config/gufolabs.sh" linenums="1"
+--8<-- "examples/scripts/config/gufolabs.sh"
+```
+
+Script, generating a multiple instances of collector:
+
+``` txt title="examples/scripts/config/twamp.sh" linenums="1"
+--8<-- "examples/scripts/config/twamp.sh"
+```
+
+The overall result:
+```
+$ gufo-agent --config-discovery --config-discovery-opts=-builtins --config-scripts=examples/scripts/config
+...
+collectors:
+- id: GufoLabs dns
+  type: dns
+  interval: 15
+  disabled: false
+  query: gufolabs.com
+  n: 10
+- id: Twamp Reflector
+  type: twamp_reflector
+  interval: 10
+  disabled: true
+- id: Twamp Sender
+  type: twamp_sender
+  interval: 10
+  disabled: true
+  reflector: 127.0.0.1
+  n_packets: 100
+  model: g711
+```
+

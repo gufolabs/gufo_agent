@@ -27,6 +27,7 @@ pub struct ConfigDiscoveryOpts {
     disable_builtins: bool,
     disabled: HashSet<String>,
     explicitly_enabled: HashSet<String>,
+    script_paths: Vec<String>,
 }
 
 impl ConfigDiscoveryOpts {
@@ -39,8 +40,18 @@ impl ConfigDiscoveryOpts {
         }
     }
     #[allow(unused_variables)]
-    pub fn get_interval<T: ToString>(name: T) -> u64 {
+    pub fn get_interval<T: ToString>(&self, name: T) -> u64 {
         10
+    }
+    pub fn script_path<T: ToString>(&mut self, path: T) {
+        let s = path.to_string();
+        // Suppress duplicates
+        if !self.script_paths.contains(&s) {
+            self.script_paths.push(s)
+        }
+    }
+    pub fn script_paths(&self) -> Vec<String> {
+        self.script_paths.clone()
     }
 }
 
