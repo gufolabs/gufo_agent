@@ -7,7 +7,7 @@
 use crate::{CollectorConfig, Collectors, MetricsData, SenderCommand};
 use common::{AgentError, Labels, Measure};
 use rand::Rng;
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::time::{Instant, SystemTime, UNIX_EPOCH};
 use tokio::sync::mpsc;
 use tokio::time::Duration;
 
@@ -38,6 +38,7 @@ impl Schedule {
     }
     pub async fn run(&mut self) {
         log::info!("[{}] Starting collector", self.id);
+        // Initial time offset
         let delay: u64 = if self.collector.is_random_offset() {
             // Sleep random time to prevent spikes of load
             let max_delay = self.interval * 1_000_000_000;
@@ -52,7 +53,7 @@ impl Schedule {
             Duration::from_secs(self.interval)
         );
         tokio::time::sleep(Duration::from_nanos(delay)).await;
-        let sleep_duration = Duration::from_secs(self.interval);
+        //
         let collector_name = self.collector.get_name();
         loop {
             log::info!("[{}] Collecting", self.id);
@@ -65,6 +66,7 @@ impl Schedule {
                 }
             };
             // Run collector
+            let t0 = Instant::now();
             match self.collector.collect().await {
                 Ok(measures) => {
                     if let Err(e) = self.send(collector_name, measures, ts).await {
@@ -75,7 +77,18 @@ impl Schedule {
                 }
                 Err(e) => log::error!("[{}] Crashed with: {}", self.id, e),
             };
-            tokio::time::sleep(sleep_duration).await;
+            // Time elapsed
+            let dt = t0.elapsed();
+            // Adjust sleep time
+            let to_sleep = if dt.as_secs() >= self.interval {
+                // Elapsed time is greater, than interval
+                log::info!("[{}] Overrun configured interval", self.id);
+                Duration::from_secs(self.interval)
+            } else {
+                // Deduct elapsed time
+                Duration::from_nanos(self.interval * 1_000_000_000 - dt.as_nanos() as u64)
+            };
+            tokio::time::sleep(to_sleep).await;
         }
     }
     async fn send(
