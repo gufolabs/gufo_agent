@@ -350,7 +350,7 @@ impl TryFrom<&str> for ParsedMetrics {
 mod tests {
     use super::{
         empty_line, hash_comment, hash_eof, hash_help, hash_type, hash_unit, hashed_line,
-        metricname, parse, Desc, Token,
+        metricname, parse, Desc, InternalValue, Labels, Metric, Token,
     };
 
     #[test]
@@ -460,10 +460,12 @@ mod tests {
 # TYPE metric1 gauge
 # UNIT metric1 seconds
 metric1 12
+
 # HELP metric2 second metric
 # TYPE metric2 counter
 # UNIT metric2 meters
 metric2 -15
+
 # EOF"#;
         assert_eq!(
             parse(input),
@@ -473,10 +475,22 @@ metric2 -15
                     Token::DescHelp(Desc::new("metric1", "first metric")),
                     Token::DescType(Desc::new("metric1", "gauge")),
                     Token::DescUnit(Desc::new("metric1", "seconds")),
+                    Token::Metric(Metric {
+                        metric_name: "metric1".into(),
+                        labels: Labels::default(),
+                        value: InternalValue::U64(12),
+                        timestamp: None
+                    }),
                     Token::EmptyLine,
                     Token::DescHelp(Desc::new("metric2", "second metric")),
                     Token::DescType(Desc::new("metric2", "counter")),
                     Token::DescUnit(Desc::new("metric2", "meters")),
+                    Token::Metric(Metric {
+                        metric_name: "metric2".into(),
+                        labels: Labels::default(),
+                        value: InternalValue::I64(-15),
+                        timestamp: None
+                    }),
                     Token::EmptyLine,
                     Token::Eof,
                 ]
