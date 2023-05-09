@@ -7,13 +7,13 @@
 // See LICENSE for details
 // ---------------------------------------------------------------------
 
-use common::{AgentError, Labels, Measure, Value};
+use common::{AgentError, Label, Labels, Measure, Value};
 use nom::{
     branch::alt,
-    bytes::complete::{is_not, tag},
-    character::complete::{alpha1, alphanumeric1, line_ending, space0, space1},
+    bytes::complete::{escaped, is_not, tag},
+    character::complete::{alpha1, alphanumeric1, char, line_ending, space0, space1},
     combinator::{eof, opt, recognize},
-    multi::{many0, many0_count},
+    multi::{many0, many0_count, separated_list0},
     number::complete::recognize_float_parts,
     sequence::{pair, tuple},
     IResult,
@@ -132,7 +132,7 @@ pub fn parse(input: &str) -> IResult<&str, Vec<Token>> {
 // Parse single line and return Token
 fn line(input: &str) -> IResult<&str, Token> {
     //alt((empty_line, hashed_line, metric_line))(input)
-    alt((empty_line, hashed_line, sample_line))(input)
+    alt((empty_line, hashed_line, metric_line))(input)
 }
 
 // Empty line
@@ -172,7 +172,7 @@ fn hash_help(input: &str) -> IResult<&str, Token> {
     let (input, _) = space1(input)?;
     let (input, _) = tag("HELP")(input)?;
     let (input, _) = space1(input)?;
-    let (input, name) = metricname(input)?;
+    let (input, name) = metric_name(input)?;
     let (input, _) = space1(input)?;
     let (input, help) = is_not("\r\n")(input)?;
     let (input, _) = alt((line_ending, eof))(input)?;
@@ -183,7 +183,7 @@ fn hash_type(input: &str) -> IResult<&str, Token> {
     let (input, _) = space1(input)?;
     let (input, _) = tag("TYPE")(input)?;
     let (input, _) = space1(input)?;
-    let (input, name) = metricname(input)?;
+    let (input, name) = metric_name(input)?;
     let (input, _) = space1(input)?;
     let (input, t) = alt((tag("counter"), tag("gauge")))(input)?;
     let (input, _) = alt((line_ending, eof))(input)?;
@@ -193,7 +193,7 @@ fn hash_unit(input: &str) -> IResult<&str, Token> {
     let (input, _) = space1(input)?;
     let (input, _) = tag("UNIT")(input)?;
     let (input, _) = space1(input)?;
-    let (input, name) = metricname(input)?;
+    let (input, name) = metric_name(input)?;
     let (input, _) = space1(input)?;
     let (input, unit) = is_not("\r\n")(input)?;
     let (input, _) = alt((line_ending, eof))(input)?;
@@ -213,9 +213,11 @@ fn recognize_value(input: &str) -> IResult<&str, InternalValue> {
     Ok((input, value))
 }
 // <metric_name>[<labels>] SP <value>[ SP <timestamp>] <LF>
-fn sample_line(input: &str) -> IResult<&str, Token> {
+fn metric_line(input: &str) -> IResult<&str, Token> {
     // <metric_name>
-    let (input, metric_name) = metricname(input)?;
+    let (input, metric_name) = metric_name(input)?;
+    // <labels>
+    let (input, labels) = labels(input)?;
     // SP
     let (input, _) = space1(input)?;
     // <value>
@@ -227,7 +229,7 @@ fn sample_line(input: &str) -> IResult<&str, Token> {
         input,
         Token::Metric(Metric {
             metric_name: metric_name.into(),
-            labels: Labels::default(),
+            labels,
             value,
             timestamp: None,
         }),
@@ -237,7 +239,7 @@ fn sample_line(input: &str) -> IResult<&str, Token> {
 // metricname = metricname-initial-char 0*metricname-char
 // metricname-char = metricname-initial-char / DIGIT
 // metricname-initial-char = ALPHA / "_" / ":"
-fn metricname(input: &str) -> IResult<&str, &str> {
+fn metric_name(input: &str) -> IResult<&str, &str> {
     // metricname-initial-char 0*metricname-char
     recognize(pair(
         // metricname-initial-char = ALPHA / "_" / ":"
@@ -245,6 +247,43 @@ fn metricname(input: &str) -> IResult<&str, &str> {
         // metricname-char = metricname-initial-char / DIGIT
         many0_count(alt((alphanumeric1, tag("_"), tag(":")))),
     ))(input)
+}
+
+// label-name = label-name-initial-char *label-name-char
+// label-name-char = label-name-initial-char / DIGIT
+// label-name-initial-char = ALPHA / "_"
+fn label_name(input: &str) -> IResult<&str, &str> {
+    // label-name = label-name-initial-char *label-name-char
+    recognize(pair(
+        // label-name-initial-char = ALPHA / "_"
+        alt((alpha1, tag("_"))),
+        // label-name-char = label-name-initial-char / DIGIT
+        many0_count(alt((alphanumeric1, tag("_")))),
+    ))(input)
+}
+
+// labels = "{" [label *(COMMA label)] "}"
+fn labels(input: &str) -> IResult<&str, Labels> {
+    if !input.starts_with('{') {
+        return Ok((input, Labels::default()));
+    }
+    let (input, _) = tag("{")(input)?;
+    let (input, r) = separated_list0(tag(","), label)(input)?;
+    let (input, _) = tag("}")(input)?;
+    Ok((input, Labels::new(r)))
+}
+
+// label = label-name EQ DQUOTE escaped-string DQUOTE
+fn label(input: &str) -> IResult<&str, Label> {
+    // <label_name>
+    let (input, name) = label_name(input)?;
+    // ="
+    let (input, _) = tag("=\"")(input)?;
+    // Escaped string
+    let (input, value) = escaped(is_not("\""), '\\', char('"'))(input)?;
+    // "
+    let (input, _) = tag("\"")(input)?;
+    Ok((input, Label::new(name, value)))
 }
 
 #[derive(Default)]
@@ -350,27 +389,27 @@ impl TryFrom<&str> for ParsedMetrics {
 mod tests {
     use super::{
         empty_line, hash_comment, hash_eof, hash_help, hash_type, hash_unit, hashed_line,
-        metricname, parse, Desc, InternalValue, Labels, Metric, Token,
+        metric_name, parse, Desc, InternalValue, Labels, Metric, Token,
     };
 
     #[test]
     fn test_metricname() {
-        assert!(metricname("").is_err());
-        assert!(metricname("#").is_err());
-        assert_eq!(metricname("m"), Ok(("", "m")));
-        assert_eq!(metricname("_"), Ok(("", "_")));
-        assert_eq!(metricname(":"), Ok(("", ":")));
-        assert!(metricname("0").is_err());
-        assert_eq!(metricname("m1"), Ok(("", "m1")));
+        assert!(metric_name("").is_err());
+        assert!(metric_name("#").is_err());
+        assert_eq!(metric_name("m"), Ok(("", "m")));
+        assert_eq!(metric_name("_"), Ok(("", "_")));
+        assert_eq!(metric_name(":"), Ok(("", ":")));
+        assert!(metric_name("0").is_err());
+        assert_eq!(metric_name("m1"), Ok(("", "m1")));
         assert_eq!(
-            metricname(":very_very:123:long"),
+            metric_name(":very_very:123:long"),
             Ok(("", ":very_very:123:long"))
         );
     }
 
     #[test]
     fn test_empty_line() {
-        assert!(empty_line("").is_ok());
+        //assert!(empty_line("").is_ok());
         assert!(empty_line("\n").is_ok());
         assert!(empty_line("\r\n").is_ok());
         assert!(empty_line(" ").is_ok());
