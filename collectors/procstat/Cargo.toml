@@ -1,0 +1,13 @@
+[package]
+edition = "2021"
+name = "procstat"
+version = "0.1.0"
+
+[dependencies]
+async-trait = "0.1"
+common = {path = "../../common"}
+log = "0.4"
+page_size = "0.5"
+ps = {path = "../../proto/ps"}
+regex = "1.8"
+serde = {version = "1.0", features = ["derive"]}

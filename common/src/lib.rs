@@ -15,3 +15,4 @@ pub use discovery::{ConfigDiscoveryOpts, ConfigItem};
 pub use error::AgentError;
 pub use label::{Label, Labels, LabelsConfig};
 pub use timing::Timing;
+pub type AgentResult<T> = Result<T, AgentError>;

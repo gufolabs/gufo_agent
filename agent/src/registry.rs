@@ -19,6 +19,7 @@ pub enum Collectors {
     Http(http::Collector),
     Memory(memory::Collector),
     Network(network::Collector),
+    Procstat(procstat::Collector),
     Sockets(sockets::Collector),
     Spool(spool::Collector),
     TwampReflector(twamp_reflector::Collector),
@@ -68,6 +69,7 @@ impl TryFrom<CollectorConfig> for Collectors {
             "http" => Collectors::Http(from_value(value)?),
             "memory" => Collectors::Memory(from_value(value)?),
             "network" => Collectors::Network(from_value(value)?),
+            "procstat" => Collectors::Procstat(from_value(value)?),
             "sockets" => Collectors::Sockets(from_value(value)?),
             "spool" => Collectors::Spool(from_value(value)?),
             "twamp_reflector" => Collectors::TwampReflector(from_value(value)?),
@@ -92,6 +94,7 @@ impl Collectors {
             Collectors::Http(_) => http::Collector::get_name(),
             Collectors::Memory(_) => memory::Collector::get_name(),
             Collectors::Network(_) => network::Collector::get_name(),
+            Collectors::Procstat(_) => procstat::Collector::get_name(),
             Collectors::Sockets(_) => sockets::Collector::get_name(),
             Collectors::Spool(_) => spool::Collector::get_name(),
             Collectors::TwampReflector(_) => twamp_reflector::Collector::get_name(),
@@ -113,6 +116,7 @@ impl Collectors {
             Collectors::Http(_) => http::Collector::is_random_offset(),
             Collectors::Memory(_) => memory::Collector::is_random_offset(),
             Collectors::Network(_) => network::Collector::is_random_offset(),
+            Collectors::Procstat(_) => procstat::Collector::is_random_offset(),
             Collectors::Sockets(_) => sockets::Collector::is_random_offset(),
             Collectors::Spool(_) => spool::Collector::is_random_offset(),
             Collectors::TwampReflector(_) => twamp_reflector::Collector::is_random_offset(),
@@ -134,6 +138,7 @@ impl Collectors {
             Collectors::Http(c) => c.collect().await,
             Collectors::Memory(c) => c.collect().await,
             Collectors::Network(c) => c.collect().await,
+            Collectors::Procstat(c) => c.collect().await,
             Collectors::Sockets(c) => c.collect().await,
             Collectors::Spool(c) => c.collect().await,
             Collectors::TwampReflector(c) => c.collect().await,
@@ -154,6 +159,7 @@ impl Collectors {
             "http".to_string(),
             "memory".to_string(),
             "network".to_string(),
+            "procstat".to_string(),
             "sockets".to_string(),
             "spool".to_string(),
             "twamp_reflector".to_string(),
@@ -219,6 +225,12 @@ impl Collectors {
             let x = network::Collector::discover_config(opts)?;
             if !x.is_empty() {
                 r.push((network::Collector::get_name(), x));
+            }
+        }
+        if !opts.is_disabled("procstat") {
+            let x = procstat::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((procstat::Collector::get_name(), x));
             }
         }
         if !opts.is_disabled("sockets") {

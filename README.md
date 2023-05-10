@@ -82,6 +82,7 @@ See "Gufo Agent Man Pages" for details.
 | `http`            | Perform HTTP request                              |
 | `memory`          | Host's memory statistics                          |
 | `network`         | Host's network interface statistics               |
+| `procstat`        | Process' statistics                               |
 | `sockets`         | Host's sockets statistics                         |
 | `spool`           | Read files in openmetrics format from a directory |
 | `twamp_reflector` | TWAMP reflector for SLA probing                   |

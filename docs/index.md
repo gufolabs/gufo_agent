@@ -69,6 +69,7 @@ See [Gufo Agent Man Pages](man.md) for details.
 | [http](collectors/http.md)                       | Perform HTTP request                              |
 | [memory](collectors/memory.md)                   | Host's memory statistics                          |
 | [network](collectors/network.md)                 | Host's network interface statistics               |
+| [procstat](collectors/procstat.md)               | Process' statistics                               |
 | [sockets](collectors/sockets.md)                 | Host's sockets statistics                         |
 | [spool](collectors/spool.md)                     | Read files in openmetrics format from a directory |
 | [twamp_reflector](collectors/twamp_reflector.md) | TWAMP reflector for SLA probing                   |

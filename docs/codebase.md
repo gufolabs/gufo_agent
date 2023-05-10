@@ -27,6 +27,7 @@ The code base of the project has following structure:
     * `emodel` - G.107 E-Model calculations and constants.
     * `frame` - `FrameReader` and `FrameWriter` traits.
     * `openmetrics` - OpenMetrics parser.
+    * `ps` - Process statistics collection.
     * `tos` - DSCP/ToS constants.
     * `twamp` - TWAMP protocol frames.
     * `udp` - `UdpConnection` wrapper.

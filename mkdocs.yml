@@ -22,6 +22,7 @@ nav:
       - http: collectors/http.md
       - memory: collectors/memory.md
       - network: collectors/network.md
+      - procstat: collectors/procstat.md
       - sockets: collectors/sockets.md
       - spool: collectors/spool.md
       - twamp_reflector: collectors/twamp_reflector.md
