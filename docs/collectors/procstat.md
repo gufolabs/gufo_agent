@@ -42,6 +42,12 @@ Config example:
   | `ps_cpu_time_iowait`              | Counter     | Linux    | CPU time iowait in seconds                                                  |
   | `ps_mem_total`                    | Counter     | Linux    | Total memory                                                                |
   | `ps_mem_rss`                      | Counter     | Linux    | Resident set size                                                           |
+  | `ps_mem_swap`                     | Gauge       | Linux    | Swapped-out virtual memory size                                             |
+  | `ps_mem_data`                     | Gauge       | Linux    | Data segment size                                                           |
+  | `ps_mem_stack`                    | Gauge       | Linux    | Stack segment size                                                          |
+  | `ps_mem_text`                     | Gauge       | Linux    | Text segment size                                                           |
+  | `ps_mem_lib`                      | Gauge       | Linux    | Shared library code size                                                    |
+  | `ps_mem_locked`                   | Gauge       | Linux    | Locked memory size                                                          |
   | `ps_read_count`                   | Counter     | Linux    | Total read I/O operations                                                   |
   | `ps_write_count`                  | Counter     | Linux    | Total write I/O operations                                                  |
   | `ps_read_bytes`                   | Counter     | Linux    | Total bytes read                                                            |

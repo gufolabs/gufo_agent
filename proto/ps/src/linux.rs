@@ -52,6 +52,7 @@ impl PsFinder for Ps {
         let p_size = page_size::get() as u64;
         let mut r = Vec::with_capacity(pids.len());
         const F_TICKS: f32 = 100.0;
+        const KB: u64 = 1024;
         for &pid in pids.iter() {
             let mut stats = ProcStat::default();
             stats.pid = pid;
@@ -104,6 +105,12 @@ impl PsFinder for Ps {
                 if let Ok(items) = parse_status(data.as_str()) {
                     for (k, v) in items.into_iter() {
                         match k {
+                            "VmSwap" => stats.mem_swap = v.map(|x| x * KB),
+                            "VmData" => stats.mem_data = v.map(|x| x * KB),
+                            "VmStk" => stats.mem_stack = v.map(|x| x * KB),
+                            "VmLck" => stats.mem_locked = v.map(|x| x * KB),
+                            "VmExe" => stats.mem_text = v.map(|x| x * KB),
+                            "VmLib" => stats.mem_lib = v.map(|x| x * KB),
                             "voluntary_ctxt_switches" => stats.voluntary_context_switches = v,
                             "nonvoluntary_ctxt_switches" => stats.involuntary_context_switches = v,
                             _ => {}

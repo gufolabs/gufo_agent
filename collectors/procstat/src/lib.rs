@@ -69,6 +69,12 @@ gauge_f!(ps_cpu_time_iowait, "CPU time iowait in seconds");
 // Mem
 gauge!(ps_mem_total, "Total memory");
 gauge!(ps_mem_rss, "Resident set size");
+gauge!(ps_mem_swap, "Swapped-out virtual memory size");
+gauge!(ps_mem_data, "Data segment size");
+gauge!(ps_mem_stack, "Stack segment size");
+gauge!(ps_mem_text, "Text segment size");
+gauge!(ps_mem_lib, "Shared library code size");
+gauge!(ps_mem_locked, "Locked memory size");
 // I/O
 counter!(ps_read_count, "Total read I/O operations");
 counter!(ps_write_count, "Total write I/O operations");
@@ -177,6 +183,12 @@ impl Collectable for Collector {
             // Memory
             apply_some!(r, stat.mem_total, ps_mem_total);
             apply_some!(r, stat.mem_rss, ps_mem_rss);
+            apply_some!(r, stat.mem_swap, ps_mem_swap);
+            apply_some!(r, stat.mem_data, ps_mem_data);
+            apply_some!(r, stat.mem_stack, ps_mem_stack);
+            apply_some!(r, stat.mem_text, ps_mem_text);
+            apply_some!(r, stat.mem_lib, ps_mem_lib);
+            apply_some!(r, stat.mem_locked, ps_mem_locked);
             // I/O
             apply_some!(r, stat.io_read_count, ps_read_count);
             apply_some!(r, stat.io_write_count, ps_write_count);

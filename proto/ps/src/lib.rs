@@ -30,10 +30,12 @@ pub struct ProcStat {
     // memory
     pub mem_rss: Option<u64>,
     pub mem_total: Option<u64>,
-    // pub mem_swap: Option<u64>,
-    // pub mem_data: Option<u64>,
-    // pub mem_stack: Option<u64>,
-    // pub mem_locked: Option<u64>,
+    pub mem_swap: Option<u64>,
+    pub mem_data: Option<u64>,
+    pub mem_stack: Option<u64>,
+    pub mem_locked: Option<u64>,
+    pub mem_text: Option<u64>,
+    pub mem_lib: Option<u64>,
     // I/O
     pub io_read_count: Option<u64>,
     pub io_write_count: Option<u64>,
