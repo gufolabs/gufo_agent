@@ -6,7 +6,7 @@
 
 use async_trait::async_trait;
 use common::{
-    counter, gauge, AgentError, AgentResult, Collectable, ConfigDiscoveryOpts, ConfigItem, Measure,
+    gauge, AgentError, AgentResult, Collectable, ConfigDiscoveryOpts, ConfigItem, Measure,
 };
 use ps::{Pid, Ps, PsFinder};
 use regex::Regex;
@@ -21,12 +21,15 @@ pub struct Config {
     pid_file: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pattern: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    self_pid: Option<bool>,
 }
 
 // Collector structure
 pub struct Collector {
     pid_file: Option<String>,
     pattern: Option<Regex>,
+    self_pid: bool,
 }
 
 // Generated metrics
@@ -46,10 +49,11 @@ impl TryFrom<Config> for Collector {
     type Error = AgentError;
 
     fn try_from(value: Config) -> Result<Self, Self::Error> {
+        let self_pid = value.self_pid.unwrap_or(false);
         // Check if configured
-        if value.pid_file.is_none() && value.pattern.is_none() {
+        if value.pid_file.is_none() && value.pattern.is_none() && !self_pid {
             return Err(AgentError::ConfigurationError(
-                "pid_file or pattern must be set".to_string(),
+                "pid_file, pattern, or self_pid must be set".to_string(),
             ));
         }
         // Compile pattern if any
@@ -63,6 +67,7 @@ impl TryFrom<Config> for Collector {
         Ok(Self {
             pid_file: value.pid_file,
             pattern: pattern,
+            self_pid,
         })
     }
 }
@@ -84,6 +89,13 @@ impl Collectable for Collector {
     async fn collect(&mut self) -> AgentResult<Vec<Measure>> {
         // Filter pids
         let mut all_pids = HashSet::new();
+        // self_pid
+        if self.self_pid {
+            match Ps::filter_by_self() {
+                Ok(pids) => Self::apply_pids(&mut all_pids, pids),
+                Err(e) => log::error!("Failed to self pid: {}", e),
+            }
+        }
         // pid_file
         if let Some(pid_file) = &self.pid_file {
             match Self::read_pid_file(pid_file) {
@@ -127,7 +139,8 @@ impl Collectable for Collector {
     fn discover_config(_: &ConfigDiscoveryOpts) -> Result<Vec<ConfigItem>, AgentError> {
         let cfg = Config {
             pid_file: None,
-            pattern: Some("gufo-agent".to_string()),
+            pattern: None,
+            self_pid: Some(true),
         };
         Ok(vec![ConfigItem::from_config(cfg)?])
     }

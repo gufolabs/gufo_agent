@@ -30,12 +30,14 @@ pub struct ProcStat {
 }
 
 pub trait PsFinder {
-    // Enumerate all processes
+    // Enumerate all running processes
     fn pids() -> Result<Vec<Pid>, AgentError>;
     // Check if process is exists
     fn has_pid(pid: Pid) -> bool;
     // Get process command line, if exists
     fn cmdline(pid: Pid) -> Option<Vec<String>>;
+    // Returns own pid
+    fn filter_by_self() -> Result<Vec<Pid>, AgentError>;
     // Returns process with given Pid, if exists
     fn filter_by_pid(pid: Pid) -> Result<Vec<Pid>, AgentError> {
         Ok(if Self::has_pid(pid) {

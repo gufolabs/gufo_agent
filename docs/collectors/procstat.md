@@ -10,6 +10,7 @@
 | `type`     | String  |         | Must be `memory`                                                   |
 | `interval` | Integer |         | Repetition interval in seconds                                     |
 | `labels`   | Object  |         | Additional collector-level labels                                  |
+| `self_pid` | Boolean |         | Include agent's own pid                                            |
 | `pid_file` | String  |         | Optional path to pid file                                          |
 | `pattern`  | String  |         | Optional regular expression that matches the process' command line |
 
@@ -19,7 +20,7 @@ Config example:
 - id: procstat
   type: procstat
   interval: 10
-  pattern: gufo-agent
+  self_pid: true
 ```
 
 ## Collected Metrics

@@ -42,6 +42,10 @@ impl PsFinder for Ps {
         read_procfs(pid, "cmdline")
             .map(|data| data.split_terminator('\0').map(|x| x.to_string()).collect())
     }
+    // Returns own pid
+    fn filter_by_self() -> Result<Vec<Pid>, AgentError> {
+        Ok(vec![std::process::id()])
+    }
     // Get stats for given pids
     fn get_stats(pids: &HashSet<Pid>) -> Vec<ProcStat> {
         let p_size = page_size::get() as u64;
