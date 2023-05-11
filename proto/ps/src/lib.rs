@@ -15,6 +15,18 @@ pub struct ProcStat {
     pub pid: Pid,
     pub num_threads: Option<u64>,
     pub num_fds: Option<u64>,
+    // ctx switch
+    pub voluntary_context_switches: Option<u64>,
+    pub involuntary_context_switches: Option<u64>,
+    // page faults
+    pub minor_faults: Option<u64>,
+    pub child_minor_faults: Option<u64>,
+    pub major_faults: Option<u64>,
+    pub child_major_faults: Option<u64>,
+    // cpu
+    pub cpu_time_user: Option<f32>,
+    pub cpu_time_system: Option<f32>,
+    pub cpu_time_iowait: Option<f32>,
     // memory
     pub mem_rss: Option<u64>,
     pub mem_total: Option<u64>,

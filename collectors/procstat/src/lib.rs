@@ -6,7 +6,8 @@
 
 use async_trait::async_trait;
 use common::{
-    gauge, AgentError, AgentResult, Collectable, ConfigDiscoveryOpts, ConfigItem, Measure,
+    counter, gauge, gauge_f, AgentError, AgentResult, Collectable, ConfigDiscoveryOpts, ConfigItem,
+    Measure,
 };
 use ps::{Pid, Ps, PsFinder};
 use regex::Regex;
@@ -35,14 +36,44 @@ pub struct Collector {
 // Generated metrics
 gauge!(ps_num_fds, "Number of open files");
 gauge!(ps_num_threads, "Number of threads");
+// ctx switches
+counter!(
+    ps_voluntary_context_switches,
+    "Total voluntary context switches"
+);
+counter!(
+    ps_involuntary_context_switches,
+    "Total involuntary context switches"
+);
+// page faults
+counter!(
+    ps_minor_faults,
+    "Total number of minor faults which do not requirie loading memory from disk"
+);
+counter!(
+    ps_major_faults,
+    "Total number of major faults which require loading memory from disk"
+);
+counter!(
+    ps_child_minor_faults,
+    "Total number of minor faults that process waited-for children made"
+);
+counter!(
+    ps_child_major_faults,
+    "Total number of major faults that process waited-for children made"
+);
+// CPU
+gauge_f!(ps_cpu_time_user, "CPU time in user mode in seconds");
+gauge_f!(ps_cpu_time_system, "CPU time in system mode in seconds");
+gauge_f!(ps_cpu_time_iowait, "CPU time iowait in seconds");
 // Mem
 gauge!(ps_mem_total, "Total memory");
 gauge!(ps_mem_rss, "Resident set size");
 // I/O
-gauge!(ps_read_count, "Total read I/O operations");
-gauge!(ps_write_count, "Total write I/O operations");
-gauge!(ps_read_bytes, "Total bytes read");
-gauge!(ps_write_bytes, "Total bytes written");
+counter!(ps_read_count, "Total read I/O operations");
+counter!(ps_write_count, "Total write I/O operations");
+counter!(ps_read_bytes, "Total bytes read");
+counter!(ps_write_bytes, "Total bytes written");
 
 // Instantiate collector from given config
 impl TryFrom<Config> for Collector {
@@ -123,6 +154,26 @@ impl Collectable for Collector {
         for stat in Ps::get_stats(&all_pids).into_iter() {
             apply_some!(r, stat.num_fds, ps_num_fds);
             apply_some!(r, stat.num_threads, ps_num_threads);
+            // ctx
+            apply_some!(
+                r,
+                stat.voluntary_context_switches,
+                ps_voluntary_context_switches
+            );
+            apply_some!(
+                r,
+                stat.involuntary_context_switches,
+                ps_involuntary_context_switches
+            );
+            // Page faults
+            apply_some!(r, stat.minor_faults, ps_minor_faults);
+            apply_some!(r, stat.major_faults, ps_major_faults);
+            apply_some!(r, stat.child_minor_faults, ps_child_minor_faults);
+            apply_some!(r, stat.child_major_faults, ps_child_major_faults);
+            // CPU
+            apply_some!(r, stat.cpu_time_user, ps_cpu_time_user);
+            apply_some!(r, stat.cpu_time_system, ps_cpu_time_system);
+            apply_some!(r, stat.cpu_time_iowait, ps_cpu_time_iowait);
             // Memory
             apply_some!(r, stat.mem_total, ps_mem_total);
             apply_some!(r, stat.mem_rss, ps_mem_rss);

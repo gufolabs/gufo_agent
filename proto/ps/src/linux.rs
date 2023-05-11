@@ -9,9 +9,10 @@ use common::{AgentError, AgentResult};
 use nom::{
     branch::alt,
     bytes::complete::{is_not, tag},
-    character::complete::{digit1, line_ending},
+    character::complete::{digit1, line_ending, space1},
     combinator::eof,
     multi::many0,
+    sequence::pair,
     IResult,
 };
 use std::collections::HashSet;
@@ -50,6 +51,7 @@ impl PsFinder for Ps {
     fn get_stats(pids: &HashSet<Pid>) -> Vec<ProcStat> {
         let p_size = page_size::get() as u64;
         let mut r = Vec::with_capacity(pids.len());
+        const F_TICKS: f32 = 100.0;
         for &pid in pids.iter() {
             let mut stats = ProcStat::default();
             stats.pid = pid;
@@ -60,6 +62,19 @@ impl PsFinder for Ps {
             if let Some(data) = read_procfs(pid, "stat") {
                 let parts: Vec<&str> = data.split(' ').collect();
                 stats.num_threads = parse_field(parts[STAT_NUM_THREADS]);
+                // faults
+                stats.minor_faults = parse_field(parts[STAT_MINFLT]);
+                stats.major_faults = parse_field(parts[STAT_MAJFLT]);
+                stats.child_minor_faults = parse_field(parts[STAT_CMINFLT]);
+                stats.child_major_faults = parse_field(parts[STAT_CMAJFLT]);
+                // cpu
+                stats.cpu_time_user = parse_field(parts[STAT_UTIME]).map(|x: f32| x / F_TICKS);
+                stats.cpu_time_system = parse_field(parts[STAT_STIME]).map(|x: f32| x / F_TICKS);
+                if parts.len() >= STAT_DELAYACCT_BLKIO_TICKS {
+                    // Linux 2.6.18
+                    stats.cpu_time_iowait =
+                        parse_field(parts[STAT_DELAYACCT_BLKIO_TICKS]).map(|x: f32| x / F_TICKS);
+                }
             }
             // Process /proc/<pid>/statm
             // See man 5 proc for detaults
@@ -78,6 +93,19 @@ impl PsFinder for Ps {
                             "syscw" => stats.io_write_count = Some(v),
                             "read_bytes" => stats.io_read_bytes = Some(v),
                             "write_bytes" => stats.io_write_bytes = Some(v),
+                            _ => {}
+                        }
+                    }
+                }
+            }
+            // Process /proc/<pid>/status
+            // See man 5 proc for detaults
+            if let Some(data) = read_procfs(pid, "status") {
+                if let Ok(items) = parse_status(data.as_str()) {
+                    for (k, v) in items.into_iter() {
+                        match k {
+                            "voluntary_ctxt_switches" => stats.voluntary_context_switches = v,
+                            "nonvoluntary_ctxt_switches" => stats.involuntary_context_switches = v,
                             _ => {}
                         }
                     }
@@ -131,8 +159,48 @@ fn parse_io(input: &str) -> AgentResult<Vec<(&str, u64)>> {
     Ok(r)
 }
 
+// /proc/<pid>/status parser
+fn parse_status_kb(input: &str) -> IResult<&str, Option<u64>> {
+    let (input, value) = digit1(input)?;
+    let (input, _) = pair(space1, tag("kB"))(input)?;
+    let (input, _) = alt((line_ending, eof))(input)?;
+    let pv = value.parse().unwrap(); //@todo
+    Ok((input, Some(pv)))
+}
+
+fn parse_status_num(input: &str) -> IResult<&str, Option<u64>> {
+    let (input, value) = digit1(input)?;
+    let (input, _) = alt((line_ending, eof))(input)?;
+    let pv = value.parse().unwrap(); //@todo
+    Ok((input, Some(pv)))
+}
+
+fn parse_status_str(input: &str) -> IResult<&str, Option<u64>> {
+    let (input, _) = is_not("\n")(input)?;
+    let (input, _) = alt((line_ending, eof))(input)?;
+    Ok((input, None))
+}
+
+fn parse_status_line(input: &str) -> IResult<&str, (&str, Option<u64>)> {
+    // tag
+    let (input, t) = is_not(":")(input)?;
+    // :
+    let (input, _) = tag(":")(input)?;
+    // <space>+
+    let (input, _) = space1(input)?;
+    // value
+    let (input, value) = alt((parse_status_kb, parse_status_num, parse_status_str))(input)?;
+    Ok((input, (t, value)))
+}
+
+fn parse_status(input: &str) -> AgentResult<Vec<(&str, Option<u64>)>> {
+    let (_, r) =
+        many0(parse_status_line)(input).map_err(|e| AgentError::InternalError(e.to_string()))?;
+    Ok(r)
+}
+
 // Constants
-// stat fields
+// /proc/<pid>/stat fields
 // const STAT_PID: usize = 0;
 // const STAT_COMM: usize = 1;
 // const STAT_STATE:  usize = 2;
@@ -142,12 +210,12 @@ fn parse_io(input: &str) -> AgentResult<Vec<(&str, u64)>> {
 // const STAT_TTY_NR: usize = 6;
 // const STAT_TPGID: usize = 7;
 // const STAT_FLAGS: usize = 8;
-// const STAT_MINFLT: usize = 9;
-// const STAT_CMINFLT: usize = 10;
-// const STAT_MAJFLT: usize = 11;
-// const STAT_CMAJFLT: usize = 12;
-// const STAT_UTIME: usize = 13;
-// const STAT_STIME: usize = 14;
+const STAT_MINFLT: usize = 9;
+const STAT_CMINFLT: usize = 10;
+const STAT_MAJFLT: usize = 11;
+const STAT_CMAJFLT: usize = 12;
+const STAT_UTIME: usize = 13;
+const STAT_STIME: usize = 14;
 // const STAT_CUTIME: usize = 15;
 // const STAT_CSTIME: usize = 16;
 // const STAT_PRIORITY: usize = 17;
@@ -174,7 +242,7 @@ const STAT_NUM_THREADS: usize = 19;
 // const STAT_PROCESSOR: usize = 38;
 // const STAT_RT_PRIORITY: usize = 39;
 // const STAT_POLICY: usize = 40;
-// const STAT_DELAYACCT_BLKIO_TICKS: usize = 41;
+const STAT_DELAYACCT_BLKIO_TICKS: usize = 41;
 // const STAT_GUEST_TIME: usize = 42;
 // const STAT_CGUEST_TIME: usize = 43;
 // const STAT_START_DATA: usize = 44;
@@ -185,7 +253,8 @@ const STAT_NUM_THREADS: usize = 19;
 // const STAT_ENV_START: usize = 49;
 // const STAT_ENV_END: usize = 50;
 // const STAT_EXIT_CODE: usize = 51;
-// statm fields
+
+// /proc/pid/statm fields
 const STATM_SIZE: usize = 0;
 const STATM_RESIDENT: usize = 1;
 // const STATM_SHARED: usize = 2;
@@ -196,7 +265,7 @@ const STATM_RESIDENT: usize = 1;
 
 #[cfg(test)]
 mod tests {
-    use super::parse_io;
+    use super::{parse_io, parse_status};
     #[test]
     fn test_io_parser() {
         let s = r#"rchar: 2300
@@ -218,6 +287,129 @@ cancelled_write_bytes: 0
                 ("read_bytes", 45056),
                 ("write_bytes", 0),
                 ("cancelled_write_bytes", 0)
+            ]
+        );
+    }
+    #[test]
+    fn test_status_parser() {
+        let s = r#"Name:   cat
+Umask:  0022
+State:  R (running)
+Tgid:   25928
+Ngid:   0
+Pid:    25928
+PPid:   528
+TracerPid:      0
+Uid:    0       0       0       0
+Gid:    0       0       0       0
+FDSize: 256
+Groups: 0 
+NStgid: 25928
+NSpid:  25928
+NSpgid: 25928
+NSsid:  528
+VmPeak:     4424 kB
+VmSize:     4424 kB
+VmLck:         0 kB
+VmPin:         0 kB
+VmHWM:       568 kB
+VmRSS:       568 kB
+RssAnon:              64 kB
+RssFile:             504 kB
+RssShmem:              0 kB
+VmData:      312 kB
+VmStk:       132 kB
+VmExe:        20 kB
+VmLib:      1520 kB
+VmPTE:        44 kB
+VmSwap:        0 kB
+HugetlbPages:          0 kB
+CoreDumping:    0
+THP_enabled:    1
+Threads:        1
+SigQ:   1/23293
+SigPnd: 0000000000000000
+ShdPnd: 0000000000000000
+SigBlk: 0000000000000000
+SigIgn: 0000000000000000
+SigCgt: 0000000000000000
+CapInh: 0000000000000000
+CapPrm: 00000000a80425fb
+CapEff: 00000000a80425fb
+CapBnd: 00000000a80425fb
+CapAmb: 0000000000000000
+NoNewPrivs:     0
+Seccomp:        2
+Seccomp_filters:        2
+Speculation_Store_Bypass:       vulnerable
+SpeculationIndirectBranch:      always enabled
+Cpus_allowed:   f
+Cpus_allowed_list:      0-3
+Mems_allowed:   1
+Mems_allowed_list:      0
+voluntary_ctxt_switches:        1
+nonvoluntary_ctxt_switches:     2"#;
+        let r = parse_status(s).unwrap();
+        assert_eq!(
+            r,
+            vec![
+                ("Name", None),
+                ("Umask", Some(22)),
+                ("State", None),
+                ("Tgid", Some(25928)),
+                ("Ngid", Some(0)),
+                ("Pid", Some(25928)),
+                ("PPid", Some(528)),
+                ("TracerPid", Some(0)),
+                ("Uid", None),
+                ("Gid", None),
+                ("FDSize", Some(256)),
+                ("Groups", None),
+                ("NStgid", Some(25928)),
+                ("NSpid", Some(25928)),
+                ("NSpgid", Some(25928)),
+                ("NSsid", Some(528)),
+                ("VmPeak", Some(4424)),
+                ("VmSize", Some(4424)),
+                ("VmLck", Some(0)),
+                ("VmPin", Some(0)),
+                ("VmHWM", Some(568)),
+                ("VmRSS", Some(568)),
+                ("RssAnon", Some(64)),
+                ("RssFile", Some(504)),
+                ("RssShmem", Some(0)),
+                ("VmData", Some(312)),
+                ("VmStk", Some(132)),
+                ("VmExe", Some(20)),
+                ("VmLib", Some(1520)),
+                ("VmPTE", Some(44)),
+                ("VmSwap", Some(0)),
+                ("HugetlbPages", Some(0)),
+                ("CoreDumping", Some(0)),
+                ("THP_enabled", Some(1)),
+                ("Threads", Some(1)),
+                ("SigQ", None),
+                ("SigPnd", Some(0)),
+                ("ShdPnd", Some(0)),
+                ("SigBlk", Some(0)),
+                ("SigIgn", Some(0)),
+                ("SigCgt", Some(0)),
+                ("CapInh", Some(0)),
+                ("CapPrm", None),
+                ("CapEff", None),
+                ("CapBnd", None),
+                ("CapAmb", Some(0)),
+                ("NoNewPrivs", Some(0)),
+                ("Seccomp", Some(2)),
+                ("Seccomp_filters", Some(2)),
+                ("Speculation_Store_Bypass", None),
+                ("SpeculationIndirectBranch", None),
+                ("Cpus_allowed", None),
+                ("Cpus_allowed_list", None),
+                ("Mems_allowed", Some(1)),
+                ("Mems_allowed_list", Some(0)),
+                ("voluntary_ctxt_switches", Some(1)),
+                ("nonvoluntary_ctxt_switches", Some(2))
             ]
         );
     }

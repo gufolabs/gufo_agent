@@ -27,17 +27,25 @@ Config example:
 
 === "OpenMetrics"
 
-  | Metric           | Metric Type | Platform | Description                |
-  | ---------------- | ----------- | -------- | -------------------------- |
-  | `ps_num_fds`     | Gauge       | Linux    | Number of open files       |
-  | `ps_num_threads` | Gauge       | Linux    | Number of threads          |
-  | `ps_mem_total`   | Gauge       | Linux    | Total memory               |
-  | `ps_mem_rss`     | Gauge       | Linux    | Resident set size          |
-  | `ps_read_count`  | Gauge       | Linux    | Total read I/O operations  |
-  | `ps_write_count` | Gauge       | Linux    | Total write I/O operations |
-  | `ps_read_bytes`  | Gauge       | Linux    | Total bytes read           |
-  | `ps_write_bytes` | Gauge       | Linux    | Total bytes written        |
-  |                  |
+  | Metric                            | Metric Type | Platform | Description                                                                 |
+  | --------------------------------- | ----------- | -------- | --------------------------------------------------------------------------- |
+  | `ps_num_fds`                      | Gauge       | Linux    | Number of open files                                                        |
+  | `ps_num_threads`                  | Gauge       | Linux    | Number of threads                                                           |
+  | `ps_voluntary_context_switches`   | Counter     | Linux    | Total voluntary context switches                                            |
+  | `ps_involuntary_context_switches` | Counter     | Linux    | Total involuntary context switches                                          |
+  | `ps_minor_faults`                 | Counter     | Linux    | Total number of minor faults which do not requirie loading memory from disk |
+  | `ps_major_faults`                 | Counter     | Linux    | Total number of major faults which require loading memory from disk         |
+  | `ps_child_minor_faults`           | Counter     | Linux    | Total number of minor faults that process waited-for children made          |
+  | `ps_child_major_faults`           | Counter     | Linux    | Total number of major faults that process waited-for children made          |
+  | `ps_cpu_time_user`                | Counter     | Linux    | CPU time in user mode in seconds                                            |
+  | `ps_cpu_time_system`              | Counter     | Linux    | CPU time in system mode in seconds                                          |
+  | `ps_cpu_time_iowait`              | Counter     | Linux    | CPU time iowait in seconds                                                  |
+  | `ps_mem_total`                    | Counter     | Linux    | Total memory                                                                |
+  | `ps_mem_rss`                      | Counter     | Linux    | Resident set size                                                           |
+  | `ps_read_count`                   | Counter     | Linux    | Total read I/O operations                                                   |
+  | `ps_write_count`                  | Counter     | Linux    | Total write I/O operations                                                  |
+  | `ps_read_bytes`                   | Counter     | Linux    | Total bytes read                                                            |
+  | `ps_write_bytes`                  | Counter     | Linux    | Total bytes written                                                         |
 
 ## Labels
 
