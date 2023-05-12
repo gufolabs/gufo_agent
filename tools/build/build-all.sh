@@ -22,4 +22,6 @@ build_target_tgz()
     )
 }
 # Build x86_64-unknown-linux-gnu
-build_target_tgz x86_64-unknown-linux-gnu:centos linux_amd64
+build_target_tgz x86_64-unknown-linux-gnu linux_amd64
+# Build aarch64-unknown-linux-gnu
+build_target_tgz aarch64-unknown-linux-gnu linux_aarch64

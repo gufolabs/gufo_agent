@@ -37,9 +37,10 @@ as well.
 
 Supported platforms:
 
-| OS    |       | Arch  |
-| ----- | ----- | ----- |
-| Linux | glibc | amd64 |
+| OS    | libc        | Arch    |
+| ----- | ----------- | ------- |
+| Linux | glibc 2.17+ | amd64   |
+| Linux | glibc 2.17+ | aarch64 |
 
 ## Obtaining the Gufo Agent
 
