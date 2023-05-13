@@ -9,8 +9,9 @@ use common::ConfigDiscoveryOpts;
 use std::env;
 use std::process;
 
+/// The lightweight infrastructure monitoring agent.
 #[derive(Parser, Debug)]
-#[command(author, version, about, long_about = None)]
+#[command(name = "gufo-agent", author, version, about, long_about = None)]
 struct Cli {
     #[arg(short, long)]
     pub quiet: bool,
