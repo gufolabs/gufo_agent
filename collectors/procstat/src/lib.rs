@@ -103,7 +103,7 @@ impl TryFrom<Config> for Collector {
         //
         Ok(Self {
             pid_file: value.pid_file,
-            pattern: pattern,
+            pattern,
             self_pid,
         })
     }

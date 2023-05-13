@@ -54,10 +54,11 @@ impl PsFinder for Ps {
         const F_TICKS: f32 = 100.0;
         const KB: u64 = 1024;
         for &pid in pids.iter() {
-            let mut stats = ProcStat::default();
-            stats.pid = pid;
-            // num_fds
-            stats.num_fds = get_num_fds(pid);
+            let mut stats = ProcStat {
+                pid,
+                num_fds: get_num_fds(pid),
+                ..Default::default()
+            };
             // Process /proc/<pid>/stat
             // See man 5 proc for details
             if let Some(data) = read_procfs(pid, "stat") {
