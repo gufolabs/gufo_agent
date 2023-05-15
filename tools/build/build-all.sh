@@ -14,14 +14,34 @@ echo "Building gufo-agent ${VERSION}"
 # $2 - distribution platform name
 build_target_tgz()
 {
+    # Build
     cross build --release --target $1
+    # Copy binary distribution
     (
         cd target/$1/release \
         && tar cfz gufo-agent.tgz gufo-agent \
         && mv gufo-agent.tgz ../../../dist/gufo-agent-${VERSION}_$2.tgz
     )
 }
-# Build x86_64-unknown-linux-gnu
+# Prepare structure for debian package
+# $1 - arch
+prepare_deb()
+{
+    root="dist/deb/$1"
+    # Cleanup and recreate directory
+    [ -d $root ] && rm -r $root
+    mkdir -p $root
+    # Inner directory structure
+    mkdir -p "$root/usr/bin"
+    mkdir -p "$root/usr/share/man/man1"
+    # Copy binary
+    tar -x -z -f ./dist/gufo-agent-${VERSION}_linux_$1.tgz -C $root/usr/bin
+    # Copy man
+    cp man/gufo-agent.1 $root/usr/share/man/man1
+}
+# Build x86_64-unknown-linux-gnu + deb
 build_target_tgz x86_64-unknown-linux-gnu linux_amd64
-# Build aarch64-unknown-linux-gnu
+prepare_deb amd64
+# Build aarch64-unknown-linux-gnu + deb
 build_target_tgz aarch64-unknown-linux-gnu linux_aarch64
+prepare_deb aarch64
