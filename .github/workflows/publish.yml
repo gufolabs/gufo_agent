@@ -33,15 +33,6 @@ jobs:
           version: ${{ github.event.release.name }}
           arch: amd64
           desc: an universal agent for infrastructure monitoring
-      - name: Build deb amd64
-        uses: jiro4989/build-deb-action@v2
-        with:
-          package: gufo-agent
-          package_root: dist/deb/amd64
-          maintainer: Gufo Labs
-          version: ${{ github.event.release.name }}
-          arch: amd64
-          desc: an universal agent for infrastructure monitoring
       - name: Build deb aarch64
         uses: jiro4989/build-deb-action@v2
         with:
@@ -56,3 +47,4 @@ jobs:
         with:
           files: |
             dist/gufo-agent-*
+            *.deb
