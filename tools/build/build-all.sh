@@ -39,9 +39,27 @@ prepare_deb()
     # Copy man
     cp man/gufo-agent.1 $root/usr/share/man/man1
 }
+# Prepare structure for rpm package
+# $1 - arch
+prepare_rpm()
+{
+    root="dist/rpm/$1"
+    # Cleanup and recreate directory
+    [ -d $root ] && rm -r $root
+    mkdir -p $root
+    # Inner directory structure
+    mkdir -p "$root/usr/bin"
+    mkdir -p "$root/usr/share/man/man1"
+    # Copy binary
+    tar -x -z -f ./dist/gufo-agent-${VERSION}_linux_$1.tgz -C $root/usr/bin
+    # Copy man
+    cp man/gufo-agent.1 $root/usr/share/man/man1
+}
 # Build x86_64-unknown-linux-gnu + deb
 build_target_tgz x86_64-unknown-linux-gnu linux_amd64
 prepare_deb amd64
+prepare_rpm amd64
 # Build aarch64-unknown-linux-gnu + deb
 build_target_tgz aarch64-unknown-linux-gnu linux_aarch64
 prepare_deb aarch64
+prepare_rpm aarch64
