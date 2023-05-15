@@ -14,9 +14,18 @@ pub struct Config {
     pub version: String,
     #[serde(rename = "$type")]
     pub r#type: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub agent: Option<AgentConfig>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub labels: LabelsConfig,
     pub sender: SenderConfig,
     pub collectors: Vec<CollectorConfig>,
+}
+
+#[derive(Deserialize, Debug, Serialize)]
+pub struct AgentConfig {
+    #[serde(default = "default_none", skip_serializing_if = "Option::is_none")]
+    pub host: Option<String>,
 }
 
 #[derive(Deserialize, Debug, Serialize)]
@@ -84,4 +93,8 @@ fn default_3000() -> String {
 
 fn default_metrics() -> String {
     "/metrics".into()
+}
+
+fn default_none() -> Option<String> {
+    None
 }

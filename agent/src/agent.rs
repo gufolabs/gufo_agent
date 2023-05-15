@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------
 
 use crate::{CollectorConfig, Config, ConfigResolver, Schedule, Sender, SenderCommand};
-use common::{AgentError, Label, Labels};
+use common::{AgentError, AgentResult, Label, Labels};
 use gethostname::gethostname;
 use std::collections::{HashMap, HashSet};
 use tokio::runtime::Runtime;
@@ -108,6 +108,7 @@ impl Agent {
         Ok(())
     }
     async fn apply(&mut self, cfg: Config) -> Result<(), AgentError> {
+        self.configure_agent(&cfg).await?;
         self.configure_sender(&cfg).await?;
         // Configure collectors
         let mut id_set = HashSet::new();
@@ -145,6 +146,15 @@ impl Agent {
         }
         for x in stop_set.iter() {
             self.stop_collector(x).await?;
+        }
+        Ok(())
+    }
+    // Configure agent
+    async fn configure_agent(&mut self, cfg: &Config) -> AgentResult<()> {
+        if let Some(agent_config) = &cfg.agent {
+            if let Some(host) = &agent_config.host {
+                self.hostname = host.clone();
+            }
         }
         Ok(())
     }

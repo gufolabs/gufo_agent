@@ -38,6 +38,47 @@ Example:
     }
     ```
 
+## agent
+
+Agent configuration
+
+Example:
+
+=== "YAML"
+
+    ``` yaml
+    agent:
+        host: test
+    ```
+
+=== "JSON"
+
+    ``` json
+    {
+        "agent": {
+            "host": "test"
+        }
+    }
+    ```
+
+### host
+
+Set hostname manually.
+
+Example:
+
+=== "YAML"
+
+    ``` yaml
+    host: test
+    ```
+
+=== "JSON"
+
+    ``` json
+    host: "test"
+    ```
+
 ## sender
 
 Metrics sender configuration.
