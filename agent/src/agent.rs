@@ -171,7 +171,10 @@ impl Agent {
         }
         // Configure labels
         if let Some(tx) = &self.sender_tx {
-            let mut labels: Labels = cfg.labels.clone().into();
+            let mut labels = match &cfg.agent {
+                Some(x) => x.labels.clone().into(),
+                None => Labels::default(),
+            };
             labels.push(Label::new("host", self.hostname.clone()));
             if let Err(e) = tx.send(SenderCommand::SetAgentLabels(labels)).await {
                 log::error!("Failed to set labels: {}", e);

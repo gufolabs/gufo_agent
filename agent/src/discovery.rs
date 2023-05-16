@@ -15,7 +15,6 @@ pub fn config_from_discovery(opts: &ConfigDiscoveryOpts) -> Result<String, Agent
     let mut r = Config {
         version: "1.0".into(),
         r#type: "zeroconf".into(),
-        labels: None,
         agent: None,
         sender: SenderConfig {
             r#type: "openmetrics".into(),

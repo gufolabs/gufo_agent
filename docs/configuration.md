@@ -12,32 +12,6 @@ Config format version. Must be set to `1.0`
 
 Config type. Must be set to `zeroconf`.
 
-### labels
-
-Optional agent-level labels. Agent-level labels are appended to all collected metrics.
-Labels are set as key-value pairs.
-
-Example:
-
-=== "YAML"
-
-    ``` yaml
-    labels:
-        dc: south
-        zone: europe
-    ```
-
-=== "JSON"
-
-    ``` json
-    {
-        "labels": {
-            "dc": "south",
-            "zone": "europe"
-        }
-    }
-    ```
-
 ## agent
 
 Agent configuration
@@ -77,6 +51,30 @@ Example:
 
     ``` json
     host: "test"
+    ```
+
+### labels
+
+Optional agent-level labels. Agent-level labels are appended to all collected metrics.
+Labels are set as key-value pairs.
+
+Example:
+
+=== "YAML"
+
+    ``` yaml
+    labels:
+        dc: south
+        zone: europe
+    ```
+
+=== "JSON"
+
+    ``` json
+    "labels": {
+        "dc": "south",
+        "zone": "europe"
+    }
     ```
 
 ## sender
@@ -214,9 +212,11 @@ the config.
     ``` yaml
     $version: "1.0"
     $type: "zeroconf"
-    labels:
-        dc: south
-        zone: europe
+    agent:
+        host: test
+        labels:
+            dc: south
+            zone: europe
     sender:
         type: openmetrics
         mode: pull
@@ -241,9 +241,12 @@ the config.
     {
         "$version": "1.0",
         "$type": "zeroconf",
-        "labels": {
-            "dc": "south",
-            "zone": "europe"
+        "agent": {
+            "host": "test",
+            "labels": {
+                "dc": "south",
+                "zone": "europe"
+            }
         },
         "sender": {
             "type": "openmetrics",

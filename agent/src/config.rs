@@ -16,8 +16,6 @@ pub struct Config {
     pub r#type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub agent: Option<AgentConfig>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub labels: LabelsConfig,
     pub sender: SenderConfig,
     pub collectors: Vec<CollectorConfig>,
 }
@@ -26,6 +24,8 @@ pub struct Config {
 pub struct AgentConfig {
     #[serde(default = "default_none", skip_serializing_if = "Option::is_none")]
     pub host: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub labels: LabelsConfig,
 }
 
 #[derive(Deserialize, Debug, Serialize)]
