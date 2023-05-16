@@ -34,52 +34,70 @@ pub struct Collector {
 }
 
 // Generated metrics
-gauge!(ps_num_fds, "Number of open files");
-gauge!(ps_num_threads, "Number of threads");
+gauge!(ps_num_fds, "Number of open files", process_name);
+gauge!(ps_num_threads, "Number of threads", process_name);
 // ctx switches
 counter!(
     ps_voluntary_context_switches,
-    "Total voluntary context switches"
+    "Total voluntary context switches",
+    process_name
 );
 counter!(
     ps_involuntary_context_switches,
-    "Total involuntary context switches"
+    "Total involuntary context switches",
+    process_name
 );
 // page faults
 counter!(
     ps_minor_faults,
-    "Total number of minor faults which do not requirie loading memory from disk"
+    "Total number of minor faults which do not requirie loading memory from disk",
+    process_name
 );
 counter!(
     ps_major_faults,
-    "Total number of major faults which require loading memory from disk"
+    "Total number of major faults which require loading memory from disk",
+    process_name
 );
 counter!(
     ps_child_minor_faults,
-    "Total number of minor faults that process waited-for children made"
+    "Total number of minor faults that process waited-for children made",
+    process_name
 );
 counter!(
     ps_child_major_faults,
-    "Total number of major faults that process waited-for children made"
+    "Total number of major faults that process waited-for children made",
+    process_name
 );
 // CPU
-gauge_f!(ps_cpu_time_user, "CPU time in user mode in seconds");
-gauge_f!(ps_cpu_time_system, "CPU time in system mode in seconds");
-gauge_f!(ps_cpu_time_iowait, "CPU time iowait in seconds");
+gauge_f!(
+    ps_cpu_time_user,
+    "CPU time in user mode in seconds",
+    process_name
+);
+gauge_f!(
+    ps_cpu_time_system,
+    "CPU time in system mode in seconds",
+    process_name
+);
+gauge_f!(
+    ps_cpu_time_iowait,
+    "CPU time iowait in seconds",
+    process_name
+);
 // Mem
-gauge!(ps_mem_total, "Total memory");
-gauge!(ps_mem_rss, "Resident set size");
-gauge!(ps_mem_swap, "Swapped-out virtual memory size");
-gauge!(ps_mem_data, "Data segment size");
-gauge!(ps_mem_stack, "Stack segment size");
-gauge!(ps_mem_text, "Text segment size");
-gauge!(ps_mem_lib, "Shared library code size");
-gauge!(ps_mem_locked, "Locked memory size");
+gauge!(ps_mem_total, "Total memory", process_name);
+gauge!(ps_mem_rss, "Resident set size", process_name);
+gauge!(ps_mem_swap, "Swapped-out virtual memory size", process_name);
+gauge!(ps_mem_data, "Data segment size", process_name);
+gauge!(ps_mem_stack, "Stack segment size", process_name);
+gauge!(ps_mem_text, "Text segment size", process_name);
+gauge!(ps_mem_lib, "Shared library code size", process_name);
+gauge!(ps_mem_locked, "Locked memory size", process_name);
 // I/O
-counter!(ps_read_count, "Total read I/O operations");
-counter!(ps_write_count, "Total write I/O operations");
-counter!(ps_read_bytes, "Total bytes read");
-counter!(ps_write_bytes, "Total bytes written");
+counter!(ps_read_count, "Total read I/O operations", process_name);
+counter!(ps_write_count, "Total write I/O operations", process_name);
+counter!(ps_read_bytes, "Total bytes read", process_name);
+counter!(ps_write_bytes, "Total bytes written", process_name);
 
 // Instantiate collector from given config
 impl TryFrom<Config> for Collector {
@@ -110,9 +128,9 @@ impl TryFrom<Config> for Collector {
 }
 
 macro_rules! apply_some {
-    ($r:ident, $v:expr, $fn:ident) => {
+    ($r:ident, $v:expr, $fn:ident, $pn:expr) => {
         if let Some(x) = $v {
-            $r.push($fn(x));
+            $r.push($fn(x, $pn));
         }
     };
 }
@@ -158,42 +176,70 @@ impl Collectable for Collector {
         // Collect data
         let mut r = Vec::with_capacity(all_pids.len() * 20);
         for stat in Ps::get_stats(&all_pids).into_iter() {
-            apply_some!(r, stat.num_fds, ps_num_fds);
-            apply_some!(r, stat.num_threads, ps_num_threads);
+            let process_name = stat.process_name.unwrap_or_default();
+            apply_some!(r, stat.num_fds, ps_num_fds, process_name.clone());
+            apply_some!(r, stat.num_threads, ps_num_threads, process_name.clone());
             // ctx
             apply_some!(
                 r,
                 stat.voluntary_context_switches,
-                ps_voluntary_context_switches
+                ps_voluntary_context_switches,
+                process_name.clone()
             );
             apply_some!(
                 r,
                 stat.involuntary_context_switches,
-                ps_involuntary_context_switches
+                ps_involuntary_context_switches,
+                process_name.clone()
             );
             // Page faults
-            apply_some!(r, stat.minor_faults, ps_minor_faults);
-            apply_some!(r, stat.major_faults, ps_major_faults);
-            apply_some!(r, stat.child_minor_faults, ps_child_minor_faults);
-            apply_some!(r, stat.child_major_faults, ps_child_major_faults);
+            apply_some!(r, stat.minor_faults, ps_minor_faults, process_name.clone());
+            apply_some!(r, stat.major_faults, ps_major_faults, process_name.clone());
+            apply_some!(
+                r,
+                stat.child_minor_faults,
+                ps_child_minor_faults,
+                process_name.clone()
+            );
+            apply_some!(
+                r,
+                stat.child_major_faults,
+                ps_child_major_faults,
+                process_name.clone()
+            );
             // CPU
-            apply_some!(r, stat.cpu_time_user, ps_cpu_time_user);
-            apply_some!(r, stat.cpu_time_system, ps_cpu_time_system);
-            apply_some!(r, stat.cpu_time_iowait, ps_cpu_time_iowait);
+            apply_some!(
+                r,
+                stat.cpu_time_user,
+                ps_cpu_time_user,
+                process_name.clone()
+            );
+            apply_some!(
+                r,
+                stat.cpu_time_system,
+                ps_cpu_time_system,
+                process_name.clone()
+            );
+            apply_some!(
+                r,
+                stat.cpu_time_iowait,
+                ps_cpu_time_iowait,
+                process_name.clone()
+            );
             // Memory
-            apply_some!(r, stat.mem_total, ps_mem_total);
-            apply_some!(r, stat.mem_rss, ps_mem_rss);
-            apply_some!(r, stat.mem_swap, ps_mem_swap);
-            apply_some!(r, stat.mem_data, ps_mem_data);
-            apply_some!(r, stat.mem_stack, ps_mem_stack);
-            apply_some!(r, stat.mem_text, ps_mem_text);
-            apply_some!(r, stat.mem_lib, ps_mem_lib);
-            apply_some!(r, stat.mem_locked, ps_mem_locked);
+            apply_some!(r, stat.mem_total, ps_mem_total, process_name.clone());
+            apply_some!(r, stat.mem_rss, ps_mem_rss, process_name.clone());
+            apply_some!(r, stat.mem_swap, ps_mem_swap, process_name.clone());
+            apply_some!(r, stat.mem_data, ps_mem_data, process_name.clone());
+            apply_some!(r, stat.mem_stack, ps_mem_stack, process_name.clone());
+            apply_some!(r, stat.mem_text, ps_mem_text, process_name.clone());
+            apply_some!(r, stat.mem_lib, ps_mem_lib, process_name.clone());
+            apply_some!(r, stat.mem_locked, ps_mem_locked, process_name.clone());
             // I/O
-            apply_some!(r, stat.io_read_count, ps_read_count);
-            apply_some!(r, stat.io_write_count, ps_write_count);
-            apply_some!(r, stat.io_read_bytes, ps_read_bytes);
-            apply_some!(r, stat.io_write_bytes, ps_write_bytes);
+            apply_some!(r, stat.io_read_count, ps_read_count, process_name.clone());
+            apply_some!(r, stat.io_write_count, ps_write_count, process_name.clone());
+            apply_some!(r, stat.io_read_bytes, ps_read_bytes, process_name.clone());
+            apply_some!(r, stat.io_write_bytes, ps_write_bytes, process_name.clone());
         }
         // Push result
         Ok(r)

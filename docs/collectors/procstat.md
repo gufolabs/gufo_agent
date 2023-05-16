@@ -55,7 +55,11 @@ Config example:
 
 ## Labels
 
-`procstat` collector doesn't append its own labels.
+`procstat` collector appends the following labels:
+
+| Label          | Description         |
+| -------------- | ------------------- |
+| `process_name` | Name of the process |
 
 ## Config Discovery
 

@@ -63,6 +63,16 @@ impl PsFinder for Ps {
             // See man 5 proc for details
             if let Some(data) = read_procfs(pid, "stat") {
                 let parts: Vec<&str> = data.split(' ').collect();
+                // process name
+                let pn = parts[STAT_COMM];
+                let process_name = if pn.starts_with('(') && pn.ends_with(')') {
+                    String::from(&pn[1..pn.len() - 1])
+                } else {
+                    String::from(pn)
+                };
+                if !process_name.is_empty() {
+                    stats.process_name = Some(process_name)
+                }
                 stats.num_threads = parse_field(parts[STAT_NUM_THREADS]);
                 // faults
                 stats.minor_faults = parse_field(parts[STAT_MINFLT]);
@@ -210,7 +220,7 @@ fn parse_status(input: &str) -> AgentResult<Vec<(&str, Option<u64>)>> {
 // Constants
 // /proc/<pid>/stat fields
 // const STAT_PID: usize = 0;
-// const STAT_COMM: usize = 1;
+const STAT_COMM: usize = 1;
 // const STAT_STATE:  usize = 2;
 // const STAT_PPID: usize = 3;
 // const STAT_PGRP: usize = 4;

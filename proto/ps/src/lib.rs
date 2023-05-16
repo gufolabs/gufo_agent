@@ -13,6 +13,7 @@ pub type Pid = u32;
 #[derive(Default, Debug)]
 pub struct ProcStat {
     pub pid: Pid,
+    pub process_name: Option<String>,
     pub num_threads: Option<u64>,
     pub num_fds: Option<u64>,
     // ctx switch
