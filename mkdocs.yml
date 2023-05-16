@@ -21,6 +21,7 @@ nav:
       - fs: collectors/fs.md
       - http: collectors/http.md
       - memory: collectors/memory.md
+      - modbus_tcp: collectors/modbus_tcp.md
       - network: collectors/network.md
       - procstat: collectors/procstat.md
       - sockets: collectors/sockets.md
@@ -90,3 +91,6 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
+extra:
+  "tab": ":material-arrow-right:"
+  "complex": ":material-arrow-down:"

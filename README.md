@@ -82,6 +82,7 @@ See "Gufo Agent Man Pages" for details.
 | `fs`              | File systems statistic                            |
 | `http`            | Perform HTTP request                              |
 | `memory`          | Host's memory statistics                          |
+| `modbus_tcp`      | Perform Modbus TCP requests                       |
 | `network`         | Host's network interface statistics               |
 | `procstat`        | Process' statistics                               |
 | `sockets`         | Host's sockets statistics                         |

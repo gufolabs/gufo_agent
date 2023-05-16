@@ -18,6 +18,7 @@ pub enum Collectors {
     Fs(fs::Collector),
     Http(http::Collector),
     Memory(memory::Collector),
+    ModbusTcp(modbus_tcp::Collector),
     Network(network::Collector),
     Procstat(procstat::Collector),
     Sockets(sockets::Collector),
@@ -68,6 +69,7 @@ impl TryFrom<CollectorConfig> for Collectors {
             "fs" => Collectors::Fs(from_value(value)?),
             "http" => Collectors::Http(from_value(value)?),
             "memory" => Collectors::Memory(from_value(value)?),
+            "modbus_tcp" => Collectors::ModbusTcp(from_value(value)?),
             "network" => Collectors::Network(from_value(value)?),
             "procstat" => Collectors::Procstat(from_value(value)?),
             "sockets" => Collectors::Sockets(from_value(value)?),
@@ -93,6 +95,7 @@ impl Collectors {
             Collectors::Fs(_) => fs::Collector::get_name(),
             Collectors::Http(_) => http::Collector::get_name(),
             Collectors::Memory(_) => memory::Collector::get_name(),
+            Collectors::ModbusTcp(_) => modbus_tcp::Collector::get_name(),
             Collectors::Network(_) => network::Collector::get_name(),
             Collectors::Procstat(_) => procstat::Collector::get_name(),
             Collectors::Sockets(_) => sockets::Collector::get_name(),
@@ -115,6 +118,7 @@ impl Collectors {
             Collectors::Fs(_) => fs::Collector::is_random_offset(),
             Collectors::Http(_) => http::Collector::is_random_offset(),
             Collectors::Memory(_) => memory::Collector::is_random_offset(),
+            Collectors::ModbusTcp(_) => modbus_tcp::Collector::is_random_offset(),
             Collectors::Network(_) => network::Collector::is_random_offset(),
             Collectors::Procstat(_) => procstat::Collector::is_random_offset(),
             Collectors::Sockets(_) => sockets::Collector::is_random_offset(),
@@ -137,6 +141,7 @@ impl Collectors {
             Collectors::Fs(c) => c.collect().await,
             Collectors::Http(c) => c.collect().await,
             Collectors::Memory(c) => c.collect().await,
+            Collectors::ModbusTcp(c) => c.collect().await,
             Collectors::Network(c) => c.collect().await,
             Collectors::Procstat(c) => c.collect().await,
             Collectors::Sockets(c) => c.collect().await,
@@ -158,6 +163,7 @@ impl Collectors {
             "fs".to_string(),
             "http".to_string(),
             "memory".to_string(),
+            "modbus_tcp".to_string(),
             "network".to_string(),
             "procstat".to_string(),
             "sockets".to_string(),
@@ -219,6 +225,12 @@ impl Collectors {
             let x = memory::Collector::discover_config(opts)?;
             if !x.is_empty() {
                 r.push((memory::Collector::get_name(), x));
+            }
+        }
+        if !opts.is_disabled("modbus_tcp") {
+            let x = modbus_tcp::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((modbus_tcp::Collector::get_name(), x));
             }
         }
         if !opts.is_disabled("network") {

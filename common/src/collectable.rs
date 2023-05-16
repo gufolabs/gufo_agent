@@ -6,7 +6,7 @@
 use crate::{AgentError, ConfigDiscoveryOpts, ConfigItem, Labels};
 use async_trait::async_trait;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Value {
     Counter(u64),
     Gauge(u64),

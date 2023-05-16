@@ -1,0 +1,11 @@
+[package]
+edition = "2021"
+name = "modbus"
+version = "0.1.0"
+
+[dependencies]
+common = {path = "../../common"}
+serde = {version = "1.0", features = ["derive"]}
+
+[dev-dependencies]
+assert_approx_eq = "1.1"
