@@ -19,6 +19,9 @@ impl Label {
             value: value.to_string(),
         }
     }
+    pub fn is_empty(&self) -> bool {
+        self.value.is_empty()
+    }
 }
 
 #[derive(Debug, Hash, Eq, PartialEq, Clone, Ord, PartialOrd, Default)]
@@ -41,12 +44,14 @@ impl Labels {
         }
     }
     pub fn push(&mut self, v: Label) {
-        match &mut self.0 {
-            Some(x) => {
-                x.push(v);
-            }
-            None => {
-                self.0 = Some(vec![v]);
+        if !v.is_empty() {
+            match &mut self.0 {
+                Some(x) => {
+                    x.push(v);
+                }
+                None => {
+                    self.0 = Some(vec![v]);
+                }
             }
         }
     }
@@ -54,13 +59,15 @@ impl Labels {
     fn update_map(&self, map: &mut BTreeMap<String, String>) {
         if let Some(v) = &self.0 {
             for x in v.iter() {
-                map.insert(x.key.clone(), x.value.clone());
+                if !x.is_empty() {
+                    map.insert(x.key.clone(), x.value.clone());
+                }
             }
         }
     }
     // Merge 3 set of labels and return sorted summary
     pub fn merge_sort4(v1: &Labels, v2: &Labels, v3: &Labels, v4: &Labels) -> Labels {
-        if v1.is_empty() && v2.is_empty() && v3.is_empty() {
+        if v1.is_empty() && v2.is_empty() && v3.is_empty() && v4.is_empty() {
             return Labels::default();
         }
         let mut map = BTreeMap::new();
