@@ -17,6 +17,7 @@ gethostname = "0.4"
 http = {path = "../collectors/http"}
 log = "0.4"
 memory = {path = "../collectors/memory"}
+modbus_rtu = {path = "../collectors/modbus_rtu"}
 modbus_tcp = {path = "../collectors/modbus_tcp"}
 network = {path = "../collectors/network"}
 procstat = {path = "../collectors/procstat"}

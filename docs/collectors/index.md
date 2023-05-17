@@ -53,6 +53,7 @@ labels are set as key-value pairs:
 | [fs](fs.md)                           | File systems statistic                            |
 | [http](http.md)                       | Perform HTTP request                              |
 | [memory](memory.md)                   | Host's memory statistics                          |
+| [modbus_rtu](modbus_rtu.md)           | Perform Modbus RTU requests                       |
 | [modbus_tcp](modbus_tcp.md)           | Perform Modbus TCP requests                       |
 | [network](network.md)                 | Host's network interface statistics               |
 | [procstat](procstat.md)               | Process' statistics                               |

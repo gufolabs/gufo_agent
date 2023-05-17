@@ -21,6 +21,7 @@ nav:
       - fs: collectors/fs.md
       - http: collectors/http.md
       - memory: collectors/memory.md
+      - modbus_rtu: collectors/modbus_rtu.md
       - modbus_tcp: collectors/modbus_tcp.md
       - network: collectors/network.md
       - procstat: collectors/procstat.md

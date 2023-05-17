@@ -7,7 +7,7 @@
 use async_trait::async_trait;
 use common::{AgentError, Collectable, Measure};
 use common::{Labels, LabelsConfig};
-use modbus::ModbusFormat;
+use modbus::{ModbusFormat, RegisterType};
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 use tokio::time::{timeout, Duration};
@@ -36,15 +36,6 @@ pub struct CollectorConfigItem {
     pub format: ModbusFormat,
     #[serde(default = "default_255")]
     pub slave: u8,
-}
-
-#[derive(Deserialize, Serialize, Debug, Clone, Hash)]
-#[serde(rename_all = "lowercase")]
-#[serde(tag = "request_type")]
-pub enum RegisterType {
-    Holding,
-    Input,
-    Coil,
 }
 
 // Collector structure

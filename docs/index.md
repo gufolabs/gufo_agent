@@ -69,6 +69,7 @@ See [Gufo Agent Man Pages](man.md) for details.
 | [fs](collectors/fs.md)                           | File systems statistic                            |
 | [http](collectors/http.md)                       | Perform HTTP request                              |
 | [memory](collectors/memory.md)                   | Host's memory statistics                          |
+| [modbus_rtu](collectors/modbus_rtu.md)           | Perform Modbus RTU requests                       |
 | [modbus_tcp](collectors/modbus_tcp.md)           | Perform Modbus TCP requests                       |
 | [network](collectors/network.md)                 | Host's network interface statistics               |
 | [procstat](collectors/procstat.md)               | Process' statistics                               |

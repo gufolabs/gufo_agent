@@ -20,6 +20,7 @@ members = [
   "collectors/fs",
   "collectors/http",
   "collectors/memory",
+  "collectors/modbus_rtu",
   "collectors/modbus_tcp",
   "collectors/network",
   "collectors/procstat",
