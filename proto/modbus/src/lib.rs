@@ -11,7 +11,6 @@ use std::hash::Hash;
 
 #[derive(Deserialize, Serialize, Debug, Clone, Hash)]
 #[serde(rename_all = "lowercase")]
-#[serde(tag = "request_type")]
 pub enum RegisterType {
     Holding,
     Input,

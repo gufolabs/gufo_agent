@@ -30,7 +30,6 @@ pub struct CollectorConfigItem {
     pub help: String,
     pub labels: LabelsConfig,
     pub register: u16,
-    // #[serde(flatten)]
     #[serde(default = "default_holding")]
     pub register_type: RegisterType,
     pub format: ModbusFormat,
