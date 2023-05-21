@@ -51,8 +51,7 @@ Version: ${VERSION}
 Installed-Size: ${INPUT_INSTALLED_SIZE}
 Architecture: ${arch}
 Maintainer: Gufo Labs
-
-an universal agent for infrastructure monitoring
+Description: An universal agent for infrastructure monitoring
 __EOF__
     # Build deb
     dpkg-deb -Zgzip -b $root "dist/gufo-agent_${VERSION}_${arch}.deb"
