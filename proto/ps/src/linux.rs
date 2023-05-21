@@ -170,10 +170,9 @@ fn parse_field<T: FromStr>(s: &str) -> Option<T> {
 fn parse_io_line(input: &str) -> IResult<&str, (&str, u64)> {
     let (input, t) = is_not(":")(input)?;
     let (input, _) = tag(": ")(input)?;
-    let (input, value) = digit1(input)?;
-    let pv = value.parse().unwrap(); // @todo: Remove unwrap
+    let (input, value) = map_res(digit1, |x: &str| x.parse::<u64>())(input)?;
     let (input, _) = alt((line_ending, eof))(input)?;
-    Ok((input, (t, pv)))
+    Ok((input, (t, value)))
 }
 
 fn parse_io(input: &str) -> AgentResult<Vec<(&str, u64)>> {
@@ -184,24 +183,23 @@ fn parse_io(input: &str) -> AgentResult<Vec<(&str, u64)>> {
 
 // /proc/<pid>/status parser
 fn parse_status_kb(input: &str) -> IResult<&str, Option<u64>> {
-    let (input, value) = digit1(input)?;
+    let (input, value) = map_res(digit1, |x: &str| x.parse::<u64>())(input)?;
     let (input, _) = pair(space1, tag("kB"))(input)?;
     let (input, _) = alt((line_ending, eof))(input)?;
-    let pv = value.parse().unwrap(); //@todo
-    Ok((input, Some(pv)))
+    Ok((input, Some(value)))
 }
 
 fn parse_status_num(input: &str) -> IResult<&str, Option<u64>> {
-    let (input, value) = digit1(input)?;
+    let (input, value) = map_res(digit1, |x: &str| x.parse::<u64>())(input)?;
     let (input, _) = alt((line_ending, eof))(input)?;
-    let pv = value.parse().unwrap(); //@todo
-    Ok((input, Some(pv)))
+    Ok((input, Some(value)))
 }
 
 // Parse 4-digits of uid/gid
 fn parse_status_uids(input: &str) -> IResult<&str, Option<u64>> {
     let (input, uids) =
         separated_list1(space1, map_res(digit1, |x: &str| x.parse::<u64>()))(input)?;
+    let (input, _) = alt((line_ending, eof))(input)?;
     Ok((input, Some(uids[0])))
 }
 
