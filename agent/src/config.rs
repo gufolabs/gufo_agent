@@ -61,13 +61,11 @@ impl Hash for CollectorConfig {
         self.id.hash(state);
         self.r#type.hash(state);
         self.interval.hash(state);
-        // @todo: Hash the rest
-        //self.labels.hash(state);
-        // pub disabled: bool,
-        // #[serde(default)]
-        // pub labels: Vec<String>,
-        // #[serde(flatten)]
-        // pub config: serde_json::Value,
+        if let Some(labels) = &self.labels {
+            labels.hash(state);
+        }
+        self.disabled.hash(state);
+        self.config.hash(state);
     }
 }
 

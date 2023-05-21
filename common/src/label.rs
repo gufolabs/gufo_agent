@@ -4,7 +4,7 @@
 // Copyright (C) 2021-2023, Gufo Labs
 // --------------------------------------------------------------------
 
-use std::collections::{BTreeMap, HashMap};
+use std::collections::BTreeMap;
 
 #[derive(Debug, Hash, Eq, PartialEq, Clone, Ord, PartialOrd)]
 pub struct Label {
@@ -91,7 +91,7 @@ impl Labels {
     }
 }
 
-pub type LabelsConfig = Option<HashMap<String, String>>;
+pub type LabelsConfig = Option<BTreeMap<String, String>>;
 
 impl From<LabelsConfig> for Labels {
     fn from(value: LabelsConfig) -> Self {
