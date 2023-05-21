@@ -24,24 +24,6 @@ jobs:
         run: cargo install cross --git https://github.com/cross-rs/cross
       - name: Build
         run: ./tools/build/build-all.sh ${{ github.event.release.name }}
-      - name: Build deb amd64
-        uses: jiro4989/build-deb-action@v2
-        with:
-          package: gufo-agent
-          package_root: dist/deb/amd64
-          maintainer: Gufo Labs
-          version: ${{ github.event.release.name }}
-          arch: amd64
-          desc: an universal agent for infrastructure monitoring
-      - name: Build deb aarch64
-        uses: jiro4989/build-deb-action@v2
-        with:
-          package: gufo-agent
-          package_root: dist/deb/aarch64
-          maintainer: Gufo Labs
-          version: ${{ github.event.release.name }}
-          arch: aarch64
-          desc: an universal agent for infrastructure monitoring
       - name: Build rpm amd64
         uses: jiro4989/build-rpm-action@v2
         with:
@@ -66,5 +48,5 @@ jobs:
         with:
           files: |
             dist/gufo-agent-*
-            *.deb
+            dist/*.deb
             *.rpm
