@@ -6,8 +6,11 @@ version = "0.1.0"
 [dependencies]
 async-trait = "0.1"
 common = {path = "../../common"}
+lazy_static = "1.4"
 log = "0.4"
 page_size = "0.5"
 ps = {path = "../../proto/ps"}
 regex = "1.8"
 serde = {version = "1.0", features = ["derive"]}
+tokio = "1.27"
+users = "0.11"

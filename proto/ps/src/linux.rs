@@ -4,14 +4,14 @@
 // Copyright (C) 2021-2023, Gufo Labs
 // --------------------------------------------------------------------
 
-use crate::{Pid, ProcStat, PsFinder};
+use crate::{ProcStat, PsFinder};
 use common::{AgentError, AgentResult};
 use nom::{
     branch::alt,
     bytes::complete::{is_not, tag},
     character::complete::{digit1, line_ending, space1},
-    combinator::eof,
-    multi::many0,
+    combinator::{eof, map_res},
+    multi::{many0, separated_list1},
     sequence::pair,
     IResult,
 };
@@ -20,6 +20,9 @@ use std::fs::{read_dir, read_to_string};
 use std::path::{Path, PathBuf};
 use std::str::FromStr;
 
+pub type Pid = u32;
+pub type Uid = u32;
+pub type Gid = u32;
 pub struct Ps;
 
 impl PsFinder for Ps {
@@ -116,6 +119,8 @@ impl PsFinder for Ps {
                 if let Ok(items) = parse_status(data.as_str()) {
                     for (k, v) in items.into_iter() {
                         match k {
+                            "Uid" => stats.uid = v.map(|x| x as Uid),
+                            "Gid" => stats.gid = v.map(|x| x as Gid),
                             "VmSwap" => stats.mem_swap = v.map(|x| x * KB),
                             "VmData" => stats.mem_data = v.map(|x| x * KB),
                             "VmStk" => stats.mem_stack = v.map(|x| x * KB),
@@ -166,7 +171,7 @@ fn parse_io_line(input: &str) -> IResult<&str, (&str, u64)> {
     let (input, t) = is_not(":")(input)?;
     let (input, _) = tag(": ")(input)?;
     let (input, value) = digit1(input)?;
-    let pv = value.parse().unwrap();
+    let pv = value.parse().unwrap(); // @todo: Remove unwrap
     let (input, _) = alt((line_ending, eof))(input)?;
     Ok((input, (t, pv)))
 }
@@ -193,6 +198,13 @@ fn parse_status_num(input: &str) -> IResult<&str, Option<u64>> {
     Ok((input, Some(pv)))
 }
 
+// Parse 4-digits of uid/gid
+fn parse_status_uids(input: &str) -> IResult<&str, Option<u64>> {
+    let (input, uids) =
+        separated_list1(space1, map_res(digit1, |x: &str| x.parse::<u64>()))(input)?;
+    Ok((input, Some(uids[0])))
+}
+
 fn parse_status_str(input: &str) -> IResult<&str, Option<u64>> {
     let (input, _) = is_not("\n")(input)?;
     let (input, _) = alt((line_ending, eof))(input)?;
@@ -207,7 +219,12 @@ fn parse_status_line(input: &str) -> IResult<&str, (&str, Option<u64>)> {
     // <space>+
     let (input, _) = space1(input)?;
     // value
-    let (input, value) = alt((parse_status_kb, parse_status_num, parse_status_str))(input)?;
+    let (input, value) = alt((
+        parse_status_kb,
+        parse_status_num,
+        parse_status_uids,
+        parse_status_str,
+    ))(input)?;
     Ok((input, (t, value)))
 }
 
@@ -379,8 +396,8 @@ nonvoluntary_ctxt_switches:     2"#;
                 ("Pid", Some(25928)),
                 ("PPid", Some(528)),
                 ("TracerPid", Some(0)),
-                ("Uid", None),
-                ("Gid", None),
+                ("Uid", Some(0)),
+                ("Gid", Some(0)),
                 ("FDSize", Some(256)),
                 ("Groups", None),
                 ("NStgid", Some(25928)),

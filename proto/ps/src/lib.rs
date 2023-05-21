@@ -8,11 +8,11 @@ use common::AgentError;
 use regex::Regex;
 use std::collections::HashSet;
 
-pub type Pid = u32;
-
 #[derive(Default, Debug)]
 pub struct ProcStat {
     pub pid: Pid,
+    pub uid: Option<Uid>,
+    pub gid: Option<Gid>,
     pub process_name: Option<String>,
     pub num_threads: Option<u64>,
     pub num_fds: Option<u64>,
@@ -78,4 +78,4 @@ pub trait PsFinder {
 #[cfg(target_os = "linux")]
 mod linux;
 #[cfg(target_os = "linux")]
-pub use linux::Ps;
+pub use linux::{Gid, Pid, Ps, Uid};
