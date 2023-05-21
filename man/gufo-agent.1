@@ -23,10 +23,104 @@
 .\" ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 .\" (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 .\" SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-.Dd May 15, 2023
-.Dt ID 1
-.Os
-.Sh NAME
+.TH gufo-agent 1
+.SH NAME
 .Nm gufo-agent
 .Nd an universal agent for infrastructure monitoring
-.Sh SYNOPSYS
+.SH SYNOPSYS
+Usage: gufo-agent [OPTIONS]
+
+Options:
+  -q, --quiet
+  -v, --verbose...
+  -k, --insecure         [env: GA_INSECURE=]
+  -c, --config <CONFIG>  [env: GA_CONFIG=]
+      --hostname <HOSTNAME>  [env: GA_HOSTNAME=]
+      --list-collectors
+      --dump-metrics     [env: GA_DUMP_METRICS=]
+      --config-discovery
+      --config-discovery-opts <CONFIG_DISCOVERY_OPTS>  [env: GA_CONFIG_DISCOVERY_OPTS=]
+      --config-scripts <CONFIG_SCRIPTS>
+  -h, --help             Print help
+  -V, --version          Print version
+.SH DESCRIPTION
+The \fBgufo-agent\fR is an universal agent for infrastructure monitoring, which
+collects the configured metrics and exposes them to the OpenMetrics compatible
+endpoint.
+
+.SH OPTIONS
+The following options are available:
+
+.TP
+.BR \-q ", " \-\-quiet
+Be quiet and disable logging.
+.TP
+.BR \-v ", " \-\-verbose
+Increase logging verbosity. Repeat option to increase verbosity further.
+The appropriate logging levels:
+`-v` - info.
+`-vv` - debug.
+.TP
+.BR \-k ", " \-\-insecure
+Do not check TLS certificate when fetching config over HTTPS.
+.TP
+.BR \-c ", " \-\-config " " \fI<CONFIG>\fR
+Load configuration from \fI<CONFIG>\fR path.
+.TP
+.BR \-\-hostname
+Override agent's hostname.
+.TP
+.BR \-\-list-collectors
+Print list of compiled collectors and exit.
+.TP
+.BR \-\-dump-metrics
+Dump metrics database state to stdout after each collector run.
+.TP
+.BR \-\-config-discovery
+Run config discovery, dump resulting config to stdout and exit. See Config Discovery for details.
+.TP
+.BR \-\-config-discovery-opts
+Optional config discovery configuration. See Config Discovery for details.
+.TP
+.BR \-\-config-scripts
+A path to the directory containing config discovery scripts. See Config Discovery for details.
+.TP
+.BR \-h ", " \-\-help
+Print help and exit.
+.TP
+.BR \-V ", " \-\-version
+Print agent version and exit.
+
+.SH ENVIRONMENT
+The following environment variables affect the execution of \fBgufo-agent\fR:
+
+.TP
+.BR GA_CONFIG
+same as \fI--config\fR option.
+.TP
+.BR GA_DUMP_METRICS
+same as \fI--dump-metrics\fR option.
+.TP
+.BR GA_HOSTNAME
+same as \fI--hostname\fR option.
+.TP
+.BR GA_INSECURE
+same as \fI--insecure\fR option.
+.TP
+.BR GA_CONFIG_DISCOVERY_OPTS
+same as \fI--config-discovery-opts\fR option.
+.TP
+.BR GA_CONFIG_SCRIPTS
+a colon-sparated list of directories, containing discovery scripts.
+
+.SH EXIT STATUS
+The `gufo-agent` returns:
+.TP
+.BR 0
+on successful exit.
+.TP
+.BR 1
+on error.
+.TP
+.BR 2
+on invalid command-line option.
