@@ -255,7 +255,7 @@ mod tests {
         let data = [1u8, 2u8];
         let msg = into_vec16(&data);
         let result = ModbusFormat::I16Be.modbus_try_from(msg).unwrap();
-        assert_eq!(result, Value::Gauge(2580));
+        assert_eq!(result, Value::GaugeI(258));
     }
 
     #[test]
@@ -346,7 +346,7 @@ mod tests {
         let data = [1u8, 2u8, 3u8, 4u8];
         let msg = into_vec16(&data);
         let result = ModbusFormat::U32Be.modbus_try_from(msg).unwrap();
-        assert_eq!(result, Value::GaugeI(16909060));
+        assert_eq!(result, Value::Gauge(16909060));
     }
 
     #[test]
@@ -354,7 +354,7 @@ mod tests {
         let data = [0xffu8, 0xfeu8, 0xfdu8, 0xfcu8];
         let msg = into_vec16(&data);
         let result = ModbusFormat::U32Be.modbus_try_from(msg).unwrap();
-        assert_eq!(result, Value::Gauge(42949012440));
+        assert_eq!(result, Value::Gauge(4294901244));
     }
     #[test]
     fn test_u32_le_1() {
