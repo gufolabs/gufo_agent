@@ -22,31 +22,14 @@ jobs:
         run: ./tools/build/setup-rust.sh
       - name: Install Cross
         run: cargo install cross --git https://github.com/cross-rs/cross
+      - name: Install system packages
+        run: apt-get install -y rpm
       - name: Build
         run: ./tools/build/build-all.sh ${{ github.event.release.name }}
-      - name: Build rpm amd64
-        uses: jiro4989/build-rpm-action@v2
-        with:
-          package: gufo-agent
-          package_root: dist/rpm/amd64
-          maintainer: Gufo Labs
-          version: ${{ github.event.release.name }}
-          arch: x86_64
-          desc: an universal agent for infrastructure monitoring
-      # error: No compatible architectures found for build
-      # - name: Build rpm aarch64
-      #   uses: jiro4989/build-rpm-action@v2
-      #   with:
-      #     package: gufo-agent
-      #     package_root: dist/rpm/aarch64
-      #     maintainer: Gufo Labs
-      #     version: ${{ github.event.release.name }}
-      #     arch: aarch64
-      #     desc: an universal agent for infrastructure monitoring
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
             dist/gufo-agent-*
             dist/*.deb
-            *.rpm
+            dist/*.rpm
