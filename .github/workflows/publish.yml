@@ -23,7 +23,7 @@ jobs:
       - name: Install Cross
         run: cargo install cross --git https://github.com/cross-rs/cross
       - name: Install system packages
-        run: apt-get install -y rpm
+        run: sudo apt-get install -y rpm
       - name: Build
         run: ./tools/build/build-all.sh ${{ github.event.release.name }}
       - name: Release
