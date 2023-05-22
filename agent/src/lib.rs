@@ -14,7 +14,7 @@ pub(crate) mod schedule;
 pub(crate) mod sender;
 
 pub use crate::agent::{Agent, AgentBuilder};
-pub(crate) use config::{CollectorConfig, Config, SenderConfig};
+pub(crate) use config::{AgentConfig, CollectorConfig, Config, SenderConfig};
 pub use discovery::config_from_discovery;
 pub(crate) use mdb::{MetricsData, MetricsDb};
 pub use registry::Collectors;

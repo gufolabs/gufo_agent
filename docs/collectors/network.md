@@ -4,19 +4,18 @@
 
 ## Configuration
 
-| Parameter  | Type    | Default | Description                                        |
-| ---------- | ------- | ------- | -------------------------------------------------- |
-| `id`       | String  |         | Collector's ID. Must be unique per agent instance. |
-| `type`     | String  |         | Must be `network`                                  |
-| `interval` | Integer |         | Repetition interval in seconds                     |
-| `labels`   | Object  |         | Additional collector-level labels                  |
+| Parameter  | Type    | Default                   | Description                                        |
+| ---------- | ------- | ------------------------- | -------------------------------------------------- |
+| `id`       | String  |                           | Collector's ID. Must be unique per agent instance. |
+| `type`     | String  |                           | Must be `network`                                  |
+| `interval` | Integer | `agent.defaults.interval` | Repetition interval in seconds                     |
+| `labels`   | Object  |                           | Additional collector-level labels                  |
 
 Config example:
 
 ``` yaml
 - id: CPU
   type: network
-  interval: 10
 ```
 
 ## Collected Metrics

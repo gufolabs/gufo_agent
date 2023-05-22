@@ -4,7 +4,7 @@
 // Copyright (C) 2021-2023, Gufo Labs
 // --------------------------------------------------------------------
 
-use crate::{CollectorConfig, Collectors, Config, SenderConfig};
+use crate::{AgentConfig, CollectorConfig, Collectors, Config, SenderConfig};
 use common::{AgentError, ConfigDiscoveryOpts};
 use std::fs::{metadata, read_dir};
 use std::path::Path;
@@ -15,13 +15,8 @@ pub fn config_from_discovery(opts: &ConfigDiscoveryOpts) -> Result<String, Agent
     let mut r = Config {
         version: "1.0".into(),
         r#type: "zeroconf".into(),
-        agent: None,
-        sender: SenderConfig {
-            r#type: "openmetrics".into(),
-            mode: "pull".into(),
-            listen: "0.0.0.0:3000".into(),
-            path: "/metrics".into(),
-        },
+        agent: AgentConfig::default(),
+        sender: SenderConfig::default(),
         collectors: Vec::new(),
     };
     // Built-in
@@ -44,7 +39,7 @@ fn config_from_collectors(opts: &ConfigDiscoveryOpts) -> Result<Vec<CollectorCon
                 id: name.to_string(),
                 r#type: name.to_string(),
                 disabled: false,
-                interval: opts.get_interval(name),
+                interval: None,
                 labels: None,
                 config: cfg.config.clone(),
             });

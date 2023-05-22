@@ -7,21 +7,20 @@ TWAMP-compatible implementations.
 
 ## Configuration
 
-| Parameter  | Type    | Default   | Description                                        |
-| ---------- | ------- | --------- | -------------------------------------------------- |
-| `id`       | String  |           | Collector's ID. Must be unique per agent instance. |
-| `type`     | String  |           | Must be `twamp_reflector`                          |
-| `interval` | Integer |           | Repetition interval in seconds                     |
-| `labels`   | Object  |           | Additional collector-level labels                  |
-| `listen`   | String  | `0.0.0.0` | Address to bind the control channel                |
-| `port`     | Integer | `862`     | Port for the control channel                       |
+| Parameter  | Type    | Default                   | Description                                        |
+| ---------- | ------- | ------------------------- | -------------------------------------------------- |
+| `id`       | String  |                           | Collector's ID. Must be unique per agent instance. |
+| `type`     | String  |                           | Must be `twamp_reflector`                          |
+| `interval` | Integer | `agent.defaults.interval` | Repetition interval in seconds                     |
+| `labels`   | Object  |                           | Additional collector-level labels                  |
+| `listen`   | String  | `0.0.0.0`                 | Address to bind the control channel                |
+| `port`     | Integer | `862`                     | Port for the control channel                       |
 
 Config example:
 
 ``` yaml
 - id: TWAMP Reflector
   type: twamp_reflector
-  interval: 10
   listen: "0.0.0.0"
   port: 862
 ```

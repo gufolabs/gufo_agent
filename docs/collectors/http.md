@@ -4,13 +4,13 @@
 
 ## Configuration
 
-| Parameter  | Type    | Default | Description                                        |
-| ---------- | ------- | ------- | -------------------------------------------------- |
-| `id`       | String  |         | Collector's ID. Must be unique per agent instance. |
-| `type`     | String  |         | Must be `http`                                     |
-| `interval` | Integer |         | Repetition interval in seconds                     |
-| `labels`   | Object  |         | Additional collector-level labels                  |
-| `url`      | String  |         | Request URL                                        |
+| Parameter  | Type    | Default                   | Description                                        |
+| ---------- | ------- | ------------------------- | -------------------------------------------------- |
+| `id`       | String  |                           | Collector's ID. Must be unique per agent instance. |
+| `type`     | String  |                           | Must be `http`                                     |
+| `interval` | Integer | `agent.defaults.interval` | Repetition interval in seconds                     |
+| `labels`   | Object  |                           | Additional collector-level labels                  |
+| `url`      | String  |                           | Request URL                                        |
 
 Config example:
 
@@ -18,7 +18,6 @@ Config example:
 - id: GufoLabs Site
 disabled: true
 type: http
-interval: 15
 labels:
     project: Gufo
 url: https://gufolabs.com/

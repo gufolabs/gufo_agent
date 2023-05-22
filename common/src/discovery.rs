@@ -39,10 +39,6 @@ impl ConfigDiscoveryOpts {
             self.disabled.contains(&v.to_string())
         }
     }
-    #[allow(unused_variables)]
-    pub fn get_interval<T: ToString>(&self, name: T) -> u64 {
-        10
-    }
     pub fn script_path<T: ToString>(&mut self, path: T) {
         let s = path.to_string();
         // Suppress duplicates

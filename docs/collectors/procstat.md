@@ -4,23 +4,22 @@
 
 ## Configuration
 
-| Parameter       | Type    | Default | Description                                                                |
-| --------------- | ------- | ------- | -------------------------------------------------------------------------- |
-| `id`            | String  |         | Collector's ID. Must be unique per agent instance.                         |
-| `type`          | String  |         | Must be `memory`                                                           |
-| `interval`      | Integer |         | Repetition interval in seconds                                             |
-| `labels`        | Object  |         | Additional collector-level labels                                          |
-| `expose_labels` | Array   |         | List of value to enable optional labels. See [Labels](#labels) for details |
-| `self_pid`      | Boolean |         | Include agent's own pid                                                    |
-| `pid_file`      | String  |         | Optional path to pid file                                                  |
-| `pattern`       | String  |         | Optional regular expression that matches the process' command line         |
+| Parameter       | Type    | Default                   | Description                                                                |
+| --------------- | ------- | ------------------------- | -------------------------------------------------------------------------- |
+| `id`            | String  |                           | Collector's ID. Must be unique per agent instance.                         |
+| `type`          | String  |                           | Must be `memory`                                                           |
+| `interval`      | Integer | `agent.defaults.interval` | Repetition interval in seconds                                             |
+| `labels`        | Object  |                           | Additional collector-level labels                                          |
+| `expose_labels` | Array   |                           | List of value to enable optional labels. See [Labels](#labels) for details |
+| `self_pid`      | Boolean |                           | Include agent's own pid                                                    |
+| `pid_file`      | String  |                           | Optional path to pid file                                                  |
+| `pattern`       | String  |                           | Optional regular expression that matches the process' command line         |
 
 Config example:
 
 ``` yaml
 - id: procstat
   type: procstat
-  interval: 10
   expose_labels: [user]
   self_pid: true
 ```

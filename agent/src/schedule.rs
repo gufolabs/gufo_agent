@@ -24,7 +24,9 @@ impl TryFrom<CollectorConfig> for Schedule {
     fn try_from(value: CollectorConfig) -> Result<Self, Self::Error> {
         Ok(Self {
             id: value.id.clone(),
-            interval: value.interval,
+            interval: value
+                .interval
+                .ok_or(AgentError::ParseError("invalid interval".to_string()))?,
             labels: value.labels.clone().into(),
             collector: Collectors::try_from(value)?,
             sender_tx: None,

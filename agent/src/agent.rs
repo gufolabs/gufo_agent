@@ -12,12 +12,15 @@ use tokio::runtime::Runtime;
 use tokio::sync::mpsc;
 use tokio::task::JoinHandle;
 
+pub(crate) const AGENT_DEFAULT_INTERVAL: u64 = 60;
+
 pub struct Agent {
     resolver: ConfigResolver,
     running: HashMap<String, RunningCollector>,
     sender_tx: Option<mpsc::Sender<SenderCommand>>,
     hostname: String,
     dump_metrics: bool,
+    default_interval: u64,
 }
 
 pub struct RunningCollector {
@@ -69,6 +72,7 @@ impl AgentBuilder {
                 .clone()
                 .unwrap_or_else(|| gethostname().into_string().unwrap_or("localhost".into())),
             dump_metrics: self.dump_metrics,
+            default_interval: AGENT_DEFAULT_INTERVAL,
         }
     }
 }
@@ -125,8 +129,8 @@ impl Agent {
                 continue;
             }
             let r = match self.running.get(&collector_id) {
-                Some(_) => self.update_collector(collector_cfg.clone()).await,
-                None => self.spawn_collector(collector_cfg.clone()).await,
+                Some(_) => self.update_collector(collector_cfg).await,
+                None => self.spawn_collector(collector_cfg).await,
             };
             if let Err(e) = r {
                 log::error!(
@@ -151,11 +155,10 @@ impl Agent {
     }
     // Configure agent
     async fn configure_agent(&mut self, cfg: &Config) -> AgentResult<()> {
-        if let Some(agent_config) = &cfg.agent {
-            if let Some(host) = &agent_config.host {
-                self.hostname = host.clone();
-            }
+        if let Some(host) = &cfg.agent.host {
+            self.hostname = host.clone();
         }
+        self.default_interval = cfg.agent.defaults.interval;
         Ok(())
     }
     // Configure sender
@@ -171,10 +174,7 @@ impl Agent {
         }
         // Configure labels
         if let Some(tx) = &self.sender_tx {
-            let mut labels = match &cfg.agent {
-                Some(x) => x.labels.clone().into(),
-                None => Labels::default(),
-            };
+            let mut labels: Labels = cfg.agent.labels.clone().into();
             labels.push(Label::new("host", self.hostname.clone()));
             if let Err(e) = tx.send(SenderCommand::SetAgentLabels(labels)).await {
                 log::error!("Failed to set labels: {}", e);
@@ -182,9 +182,17 @@ impl Agent {
         }
         Ok(())
     }
-
+    //
+    fn apply_defaults(&self, config: &CollectorConfig) -> AgentResult<CollectorConfig> {
+        let mut config = config.clone();
+        if config.interval.is_none() {
+            config.interval = Some(self.default_interval);
+        }
+        Ok(config)
+    }
     // Start new collector instance
-    async fn spawn_collector(&mut self, config: CollectorConfig) -> Result<(), AgentError> {
+    async fn spawn_collector(&mut self, config: &CollectorConfig) -> Result<(), AgentError> {
+        let config = self.apply_defaults(config)?;
         let config_id = config.id.clone();
         let config_hash = config.get_hash();
         log::debug!("[{}] Starting collector", config_id);
@@ -209,12 +217,13 @@ impl Agent {
         Ok(())
     }
     // // Update running collector configuration
-    async fn update_collector(&mut self, config: CollectorConfig) -> Result<(), AgentError> {
+    async fn update_collector(&mut self, config: &CollectorConfig) -> Result<(), AgentError> {
+        let config = self.apply_defaults(config)?;
         if let Some(item) = self.running.get(&config.id) {
             if item.is_changed(config.get_hash()) {
                 log::debug!("[{}] Configuration changed, restarting", &config.id);
                 self.stop_collector(&config.id).await?;
-                self.spawn_collector(config).await?;
+                self.spawn_collector(&config).await?;
             }
         }
         Ok(())

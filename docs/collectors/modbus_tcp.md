@@ -4,23 +4,23 @@
 
 ## Configuration
 
-| Parameter                | Type                | Default   | Description                                                                   |
-| ------------------------ | ------------------- | --------- | ----------------------------------------------------------------------------- |
-| `id`                     | String              |           | Collector's ID. Must be unique per agent instance.                            |
-| `type`                   | String              |           | Must be `modbus_tcp`                                                          |
-| `interval`               | Integer             |           | Repetition interval in seconds                                                |
-| `labels`                 | Object              |           | Additional collector-level labels                                             |
-| `address`                | String              |           | IP address of Modbus TCP server                                               |
-| `port`                   | Integer             | 502       | Port of Modbus TCP server                                                     |
-| `timeout_ms`             | Integer             | 5000      | Request timeout, ms.                                                          |
-| `items`                  | Array {{ complex }} |           | Metrics to collect as a list of items                                         |
-| {{ tab }}`name`          | String              |           | Metric name, as to be exposed                                                 |
-| {{ tab }}`help`          | String              |           | Short help to be exposed along with metric                                    |
-| {{ tab }}`labels`        | Object              |           | Metric labels                                                                 |
-| {{ tab }}`register`      | Integer             |           | Starting register of modbus request, zero-based                               |
-| {{ tab }}`register_type` | String              | `holding` | Modbus request type. Either `holding`, `input` or `coil`                      |
-| {{ tab }}`format`        | String              |           | Expected response format. See [Response format](#response-format) for details |
-| {{ tab }}`slave`         | Integer             | 255       | Optional slave id, see note below.                                            |
+| Parameter                | Type                | Default                   | Description                                                                   |
+| ------------------------ | ------------------- | ------------------------- | ----------------------------------------------------------------------------- |
+| `id`                     | String              |                           | Collector's ID. Must be unique per agent instance.                            |
+| `type`                   | String              |                           | Must be `modbus_tcp`                                                          |
+| `interval`               | Integer             | `agent.defaults.interval` | Repetition interval in seconds                                                |
+| `labels`                 | Object              |                           | Additional collector-level labels                                             |
+| `address`                | String              |                           | IP address of Modbus TCP server                                               |
+| `port`                   | Integer             | 502                       | Port of Modbus TCP server                                                     |
+| `timeout_ms`             | Integer             | 5000                      | Request timeout, ms.                                                          |
+| `items`                  | Array {{ complex }} |                           | Metrics to collect as a list of items                                         |
+| {{ tab }}`name`          | String              |                           | Metric name, as to be exposed                                                 |
+| {{ tab }}`help`          | String              |                           | Short help to be exposed along with metric                                    |
+| {{ tab }}`labels`        | Object              |                           | Metric labels                                                                 |
+| {{ tab }}`register`      | Integer             |                           | Starting register of modbus request, zero-based                               |
+| {{ tab }}`register_type` | String              | `holding`                 | Modbus request type. Either `holding`, `input` or `coil`                      |
+| {{ tab }}`format`        | String              |                           | Expected response format. See [Response format](#response-format) for details |
+| {{ tab }}`slave`         | Integer             | 255                       | Optional slave id, see note below.                                            |
 
 !!! warning "Check address notation"
 
@@ -39,7 +39,6 @@ Config Example:
 ``` yaml
 - id: Modbus
   type: modbus_tcp
-  interval: 10
   address: 192.168.0.2
   port: 502
   items:

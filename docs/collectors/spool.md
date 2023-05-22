@@ -8,21 +8,20 @@ file format.
 
 ## Configuration
 
-| Parameter  | Type    | Default | Description                                        |
-| ---------- | ------- | ------- | -------------------------------------------------- |
-| `id`       | String  |         | Collector's ID. Must be unique per agent instance. |
-| `type`     | String  |         | Must be `sockets`                                  |
-| `interval` | Integer |         | Repetition interval in seconds                     |
-| `labels`   | Object  |         | Additional collector-level labels                  |
-| `path`     | String  |         | Path to the spool directory                        |
-| `dry_run`  | Boolean | `false` | If set to `true` - do not remove files             |
+| Parameter  | Type    | Default                   | Description                                        |
+| ---------- | ------- | ------------------------- | -------------------------------------------------- |
+| `id`       | String  |                           | Collector's ID. Must be unique per agent instance. |
+| `type`     | String  |                           | Must be `sockets`                                  |
+| `interval` | Integer | `agent.defaults.interval` | Repetition interval in seconds                     |
+| `labels`   | Object  |                           | Additional collector-level labels                  |
+| `path`     | String  |                           | Path to the spool directory                        |
+| `dry_run`  | Boolean | `false`                   | If set to `true` - do not remove files             |
 
 Config example:
 
 ``` yaml
 - id: Spool
   type: spool
-  interval: 10
   path: /var/gufo_agent/spool
 ```
 

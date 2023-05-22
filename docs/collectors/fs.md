@@ -4,19 +4,18 @@
 
 ## Configuration
 
-| Parameter  | Type    | Default | Description                                        |
-| ---------- | ------- | ------- | -------------------------------------------------- |
-| `id`       | String  |         | Collector's ID. Must be unique per agent instance. |
-| `type`     | String  |         | Must be `fs`                                       |
-| `interval` | Integer |         | Repetition interval in seconds                     |
-| `labels`   | Object  |         | Additional collector-level labels                  |
+| Parameter  | Type    | Default                   | Description                                        |
+| ---------- | ------- | ------------------------- | -------------------------------------------------- |
+| `id`       | String  |                           | Collector's ID. Must be unique per agent instance. |
+| `type`     | String  |                           | Must be `fs`                                       |
+| `interval` | Integer | `agent.defaults.interval` | Repetition interval in seconds                     |
+| `labels`   | Object  |                           | Additional collector-level labels                  |
 
 Config example:
 
 ``` yaml
 - id: File System
   type: fs
-  interval: 10
 ```
 ## Config Discovery
 

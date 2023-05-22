@@ -6,22 +6,21 @@ format.
 
 ## Configuration
 
-| Parameter  | Type    | Default | Description                                           |
-| ---------- | ------- | ------- | ----------------------------------------------------- |
-| `id`       | String  |         | Collector's ID. Must be unique per agent instance.    |
-| `type`     | String  |         | Must be `sockets`                                     |
-| `interval` | Integer |         | Repetition interval in seconds                        |
-| `labels`   | Object  |         | Additional collector-level labels                     |
-| `cmd`      | List    |         | Command and its arguments. Each as separate list item |
-| `cd`       | String  |         | Change working directory, if set                      |
-| `env`      | Object  |         | Set environment variables, if set                     |
+| Parameter  | Type    | Default                   | Description                                           |
+| ---------- | ------- | ------------------------- | ----------------------------------------------------- |
+| `id`       | String  |                           | Collector's ID. Must be unique per agent instance.    |
+| `type`     | String  |                           | Must be `sockets`                                     |
+| `interval` | Integer | `agent.defaults.interval` | Repetition interval in seconds                        |
+| `labels`   | Object  |                           | Additional collector-level labels                     |
+| `cmd`      | List    |                           | Command and its arguments. Each as separate list item |
+| `cd`       | String  |                           | Change working directory, if set                      |
+| `env`      | Object  |                           | Set environment variables, if set                     |
 
 Config example:
 
 ``` yaml
 - id: Script
   type: exec
-  interval: 10
   cmd:
     - ./examples/scripts/collector/sample.sh
   env:

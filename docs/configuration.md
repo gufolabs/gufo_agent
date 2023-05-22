@@ -77,6 +77,34 @@ Example:
     }
     ```
 
+### defaults
+
+Collectors' default configuration
+
+Example:
+
+=== "YAML"
+
+    ``` yaml
+    defaults:
+        interval: 10
+    ```
+
+=== "JSON"
+
+    ``` json
+    "defaults": {
+        "interval": 10
+    }
+    ```
+
+
+#### interval
+
+Default collectors' repetition interval in seconds.
+
+
+
 ## sender
 
 Metrics sender configuration.

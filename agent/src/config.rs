@@ -3,6 +3,7 @@
 // --------------------------------------------------------------------
 // Copyright (C) 2021-2023, Gufo Labs
 // --------------------------------------------------------------------
+use crate::agent::AGENT_DEFAULT_INTERVAL;
 use common::LabelsConfig;
 use serde::{Deserialize, Serialize};
 use std::collections::hash_map::DefaultHasher;
@@ -14,18 +15,25 @@ pub struct Config {
     pub version: String,
     #[serde(rename = "$type")]
     pub r#type: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub agent: Option<AgentConfig>,
+    pub agent: AgentConfig,
     pub sender: SenderConfig,
     pub collectors: Vec<CollectorConfig>,
 }
 
-#[derive(Deserialize, Debug, Serialize)]
+#[derive(Deserialize, Debug, Serialize, Default)]
 pub struct AgentConfig {
     #[serde(default = "default_none", skip_serializing_if = "Option::is_none")]
     pub host: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub labels: LabelsConfig,
+    #[serde(default = "AgentDefaults::default")]
+    pub defaults: AgentDefaults,
+}
+
+#[derive(Deserialize, Debug, Serialize)]
+pub struct AgentDefaults {
+    #[serde(default = "default_interval")]
+    pub interval: u64,
 }
 
 #[derive(Deserialize, Debug, Serialize)]
@@ -47,7 +55,8 @@ pub struct SenderConfig {
 pub struct CollectorConfig {
     pub id: String,
     pub r#type: String,
-    pub interval: u64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub interval: Option<u64>,
     #[serde(default)]
     pub disabled: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -77,6 +86,25 @@ impl CollectorConfig {
     }
 }
 
+impl Default for AgentDefaults {
+    fn default() -> Self {
+        AgentDefaults {
+            interval: AGENT_DEFAULT_INTERVAL,
+        }
+    }
+}
+
+impl Default for SenderConfig {
+    fn default() -> Self {
+        SenderConfig {
+            r#type: "openmetrics".into(),
+            mode: "pull".into(),
+            listen: "0.0.0.0:3000".into(),
+            path: "/metrics".into(),
+        }
+    }
+}
+
 fn default_openmetrics() -> String {
     "openmetrics".into()
 }
@@ -95,4 +123,8 @@ fn default_metrics() -> String {
 
 fn default_none() -> Option<String> {
     None
+}
+
+fn default_interval() -> u64 {
+    AGENT_DEFAULT_INTERVAL
 }
