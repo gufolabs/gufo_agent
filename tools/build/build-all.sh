@@ -62,7 +62,7 @@ prepare_rpm()
 {
     arch=$2
     # Prepare rpmbuild
-    rpmbuild_root="dist/rpmbuild/"
+    rpmbuild_root="dist/rpmbuild"
     mkdir -p $rpmbuild_root/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
     # Prepare spec
     cat > $rpmbuild_root/SPECS/gufo-agent.spec << __EOF__
@@ -88,9 +88,7 @@ An universal agent for infrastructure monitoring
 /usr/share/man/man1/*
 __EOF__
     # Create image
-    root="dist/rpmbuild/BUILDROOT/gufo-agent-${VERSION}-1.el7.$arch"
-    # Cleanup and recreate directory
-    mkdir -p $root
+    root="$rpmbuild_root/BUILDROOT/gufo-agent-${VERSION}-1.el7.$arch"
     # Inner directory structure
     mkdir -p "$root/usr/bin"
     mkdir -p "$root/usr/share/man/man1"
