@@ -72,6 +72,7 @@ See [Gufo Agent Man Pages](man.md) for details.
 | [modbus_rtu](collectors/modbus_rtu.md)           | Perform Modbus RTU requests                       |
 | [modbus_tcp](collectors/modbus_tcp.md)           | Perform Modbus TCP requests                       |
 | [network](collectors/network.md)                 | Host's network interface statistics               |
+| [postgres](collectors/postgres.md)               | Postgresql instance statistics                    |
 | [procstat](collectors/procstat.md)               | Process' statistics                               |
 | [sockets](collectors/sockets.md)                 | Host's sockets statistics                         |
 | [spool](collectors/spool.md)                     | Read files in openmetrics format from a directory |

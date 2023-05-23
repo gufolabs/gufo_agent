@@ -85,6 +85,7 @@ See "Gufo Agent Man Pages" for details.
 | `modbus_rtu`      | Perform Modbus RTU requests                       |
 | `modbus_tcp`      | Perform Modbus TCP requests                       |
 | `network`         | Host's network interface statistics               |
+| `postgres`        | Postgresql instance statistics                    |
 | `procstat`        | Process' statistics                               |
 | `sockets`         | Host's sockets statistics                         |
 | `spool`           | Read files in openmetrics format from a directory |

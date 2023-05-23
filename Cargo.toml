@@ -23,6 +23,7 @@ members = [
   "collectors/modbus_rtu",
   "collectors/modbus_tcp",
   "collectors/network",
+  "collectors/postgres",
   "collectors/procstat",
   "collectors/sockets",
   "collectors/spool",

@@ -21,6 +21,7 @@ pub enum Collectors {
     ModbusRtu(modbus_rtu::Collector),
     ModbusTcp(modbus_tcp::Collector),
     Network(network::Collector),
+    Postgres(postgres::Collector),
     Procstat(procstat::Collector),
     Sockets(sockets::Collector),
     Spool(spool::Collector),
@@ -73,6 +74,7 @@ impl TryFrom<CollectorConfig> for Collectors {
             "modbus_rtu" => Collectors::ModbusRtu(from_value(value)?),
             "modbus_tcp" => Collectors::ModbusTcp(from_value(value)?),
             "network" => Collectors::Network(from_value(value)?),
+            "postgres" => Collectors::Postgres(from_value(value)?),
             "procstat" => Collectors::Procstat(from_value(value)?),
             "sockets" => Collectors::Sockets(from_value(value)?),
             "spool" => Collectors::Spool(from_value(value)?),
@@ -100,6 +102,7 @@ impl Collectors {
             Collectors::ModbusRtu(_) => modbus_rtu::Collector::get_name(),
             Collectors::ModbusTcp(_) => modbus_tcp::Collector::get_name(),
             Collectors::Network(_) => network::Collector::get_name(),
+            Collectors::Postgres(_) => postgres::Collector::get_name(),
             Collectors::Procstat(_) => procstat::Collector::get_name(),
             Collectors::Sockets(_) => sockets::Collector::get_name(),
             Collectors::Spool(_) => spool::Collector::get_name(),
@@ -124,6 +127,7 @@ impl Collectors {
             Collectors::ModbusRtu(_) => modbus_rtu::Collector::is_random_offset(),
             Collectors::ModbusTcp(_) => modbus_tcp::Collector::is_random_offset(),
             Collectors::Network(_) => network::Collector::is_random_offset(),
+            Collectors::Postgres(_) => postgres::Collector::is_random_offset(),
             Collectors::Procstat(_) => procstat::Collector::is_random_offset(),
             Collectors::Sockets(_) => sockets::Collector::is_random_offset(),
             Collectors::Spool(_) => spool::Collector::is_random_offset(),
@@ -148,6 +152,7 @@ impl Collectors {
             Collectors::ModbusRtu(c) => c.collect().await,
             Collectors::ModbusTcp(c) => c.collect().await,
             Collectors::Network(c) => c.collect().await,
+            Collectors::Postgres(c) => c.collect().await,
             Collectors::Procstat(c) => c.collect().await,
             Collectors::Sockets(c) => c.collect().await,
             Collectors::Spool(c) => c.collect().await,
@@ -171,6 +176,7 @@ impl Collectors {
             "modbus_rtu".to_string(),
             "modbus_tcp".to_string(),
             "network".to_string(),
+            "postgres".to_string(),
             "procstat".to_string(),
             "sockets".to_string(),
             "spool".to_string(),
@@ -249,6 +255,12 @@ impl Collectors {
             let x = network::Collector::discover_config(opts)?;
             if !x.is_empty() {
                 r.push((network::Collector::get_name(), x));
+            }
+        }
+        if !opts.is_disabled("postgres") {
+            let x = postgres::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((postgres::Collector::get_name(), x));
             }
         }
         if !opts.is_disabled("procstat") {
