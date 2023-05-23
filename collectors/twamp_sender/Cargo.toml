@@ -15,6 +15,6 @@ frame = {path = "../../proto/frame"}
 log = "0.4"
 serde = {version = "1.0", features = ["derive"]}
 serde_yaml = "0.9"
-tokio = {version = "1.27"}
+tokio = {version = "1.28"}
 tos = {path = "../../proto/tos"}
 twamp = {path = "../../proto/twamp"}

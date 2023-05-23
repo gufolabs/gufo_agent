@@ -12,6 +12,6 @@ connection = {path = "../../proto/connection"}
 log = "0.4"
 rand = "0.8"
 serde = {version = "1.0", features = ["derive"]}
-tokio = {version = "1.27"}
+tokio = {version = "1.28"}
 twamp = {path = "../../proto/twamp"}
 udp = {path = "../../proto/udp"}
