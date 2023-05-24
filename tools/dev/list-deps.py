@@ -35,7 +35,10 @@ def read_toml(crate: str) -> Crate:
         if isinstance(data, str):
             return data
         if isinstance(data, dict):
-            return data.get("version")
+            if "version" in data:
+                return data["version"]
+            if "git" in data and "tag" in data:
+                return f"{data['git']}@{data['tag']}"
         return None
 
     with open(os.path.join(crate, "Cargo.toml"), "rb") as f:
