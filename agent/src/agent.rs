@@ -21,6 +21,7 @@ pub struct Agent {
     hostname: String,
     dump_metrics: bool,
     default_interval: u64,
+    test: bool,
 }
 
 pub struct RunningCollector {
@@ -40,6 +41,7 @@ pub struct AgentBuilder {
     dump_metrics: bool,
     config: Option<String>,
     hostname: Option<String>,
+    test: bool,
 }
 
 impl AgentBuilder {
@@ -59,6 +61,10 @@ impl AgentBuilder {
         self.hostname = hostname;
         self
     }
+    pub fn set_test(&mut self, status: bool) -> &mut Self {
+        self.test = status;
+        self
+    }
     pub fn build(&self) -> Agent {
         Agent {
             resolver: ConfigResolver::builder()
@@ -73,6 +79,7 @@ impl AgentBuilder {
                 .unwrap_or_else(|| gethostname().into_string().unwrap_or("localhost".into())),
             dump_metrics: self.dump_metrics,
             default_interval: AGENT_DEFAULT_INTERVAL,
+            test: self.test,
         }
     }
 }
@@ -81,7 +88,11 @@ impl Agent {
     pub fn run(&mut self) -> Result<(), AgentError> {
         log::error!("Running agent on {}", self.hostname);
         let runtime = Runtime::new()?;
-        runtime.block_on(async move { self.bootstrap().await })?;
+        if self.test {
+            runtime.block_on(async move { self.run_test().await })?;
+        } else {
+            runtime.block_on(async move { self.bootstrap().await })?;
+        }
         log::error!("Stopping agent");
         Ok(())
     }
@@ -235,6 +246,38 @@ impl Agent {
                 .await
                 .map_err(|e| AgentError::InternalError(e.to_string()))?;
         }
+        Ok(())
+    }
+    //
+    async fn run_test(&mut self) -> AgentResult<()> {
+        // Get config
+        let config = self.resolver.get_config().await?;
+        // Configure agent
+        self.configure_agent(&config).await?;
+        self.configure_sender(&config).await?;
+        //
+        for collector_cfg in config.collectors.iter() {
+            if collector_cfg.disabled {
+                continue;
+            }
+            let config = self.apply_defaults(collector_cfg)?;
+            let config_id = config.id.clone();
+            log::debug!("[{}] Starting collector", config_id);
+            let mut schedule = Schedule::try_from(config)?;
+            schedule.set_sender(self.sender_tx.clone());
+            schedule.run_once().await;
+        }
+        // Dump database
+        if let Some(tx) = &self.sender_tx {
+            tx.send(SenderCommand::Dump)
+                .await
+                .map_err(|e| AgentError::InternalError(e.to_string()))?;
+            tx.send(SenderCommand::Shutdown)
+                .await
+                .map_err(|e| AgentError::InternalError(e.to_string()))?;
+            tx.closed().await;
+        }
+        //
         Ok(())
     }
 }

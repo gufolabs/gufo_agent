@@ -93,6 +93,29 @@ impl Schedule {
             tokio::time::sleep(to_sleep).await;
         }
     }
+    // Run collector once, then exit
+    pub async fn run_once(&mut self) {
+        log::info!("[{}] Collecting", self.id);
+        let collector_name = self.collector.get_name();
+        // Get Unix timestamp
+        let ts = match SystemTime::now().duration_since(UNIX_EPOCH) {
+            Ok(x) => x.as_secs(),
+            Err(e) => {
+                log::error!("Failed to get timestamp: {}", e);
+                0
+            }
+        };
+        match self.collector.collect().await {
+            Ok(measures) => {
+                if let Err(e) = self.send(collector_name, measures, ts).await {
+                    log::error!("[{}] Failed to send: {}", self.id, e);
+                } else {
+                    log::info!("[{}] Done", self.id);
+                }
+            }
+            Err(e) => log::error!("[{}] Crashed with: {}", self.id, e),
+        };
+    }
     async fn send(
         &self,
         collector_name: &'static str,

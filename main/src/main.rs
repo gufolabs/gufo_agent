@@ -33,6 +33,8 @@ struct Cli {
     pub config_discovery_opts: Option<String>,
     #[arg(long)]
     pub config_scripts: Vec<String>,
+    #[arg(long)]
+    pub test: bool,
 }
 
 const ERR_EX_OTHER: i32 = 1;
@@ -100,6 +102,7 @@ fn main() {
         .set_dump_metrics(cli.dump_metrics)
         .set_config(cli.config)
         .set_hostname(cli.hostname)
+        .set_test(cli.test)
         .build();
     // Run agent and wait for complete
     if let Err(e) = agent.run() {

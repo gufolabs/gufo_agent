@@ -16,6 +16,8 @@ const CONTENT_TYPE: &str = "application/openmetrics-text; version=1.0.0; charset
 pub(crate) enum SenderCommand {
     Data(MetricsData),
     SetAgentLabels(Labels),
+    Dump,
+    Shutdown,
 }
 
 pub(crate) struct Sender {
@@ -84,7 +86,13 @@ impl Sender {
                 SenderCommand::SetAgentLabels(labels) => {
                     log::debug!("Set labels to: {:?}", labels);
                     self.db.set_labels(labels).await;
-                } //SenderCommand::Shutdown => break,
+                }
+                SenderCommand::Dump => {
+                    if let Ok(data) = self.db.to_openmetrics_string().await {
+                        println!("{}", data)
+                    }
+                }
+                SenderCommand::Shutdown => break,
             }
         }
         log::info!("Shutting down");
