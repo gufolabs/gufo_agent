@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------
 
 use async_trait::async_trait;
-use common::{counter, gauge, AgentError, AgentResult, Collectable, Measure};
+use common::{counter, counter_f, gauge, AgentError, AgentResult, Collectable, Measure};
 use futures::TryStreamExt;
 use serde::{Deserialize, Serialize};
 use sqlx::{
@@ -27,6 +27,8 @@ pub struct Config {
 pub struct Collector {
     connect_opts: PgConnectOptions,
 }
+
+const MS: f64 = 1_000.0;
 
 // Generated metrics
 gauge!(
@@ -101,29 +103,29 @@ counter!(
 //     "Time at which the last data page checksum failure was detected in this database",
 //     db
 // );
-counter!(
-    pg_blk_read_time_ms,
-    "Time spent reading data file blocks by backends in this database, in ms",
+counter_f!(
+    pg_blk_read_time,
+    "Time spent reading data file blocks by backends in this database, in seconds",
     db
 );
-counter!(
-    pg_blk_write_time_ms,
-    "Time spent writing data file blocks by backends in this database, in ms",
+counter_f!(
+    pg_blk_write_time,
+    "Time spent writing data file blocks by backends in this database, in seconds",
     db
 );
-counter!(
-    pg_session_time_ms,
-    "Time spent by database sessions in this database, in ms",
+counter_f!(
+    pg_session_time,
+    "Time spent by database sessions in this database, in seconds",
     db
 );
-counter!(
-    pg_active_time_ms,
-    "Time spent executing SQL statements in this database, in ms",
+counter_f!(
+    pg_active_time,
+    "Time spent executing SQL statements in this database, in seconds",
     db
 );
-counter!(
-    pg_idle_in_transaction_time_ms,
-    "Time spent idling while in a transaction in this database, in ms",
+counter_f!(
+    pg_idle_in_transaction_time,
+    "Time spent idling while in a transaction in this database, in seconds",
     db
 );
 counter!(
@@ -245,20 +247,20 @@ impl Collectable for Collector {
                 r.push(pg_checksum_failures(v as u64, db.clone()));
             }
             // pg_checksum_last_failure
-            if let Ok(v) = row.try_get::<i64, &str>("blk_read_time") {
-                r.push(pg_blk_read_time_ms(v as u64, db.clone()));
+            if let Ok(v) = row.try_get::<f64, &str>("blk_read_time") {
+                r.push(pg_blk_read_time((v / MS) as f32, db.clone()));
             }
-            if let Ok(v) = row.try_get::<i64, &str>("blk_write_time") {
-                r.push(pg_blk_write_time_ms(v as u64, db.clone()));
+            if let Ok(v) = row.try_get::<f64, &str>("blk_write_time") {
+                r.push(pg_blk_write_time((v / MS) as f32, db.clone()));
             }
-            if let Ok(v) = row.try_get::<i64, &str>("session_time") {
-                r.push(pg_session_time_ms(v as u64, db.clone()));
+            if let Ok(v) = row.try_get::<f64, &str>("session_time") {
+                r.push(pg_session_time((v / MS) as f32, db.clone()));
             }
-            if let Ok(v) = row.try_get::<i64, &str>("active_time") {
-                r.push(pg_active_time_ms(v as u64, db.clone()));
+            if let Ok(v) = row.try_get::<f64, &str>("active_time") {
+                r.push(pg_active_time((v / MS) as f32, db.clone()));
             }
-            if let Ok(v) = row.try_get::<i64, &str>("idle_in_transaction_time") {
-                r.push(pg_idle_in_transaction_time_ms(v as u64, db.clone()));
+            if let Ok(v) = row.try_get::<f64, &str>("idle_in_transaction_time") {
+                r.push(pg_idle_in_transaction_time((v / MS) as f32, db.clone()));
             }
             if let Ok(v) = row.try_get::<i64, &str>("sessions") {
                 r.push(pg_sessions(v as u64, db.clone()));

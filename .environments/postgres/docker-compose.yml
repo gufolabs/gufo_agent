@@ -1,0 +1,12 @@
+# Postgres and PgBouncer
+version: "2"
+services:
+  postgres:
+    image: "postgres:15.3-bullseye"
+    volumes:
+      - "../../target/release:/opt/ga"
+      - "./gufo-agent-pg.yml:/etc/gufo-agent.yml"
+      - "./run-pg.sh:/run.sh"
+    environment:
+      POSTGRES_DB: agent
+      POSTGRES_PASSWORD: secret
