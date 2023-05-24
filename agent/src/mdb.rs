@@ -75,6 +75,7 @@ impl From<Value> for ValueType {
     fn from(value: Value) -> Self {
         match value {
             Value::Counter(_) => ValueType::Counter,
+            Value::CounterF(_) => ValueType::Counter,
             Value::Gauge(_) => ValueType::Gauge,
             Value::GaugeI(_) => ValueType::Gauge,
             Value::GaugeF(_) => ValueType::Gauge,

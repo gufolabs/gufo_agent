@@ -69,6 +69,69 @@ macro_rules! counter {
     };
 }
 
+// Define float counter
+// Example:
+// `counter_f!(my_counter, "Help string");`
+// expands to
+// ```
+// fn my_counter(v: f32) -> Measure {
+//     Measure {
+//         name: "my_counter".to_string(),
+//         help: "Help string".to_string(),
+//         value: Value::CounterF(v),
+//         labels: Labels::default()
+//     }
+// }
+// ```
+// Example:
+// `counter!(my_counter, "Help string", query);`
+// expands to
+// ```
+// fn my_counter<K1: ToString>(v: f32, l_query: K1) -> Measure {
+//     Measure {
+//         name: "my_counter".to_string(),
+//         help: "Help string".to_string(),
+//         value: Value::CounterF(v),
+//         labels: vec![Labels::new("query", l_query)]
+//     }
+// }
+// ```
+#[macro_export]
+macro_rules! counter_f {
+    // Without labels
+    ($name:ident, $help:literal) => {
+        fn $name(v: f32) -> Measure {
+            Measure {
+                name: stringify!($name).to_string(),
+                help: $help.to_string(),
+                value: common::Value::CounterF(v),
+                labels: common::Labels::default(),
+            }
+        }
+    };
+    // With labels
+    ($name:ident, $help:literal, $($label:ident),+) => {
+        common::metrics::paste! {
+            fn $name<$([< T $label >]: ToString),+>(
+                v: f32, $([< l_ $label>]: [< T $label >]),+
+            ) -> Measure
+            where $([< T $label >]: Clone),+
+            {
+                Measure {
+                    name: stringify!($name).to_string(),
+                    help: $help.to_string(),
+                    value: common::Value::CounterF(v),
+                    labels: common::Labels::new(
+                        vec![
+                            $(common::Label::new(stringify!($label), [< l_ $label >].clone()),)+
+                        ]
+                    ),
+                }
+            }
+        }
+    };
+}
+
 // Define gauge
 // Example:
 // `gauge!(my_gauge, "Help string");`
