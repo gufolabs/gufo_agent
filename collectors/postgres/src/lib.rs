@@ -175,6 +175,29 @@ impl TryFrom<Config> for Collector {
     }
 }
 
+macro_rules! apply {
+    ($r:expr, $fn:ident, $row:expr, $name:expr, $db:expr) => {
+        if let Ok(v) = $row.try_get::<i64, &str>($name) {
+            $r.push($fn(v as u64, $db.clone()));
+        }
+    };
+}
+
+macro_rules! apply32 {
+    ($r:expr, $fn:ident, $row:expr, $name:expr, $db:expr) => {
+        if let Ok(v) = $row.try_get::<i32, &str>($name) {
+            $r.push($fn(v as u64, $db.clone()));
+        }
+    };
+}
+macro_rules! apply_ms {
+    ($r:expr, $fn:ident, $row:expr, $name:expr, $db:expr) => {
+        if let Ok(v) = $row.try_get::<f64, &str>($name) {
+            $r.push($fn((v / MS) as f32, $db.clone()));
+        }
+    };
+}
+
 // Collector implementation
 #[async_trait]
 impl Collectable for Collector {
@@ -201,80 +224,38 @@ impl Collectable for Collector {
                 Ok(x) => x,
                 Err(_) => continue,
             };
-            //
-            if let Ok(v) = row.try_get::<i32, &str>("numbackends") {
-                r.push(pg_numbackends(v as u64, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<i64, &str>("xact_commit") {
-                r.push(pg_xact_commit(v as u64, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<i64, &str>("xact_rollback") {
-                r.push(pg_xact_rollback(v as u64, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<i64, &str>("blks_read") {
-                r.push(pg_blks_read(v as u64, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<i64, &str>("blks_hit") {
-                r.push(pg_blks_hit(v as u64, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<i64, &str>("tup_returned") {
-                r.push(pg_tup_returned(v as u64, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<i64, &str>("tup_fetched") {
-                r.push(pg_tup_fetched(v as u64, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<i64, &str>("tup_inserted") {
-                r.push(pg_tup_inserted(v as u64, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<i64, &str>("tup_updated") {
-                r.push(pg_tup_updated(v as u64, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<i64, &str>("tup_deleted") {
-                r.push(pg_tup_deleted(v as u64, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<i64, &str>("conflicts") {
-                r.push(pg_conflicts(v as u64, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<i64, &str>("temp_files") {
-                r.push(pg_temp_files(v as u64, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<i64, &str>("temp_bytes") {
-                r.push(pg_temp_bytes(v as u64, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<i64, &str>("deadlocks") {
-                r.push(pg_deadlocks(v as u64, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<i64, &str>("checksum_failures") {
-                r.push(pg_checksum_failures(v as u64, db.clone()));
-            }
+            // r, fn, row, name, db
+            apply32!(r, pg_numbackends, row, "numbackends", db);
+            apply!(r, pg_xact_commit, row, "xact_commit", db);
+            apply!(r, pg_xact_rollback, row, "xact_rollback", db);
+            apply!(r, pg_blks_read, row, "blks_read", db);
+            apply!(r, pg_blks_hit, row, "blks_hit", db);
+            apply!(r, pg_tup_returned, row, "tup_returned", db);
+            apply!(r, pg_tup_fetched, row, "tup_fetched", db);
+            apply!(r, pg_tup_inserted, row, "tup_inserted", db);
+            apply!(r, pg_tup_updated, row, "tup_updated", db);
+            apply!(r, pg_tup_deleted, row, "tup_deleted", db);
+            apply!(r, pg_conflicts, row, "conflicts", db);
+            apply!(r, pg_temp_files, row, "temp_files", db);
+            apply!(r, pg_temp_bytes, row, "temp_bytes", db);
+            apply!(r, pg_deadlocks, row, "deadlocks", db);
+            apply!(r, pg_checksum_failures, row, "checksum_failures", db);
             // pg_checksum_last_failure
-            if let Ok(v) = row.try_get::<f64, &str>("blk_read_time") {
-                r.push(pg_blk_read_time((v / MS) as f32, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<f64, &str>("blk_write_time") {
-                r.push(pg_blk_write_time((v / MS) as f32, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<f64, &str>("session_time") {
-                r.push(pg_session_time((v / MS) as f32, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<f64, &str>("active_time") {
-                r.push(pg_active_time((v / MS) as f32, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<f64, &str>("idle_in_transaction_time") {
-                r.push(pg_idle_in_transaction_time((v / MS) as f32, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<i64, &str>("sessions") {
-                r.push(pg_sessions(v as u64, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<i64, &str>("sessions_abandoned") {
-                r.push(pg_sessions_abandoned(v as u64, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<i64, &str>("sessions_fatal") {
-                r.push(pg_sessions_fatal(v as u64, db.clone()));
-            }
-            if let Ok(v) = row.try_get::<i64, &str>("sessions_killed") {
-                r.push(pg_sessions_killed(v as u64, db.clone()));
-            }
+            apply_ms!(r, pg_blk_read_time, row, "blk_read_time", db);
+            apply_ms!(r, pg_blk_write_time, row, "blk_write_time", db);
+            apply_ms!(r, pg_session_time, row, "session_time", db);
+            apply_ms!(r, pg_active_time, row, "active_time", db);
+            apply_ms!(
+                r,
+                pg_idle_in_transaction_time,
+                row,
+                "idle_in_transaction_time",
+                db
+            );
+            apply!(r, pg_sessions, row, "sessions", db);
+            apply!(r, pg_sessions_abandoned, row, "sessions_abandoned", db);
+            apply!(r, pg_sessions_fatal, row, "sessions_fatal", db);
+            apply!(r, pg_sessions_killed, row, "sessions_killed", db);
             //pg_stats_reset,
         }
         Ok(r)
