@@ -65,6 +65,10 @@ The following environment variables affect the execution of `gufo-agent`:
 * `GA_CONFIG_DISCOVERY_OPTS` - same as [`--config-discovery-opts`](#opt_config_discovery_opts) option.
 * `GA_CONFIG_SCRIPTS` - a colon-sparated list of directories, containing discovery scripts.
 
+## Signals
+
+* `SIGHUP` - reload configuration.
+
 ## Exit Status
 
 The `gufo-agent` returns:

@@ -8,9 +8,12 @@ use crate::{CollectorConfig, Config, ConfigResolver, Schedule, Sender, SenderCom
 use common::{AgentError, AgentResult, Label, Labels};
 use gethostname::gethostname;
 use std::collections::{HashMap, HashSet};
-use tokio::runtime::Runtime;
-use tokio::sync::mpsc;
-use tokio::task::JoinHandle;
+use tokio::{
+    runtime::Runtime,
+    signal::unix::{signal, SignalKind},
+    sync::mpsc,
+    task::JoinHandle,
+};
 
 pub(crate) const AGENT_DEFAULT_INTERVAL: u64 = 60;
 
@@ -97,20 +100,22 @@ impl Agent {
         Ok(())
     }
     async fn bootstrap(&mut self) -> Result<(), AgentError> {
+        // Subscribe to SIGHUP
+        let mut hup_stream = signal(SignalKind::hangup())?;
+        // Initialize resolver
         self.resolver.bootstrap().await?;
         //
         loop {
-            if let Err(e) = self.configure().await {
-                if !self.resolver.is_failable() {
-                    return Err(e);
+            match self.configure().await {
+                Ok(_) => {
+                    // Wait for sighup
+                    hup_stream.recv().await;
+                    log::info!("SIGHUP received, reloading configuration");
                 }
-                self.resolver.sleep(false).await;
-                continue;
-            }
-            if self.resolver.is_repeatable() {
-                self.resolver.sleep(true).await;
-            } else {
-                break;
+                Err(e) => {
+                    log::error!("Failed to process configuration: {}", e);
+                    break;
+                }
             }
         }
         self.wait_all().await?;

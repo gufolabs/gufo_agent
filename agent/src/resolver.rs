@@ -86,11 +86,4 @@ impl ConfigResolver {
             serde_yaml::from_slice(&data).map_err(|e| AgentError::ParseError(e.to_string()))?;
         Ok(cfg)
     }
-    pub fn is_repeatable(&self) -> bool {
-        false
-    }
-    pub fn is_failable(&self) -> bool {
-        false
-    }
-    pub async fn sleep(&self, _status: bool) {}
 }
