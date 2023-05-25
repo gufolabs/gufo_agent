@@ -21,10 +21,10 @@ Config example:
 
 ``` yaml
 - id: Postgres
-disabled: false
-type: postgres
-host: 127.0.0.1
-username: postgres
+  disabled: false
+  type: postgres
+  host: 127.0.0.1
+  username: postgres
 ```
 
 ## Collected Metrics

@@ -30,6 +30,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            dist/gufo-agent-*
-            dist/*.deb
-            dist/*.rpm
+            dist/gufo-agent*

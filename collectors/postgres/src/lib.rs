@@ -169,7 +169,7 @@ impl TryFrom<Config> for Collector {
             connect_opts = connect_opts.username(username.as_str());
         }
         if let Some(password) = &value.password {
-            connect_opts = connect_opts.password(&password.as_str());
+            connect_opts = connect_opts.password(password.as_str());
         }
         Ok(Self { connect_opts })
     }
@@ -187,7 +187,9 @@ impl Collectable for Collector {
             .await
             .map_err(|e| AgentError::InternalError(e.to_string()))?;
         // Collect data
-        let mut rows = sqlx::query("SELECT * FROM pg_stat_database").fetch(&mut conn);
+        let mut rows = sqlx::query("SELECT * FROM pg_stat_database")
+            .persistent(false)
+            .fetch(&mut conn);
         let mut r = Vec::new();
         while let Some(row) = rows
             .try_next()
@@ -212,7 +214,6 @@ impl Collectable for Collector {
             if let Ok(v) = row.try_get::<i64, &str>("blks_read") {
                 r.push(pg_blks_read(v as u64, db.clone()));
             }
-
             if let Ok(v) = row.try_get::<i64, &str>("blks_hit") {
                 r.push(pg_blks_hit(v as u64, db.clone()));
             }

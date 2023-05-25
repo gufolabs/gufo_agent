@@ -6,7 +6,24 @@ services:
     volumes:
       - "../../target/release:/opt/ga"
       - "./gufo-agent-pg.yml:/etc/gufo-agent.yml"
-      - "./run-pg.sh:/run.sh"
+      - "./run.sh:/run.sh"
+      - "./initdb.d:/docker-entrypoint-initdb.d/"
     environment:
-      POSTGRES_DB: agent
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: secret
+  pgbouncer:
+    image: "bitnami/pgbouncer:1"
+    depends_on:
+      - postgres
+    volumes:
+      - "../../target/release:/opt/ga"
+      - "./gufo-agent-pgb.yml:/etc/gufo-agent.yml"
+      - "./run.sh:/run.sh"
+    environment:
+      PGBOUNCER_IGNORE_STARTUP_PARAMETERS: extra_float_digits
+      POSTGRESQL_HOST: postgres
+      POSTGRESQL_USERNAME: postgres
+      POSTGRESQL_PASSWORD: secret
+      PGBOUNCER_DATABASE: metrics
+      POSTGRESQL_DATABASE: metrics
+      PGBOUNCER_STATS_USERS: postgres

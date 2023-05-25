@@ -10,8 +10,9 @@ sender:
   listen: 0.0.0.0:3000
   path: /metrics
 collectors:
-  - id: Postgres
-    type: postgres
+  - id: PgBouncer
+    type: pgbouncer
     host: 127.0.0.1
+    port: 6432
     username: postgres
     password: secret
