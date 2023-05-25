@@ -155,7 +155,7 @@ impl TryFrom<Config> for Collector {
     type Error = AgentError;
 
     fn try_from(value: Config) -> Result<Self, Self::Error> {
-        let mut connect_opts = PgConnectOptions::new();
+        let mut connect_opts = PgConnectOptions::new().application_name("gufo-agent");
         if let Some(host) = &value.host {
             connect_opts = connect_opts.host(host.as_str());
         }
