@@ -21,11 +21,17 @@ pub struct Config {
     socket: Option<String>,
     username: Option<String>,
     password: Option<String>,
+    #[serde(default = "default_exclude")]
+    exclude_databases: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    only_databases: Option<Vec<String>>,
 }
 
 // Collector structure
 pub struct Collector {
     connect_opts: PgConnectOptions,
+    only_databases: Vec<String>,
+    exclude_databases: Vec<String>,
 }
 
 const MS: f64 = 1_000.0;
@@ -171,7 +177,11 @@ impl TryFrom<Config> for Collector {
         if let Some(password) = &value.password {
             connect_opts = connect_opts.password(password.as_str());
         }
-        Ok(Self { connect_opts })
+        Ok(Self {
+            connect_opts,
+            only_databases: value.only_databases.unwrap_or_default(),
+            exclude_databases: value.exclude_databases,
+        })
     }
 }
 
@@ -224,6 +234,17 @@ impl Collectable for Collector {
                 Ok(x) => x,
                 Err(_) => continue,
             };
+            // Check if database is allowed to pass
+            if self.only_databases.is_empty() {
+                if self.exclude_databases.contains(&db) {
+                    continue;
+                }
+            } else {
+                // only_databases
+                if !self.only_databases.contains(&db) {
+                    continue;
+                }
+            }
             // r, fn, row, name, db
             apply32!(r, pg_numbackends, row, "numbackends", db);
             apply!(r, pg_xact_commit, row, "xact_commit", db);
@@ -265,4 +286,8 @@ impl Collectable for Collector {
     //     let cfg = Config;
     //     Ok(vec![ConfigItem::from_config(cfg)?])
     // }
+}
+
+fn default_exclude() -> Vec<String> {
+    vec!["postgres".into(), "template0".into(), "template1".into()]
 }

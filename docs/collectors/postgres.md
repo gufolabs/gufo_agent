@@ -4,17 +4,19 @@
 
 ## Configuration
 
-| Parameter  | Type    | Default                   | Description                                        |
-| ---------- | ------- | ------------------------- | -------------------------------------------------- |
-| `id`       | String  |                           | Collector's ID. Must be unique per agent instance. |
-| `type`     | String  |                           | Must be `http`                                     |
-| `interval` | Integer | `agent.defaults.interval` | Repetition interval in seconds                     |
-| `labels`   | Object  |                           | Additional collector-level labels                  |
-| `host`     | String  |                           | Server instance host for TCP connection            |
-| `port`     | Integer |                           | Server instance port for TCP connection            |
-| `socket`   | String  |                           | Unix socket path                                   |
-| `username` | String  |                           | Username to connect database                       |
-| `password` | String  |                           | Password to connect database                       |
+| Parameter           | Type    | Default                            | Description                                                            |
+| ------------------- | ------- | ---------------------------------- | ---------------------------------------------------------------------- |
+| `id`                | String  |                                    | Collector's ID. Must be unique per agent instance.                     |
+| `type`              | String  |                                    | Must be `http`                                                         |
+| `interval`          | Integer | `agent.defaults.interval`          | Repetition interval in seconds                                         |
+| `labels`            | Object  |                                    | Additional collector-level labels                                      |
+| `host`              | String  |                                    | Server instance host for TCP connection                                |
+| `port`              | Integer |                                    | Server instance port for TCP connection                                |
+| `socket`            | String  |                                    | Unix socket path                                                       |
+| `username`          | String  |                                    | Username to connect database                                           |
+| `password`          | String  |                                    | Password to connect database                                           |
+| `exclude_databases` | Array   | `[postgres, template0, template1]` | Exclude databases from output                                          |
+| `only_databases`    | Array   |                                    | Restrict output only to given databases. Overrides `exclude_databases` |
 
 
 Config example:
