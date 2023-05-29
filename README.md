@@ -86,7 +86,8 @@ See "Gufo Agent Man Pages" for details.
 | `modbus_tcp`      | Perform Modbus TCP requests                       |
 | `network`         | Host's network interface statistics               |
 | `pgbouncer`       | PgBouncer statistics                              |
-| `postgres`        | Postgresql instance statistics                    |
+| `postgres`        | PostgreSQL instance statistics                    |
+| `postgres_query`  | Perform PostgreSQL queries                        |
 | `procstat`        | Process' statistics                               |
 | `sockets`         | Host's sockets statistics                         |
 | `spool`           | Read files in openmetrics format from a directory |

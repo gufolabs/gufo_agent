@@ -57,7 +57,8 @@ labels are set as key-value pairs:
 | [modbus_tcp](modbus_tcp.md)           | Perform Modbus TCP requests                       |
 | [network](network.md)                 | Host's network interface statistics               |
 | [pgbouncer](pgbouncer.md)             | PgBouncer statistics                              |
-| [postgres](postgres.md)               | Postgresql instance statistics                    |
+| [postgres](postgres.md)               | PostgreSQL instance statistics                    |
+| [postgres_query](postgres_query.md)   | Perform PostgreSQL queries                        |
 | [procstat](procstat.md)               | Process' statistics                               |
 | [sockets](sockets.md)                 | Host's sockets statistics                         |
 | [spool](spool.md)                     | Read files in openmetrics format from a directory |

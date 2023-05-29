@@ -73,7 +73,8 @@ See [Gufo Agent Man Pages](man.md) for details.
 | [modbus_tcp](collectors/modbus_tcp.md)           | Perform Modbus TCP requests                       |
 | [network](collectors/network.md)                 | Host's network interface statistics               |
 | [pgbouncer](collectors/pgbouncer.md)             | PgBouncer statistics                              |
-| [postgres](collectors/postgres.md)               | Postgresql instance statistics                    |
+| [postgres](collectors/postgres.md)               | PostgreSQL instance statistics                    |
+| [postgres_query](collectors/postgres_query.md)   | Perform PostgreSQL queries                        |
 | [procstat](collectors/procstat.md)               | Process' statistics                               |
 | [sockets](collectors/sockets.md)                 | Host's sockets statistics                         |
 | [spool](collectors/spool.md)                     | Read files in openmetrics format from a directory |

@@ -25,6 +25,7 @@ members = [
   "collectors/network",
   "collectors/pgbouncer",
   "collectors/postgres",
+  "collectors/postgres_query",
   "collectors/procstat",
   "collectors/sockets",
   "collectors/spool",

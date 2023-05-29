@@ -27,3 +27,12 @@ services:
       PGBOUNCER_DATABASE: metrics
       POSTGRESQL_DATABASE: metrics
       PGBOUNCER_STATS_USERS: postgres
+  query:
+    image: "debian:bullseye-slim"
+    depends_on:
+      - pgbouncer
+    volumes:
+      - "../../target/release:/opt/ga"
+      - "./gufo-agent-query.yml:/etc/gufo-agent.yml"
+      - "./run.sh:/run.sh"
+    entrypoint: tail -f /dev/null

@@ -26,6 +26,7 @@ nav:
       - network: collectors/network.md
       - pgbouncer: collectors/pgbouncer.md
       - postgres: collectors/postgres.md
+      - postgres_query: collectors/postgres_query.md
       - procstat: collectors/procstat.md
       - sockets: collectors/sockets.md
       - spool: collectors/spool.md

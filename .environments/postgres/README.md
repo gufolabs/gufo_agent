@@ -24,5 +24,5 @@ docker exec -ti postgres-pgbouncer-1 /run.sh
 ## Stopping
 
 ```
-docker-compose kill
+docker-compose down
 ```

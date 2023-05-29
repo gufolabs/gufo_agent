@@ -23,6 +23,7 @@ pub enum Collectors {
     Network(network::Collector),
     Pgbouncer(pgbouncer::Collector),
     Postgres(postgres::Collector),
+    PostgresQuery(postgres_query::Collector),
     Procstat(procstat::Collector),
     Sockets(sockets::Collector),
     Spool(spool::Collector),
@@ -77,6 +78,7 @@ impl TryFrom<CollectorConfig> for Collectors {
             "network" => Collectors::Network(from_value(value)?),
             "pgbouncer" => Collectors::Pgbouncer(from_value(value)?),
             "postgres" => Collectors::Postgres(from_value(value)?),
+            "postgres_query" => Collectors::PostgresQuery(from_value(value)?),
             "procstat" => Collectors::Procstat(from_value(value)?),
             "sockets" => Collectors::Sockets(from_value(value)?),
             "spool" => Collectors::Spool(from_value(value)?),
@@ -106,6 +108,7 @@ impl Collectors {
             Collectors::Network(_) => network::Collector::get_name(),
             Collectors::Pgbouncer(_) => pgbouncer::Collector::get_name(),
             Collectors::Postgres(_) => postgres::Collector::get_name(),
+            Collectors::PostgresQuery(_) => postgres_query::Collector::get_name(),
             Collectors::Procstat(_) => procstat::Collector::get_name(),
             Collectors::Sockets(_) => sockets::Collector::get_name(),
             Collectors::Spool(_) => spool::Collector::get_name(),
@@ -132,6 +135,7 @@ impl Collectors {
             Collectors::Network(_) => network::Collector::is_random_offset(),
             Collectors::Pgbouncer(_) => pgbouncer::Collector::is_random_offset(),
             Collectors::Postgres(_) => postgres::Collector::is_random_offset(),
+            Collectors::PostgresQuery(_) => postgres_query::Collector::is_random_offset(),
             Collectors::Procstat(_) => procstat::Collector::is_random_offset(),
             Collectors::Sockets(_) => sockets::Collector::is_random_offset(),
             Collectors::Spool(_) => spool::Collector::is_random_offset(),
@@ -158,6 +162,7 @@ impl Collectors {
             Collectors::Network(c) => c.collect().await,
             Collectors::Pgbouncer(c) => c.collect().await,
             Collectors::Postgres(c) => c.collect().await,
+            Collectors::PostgresQuery(c) => c.collect().await,
             Collectors::Procstat(c) => c.collect().await,
             Collectors::Sockets(c) => c.collect().await,
             Collectors::Spool(c) => c.collect().await,
@@ -183,6 +188,7 @@ impl Collectors {
             "network".to_string(),
             "pgbouncer".to_string(),
             "postgres".to_string(),
+            "postgres_query".to_string(),
             "procstat".to_string(),
             "sockets".to_string(),
             "spool".to_string(),
@@ -273,6 +279,12 @@ impl Collectors {
             let x = postgres::Collector::discover_config(opts)?;
             if !x.is_empty() {
                 r.push((postgres::Collector::get_name(), x));
+            }
+        }
+        if !opts.is_disabled("postgres_query") {
+            let x = postgres_query::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((postgres_query::Collector::get_name(), x));
             }
         }
         if !opts.is_disabled("procstat") {
