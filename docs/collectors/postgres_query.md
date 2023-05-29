@@ -28,7 +28,6 @@ Config example:
   - id: Query
     type: postgres_query
     host: postgres
-    port: 6432
     username: postgres
     password: secret
     database: metrics
@@ -45,6 +44,35 @@ metrics are fully configurable.
 ## Labels
 
 Metric labels depend on configures queries.
+
+## Database Table Requirements
+
+* Metric name field must be of text type: CHAR, VARCHAR, TEXT.
+* Value field must must be of type: SMALLINT, SMALLSERIAL, INT2, INT, INT4, SERIAL,
+  BIGINT, BIGSERIAL, INT8, REAL, FLOAT4, DOUBLE PRECISION, FLOAT8, NUMERIC.
+* Help field is optional and must be any text type: CHAR, VARCHAR, TEXT.
+
+## Example
+
+Create metrics table or view with the following structure:
+
+``` sql
+CREATE TABLE metrics(
+    name VARCHAR(256), 
+    help VARCHAR(256), 
+    value INTEGER
+);
+```
+
+Populate with data:
+
+``` sql
+INSERT INTO metrics(name, help, value)
+VALUES
+    ('myapp_read', 'Total reads', 12),
+    ('myapp_write', 'Total writes', 28),
+    ('myapp_delete', 'Total deletes', 1);
+```
 
 ## Sample Output
 
