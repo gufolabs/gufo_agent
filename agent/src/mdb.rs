@@ -133,7 +133,9 @@ impl MetricsDb {
     pub async fn write_openmetrics(&self, out: &mut BytesMut) -> Result<(), AgentError> {
         let db = self.0.read().await;
         for (family, fv) in db.data.iter() {
-            fmt::write(out, format_args!("# HELP {} {}\n", family.name, fv.help,))?;
+            if !fv.help.is_empty() {
+                fmt::write(out, format_args!("# HELP {} {}\n", family.name, fv.help,))?;
+            }
             fmt::write(
                 out,
                 format_args!("# TYPE {} {}\n", family.name, fv.r#type.as_str(),),
