@@ -65,7 +65,17 @@ impl Labels {
             }
         }
     }
-    // Merge 3 set of labels and return sorted summary
+    // Merge 2 sets of labels and return sorted  summary
+    pub fn merge_sort2(v1: &Labels, v2: &Labels) -> Labels {
+        if v1.is_empty() && v2.is_empty() {
+            return Labels::default();
+        }
+        let mut map = BTreeMap::new();
+        v1.update_map(&mut map);
+        v2.update_map(&mut map);
+        Labels::new(map.iter().map(|(k, v)| Label::new(k, v)).collect())
+    }
+    // Merge 4 sets of labels and return sorted summary
     pub fn merge_sort4(v1: &Labels, v2: &Labels, v3: &Labels, v4: &Labels) -> Labels {
         if v1.is_empty() && v2.is_empty() && v3.is_empty() && v4.is_empty() {
             return Labels::default();

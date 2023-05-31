@@ -4,23 +4,27 @@
 
 ## Configuration
 
-| Parameter                | Type                | Default                   | Description                                        |
-| ------------------------ | ------------------- | ------------------------- | -------------------------------------------------- |
-| `id`                     | String              |                           | Collector's ID. Must be unique per agent instance. |
-| `type`                   | String              |                           | Must be `http`                                     |
-| `interval`               | Integer             | `agent.defaults.interval` | Repetition interval in seconds                     |
-| `labels`                 | Object              |                           | Additional collector-level labels                  |
-| `host`                   | String              |                           | Server instance host for TCP connection            |
-| `port`                   | Integer             |                           | Server instance port for TCP connection            |
-| `socket`                 | String              |                           | Unix socket path                                   |
-| `database`               | String              |                           | Database name                                      |
-| `username`               | String              |                           | Username to connect database                       |
-| `password`               | String              |                           | Password to connect database                       |
-| `items`                  | Array {{ complex }} |                           | List of query configurations                       |
-| {{ tab }} `query`        | String              |                           | SQL query                                          |
-| {{ tab }} `name_column`  | String              | `name`                    | Column with metric name                            |
-| {{ tab }} `value_column` | String              | `value`                   | Column with metric value                           |
-| {{ tab }} `help_column`  | String              |                           | Optional column with metric help                   |
+| Parameter                  | Type                | Default                   | Description                                                                              |
+| -------------------------- | ------------------- | ------------------------- | ---------------------------------------------------------------------------------------- |
+| `id`                       | String              |                           | Collector's ID. Must be unique per agent instance.                                       |
+| `type`                     | String              |                           | Must be `http`                                                                           |
+| `interval`                 | Integer             | `agent.defaults.interval` | Repetition interval in seconds                                                           |
+| `labels`                   | Object              |                           | Additional collector-level labels                                                        |
+| `host`                     | String              |                           | Server instance host for TCP connection                                                  |
+| `port`                     | Integer             |                           | Server instance port for TCP connection                                                  |
+| `socket`                   | String              |                           | Unix socket path                                                                         |
+| `database`                 | String              |                           | Database name                                                                            |
+| `username`                 | String              |                           | Username to connect database                                                             |
+| `password`                 | String              |                           | Password to connect database                                                             |
+| `items`                    | Array {{ complex }} |                           | List of query configurations                                                             |
+| {{ tab }} `query`          | String              |                           | SQL query                                                                                |
+| {{ tab }} `name`           | String              |                           | Metric name. Overriden by `name_column`.                                                 |
+| {{ tab }} `name_column`    | String              |                           | Column with metric name. Overrides `name` configuration.                                 |
+| {{ tab }} `help`           | String              |                           | Metric help. Overriden by `help_column`.                                                 |
+| {{ tab }} `help_column`    | String              |                           | Optional column with metric help. Overrides `help` connfiguration.                       |
+| {{ tab }} `value_column`   | String              | `value`                   | Column with metric value                                                                 |
+| {{ tab }} `labels`         | Object              |                           | Additional item-level labels.                                                            |
+| {{ tab }} `labels_columns` | Array               |                           | List of column names which to be exposed as labels. Label name matches with column name. |
 
 Config example:
 
@@ -32,8 +36,21 @@ Config example:
     password: secret
     database: metrics
     items:
+      # name, value, and help from table
       - query: SELECT name, value, help FROM metrics
         help_column: help
+      # Static name, help, and labels
+      - query: SELECT 42 as value
+        name: meaning_of_life
+        help: The most important question
+        labels:
+          region: galaxy
+          transport: autostop
+      # Static name. Labels and value are from query
+      - query: SELECT dept, region, SUM(value) AS value FROM expenses GROUP BY 1, 2
+        name: expenses
+        help: Expenses by department and the region
+        label_columns: [dept, region]
 ```
 
 ## Collected Metrics

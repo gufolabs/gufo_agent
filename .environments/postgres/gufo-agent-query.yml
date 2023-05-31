@@ -19,4 +19,15 @@ collectors:
     database: metrics
     items:
       - query: SELECT name, value, help FROM metrics
+        name_column: name
         help_column: help
+      - query: SELECT 42 as value
+        name: meaning_of_life
+        help: The most important question
+        labels:
+          region: galaxy
+          transport: autostop
+      - query: SELECT dept, region, SUM(value) AS value FROM expenses GROUP BY 1, 2
+        name: expenses
+        help: Expenses by department and the region
+        label_columns: [dept, region]

@@ -6,7 +6,7 @@
 
 use async_trait::async_trait;
 use bigdecimal::{BigDecimal, ToPrimitive};
-use common::{AgentError, AgentResult, Collectable, Labels, Measure, Value};
+use common::{AgentError, AgentResult, Collectable, Label, Labels, LabelsConfig, Measure, Value};
 use futures::TryStreamExt;
 use serde::{Deserialize, Serialize};
 use sqlx::{
@@ -29,12 +29,24 @@ pub struct Config {
 #[derive(Serialize, Deserialize)]
 pub struct ConfigQueryItem {
     query: String,
-    #[serde(default = "default_name")]
-    name_column: String,
-    #[serde(default = "default_value")]
-    value_column: String,
+    // name
+    #[serde(skip_serializing_if = "Option::is_none")]
+    name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    name_column: Option<String>,
+    // help
+    #[serde(skip_serializing_if = "Option::is_none")]
+    help: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     help_column: Option<String>,
+    // labels
+    #[serde(skip_serializing_if = "Option::is_none")]
+    labels: LabelsConfig,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    label_columns: Option<Vec<String>>,
+    // value
+    #[serde(default = "default_value")]
+    value_column: String,
 }
 
 // Collector structure
@@ -45,9 +57,33 @@ pub struct Collector {
 
 pub struct QueryItem {
     query: String,
-    name_column: String,
+    name: ColumnReference,
+    help: ColumnReference,
+    labels: Labels,
+    label_columns: Option<Vec<String>>,
     value_column: String,
-    help_column: Option<String>,
+}
+
+pub enum ColumnReference {
+    Fixed(String),
+    Column(String),
+}
+
+impl TryFrom<(Option<&String>, Option<&String>)> for ColumnReference {
+    type Error = AgentError;
+
+    // fixed/column
+    fn try_from((fixed, column): (Option<&String>, Option<&String>)) -> Result<Self, Self::Error> {
+        if let Some(c) = &column {
+            return Ok(ColumnReference::Column(c.to_string()));
+        }
+        if let Some(f) = fixed {
+            return Ok(ColumnReference::Fixed(f.clone()));
+        }
+        Err(AgentError::ConfigurationError(
+            "fixed or column value must be set".to_string(),
+        ))
+    }
 }
 
 // Instantiate collector from given config
@@ -74,29 +110,55 @@ impl TryFrom<Config> for Collector {
         if let Some(database) = &value.database {
             connect_opts = connect_opts.database(database);
         }
+        // Parse items
+        let mut items = Vec::with_capacity(value.items.len());
+        for ci in value.items.iter() {
+            // name
+            let name = ColumnReference::try_from((ci.name.as_ref(), ci.name_column.as_ref()))
+                .map_err(|_| {
+                    AgentError::ConfigurationError(
+                        "either name or name_column must be set".to_string(),
+                    )
+                })?;
+            // help
+            let help = ColumnReference::try_from((ci.help.as_ref(), ci.help_column.as_ref()))
+                .unwrap_or(ColumnReference::Fixed("".to_string()));
+            items.push(QueryItem {
+                query: ci.query.clone(),
+                name,
+                help,
+                labels: ci.labels.clone().into(),
+                label_columns: ci.label_columns.clone(),
+                value_column: ci.value_column.clone(),
+            });
+        }
         Ok(Self {
             connect_opts,
-            items: value
-                .items
-                .iter()
-                .map(|x| QueryItem {
-                    query: x.query.clone(),
-                    name_column: x.name_column.clone(),
-                    value_column: x.value_column.clone(),
-                    help_column: x.help_column.clone(),
-                })
-                .collect(),
+            items,
         })
     }
 }
 
 #[derive(Debug)]
 struct RowFields {
-    name: usize,
+    name: RowColumnReference,
+    help: RowColumnReference,
     value: usize,
     target: TargetType,
-    labels: Option<usize>,
-    help: Option<usize>,
+    labels: Labels,
+    label_columns: Option<Vec<LabelColumn>>,
+}
+
+#[derive(Debug)]
+enum RowColumnReference {
+    Fixed(String),
+    Ordinal(usize),
+}
+
+#[derive(Debug)]
+struct LabelColumn {
+    name: String,
+    ordinal: usize,
 }
 
 #[derive(Debug)]
@@ -112,16 +174,28 @@ enum TargetType {
 impl TryFrom<(&QueryItem, &PgRow)> for RowFields {
     type Error = AgentError;
 
-    fn try_from(value: (&QueryItem, &PgRow)) -> Result<Self, Self::Error> {
-        let (qi, row) = value;
-        let name_column = row
-            .try_column(qi.name_column.as_str())
-            .map_err(|_| AgentError::InternalError(format!("'{}' is not found", qi.name_column)))?;
+    fn try_from((qi, row): (&QueryItem, &PgRow)) -> Result<Self, Self::Error> {
+        let name = match &qi.name {
+            ColumnReference::Fixed(x) => RowColumnReference::Fixed(x.clone()),
+            ColumnReference::Column(x) => RowColumnReference::Ordinal(
+                row.try_column(x.as_str())
+                    .map_err(|_| AgentError::InternalError(format!("'{}' is not found", x)))?
+                    .ordinal(),
+            ),
+        };
+        let help: RowColumnReference = match &qi.help {
+            ColumnReference::Fixed(x) => RowColumnReference::Fixed(x.clone()),
+            ColumnReference::Column(x) => RowColumnReference::Ordinal(
+                row.try_column(x.as_str())
+                    .map_err(|_| AgentError::InternalError(format!("'{}' is not found", x)))?
+                    .ordinal(),
+            ),
+        };
         // Check name column type
         // Value column
-        let value_column = row
-            .try_column(qi.value_column.as_str())
-            .map_err(|_| AgentError::InternalError(format!("'{}' is not found", qi.name_column)))?;
+        let value_column = row.try_column(qi.value_column.as_str()).map_err(|_| {
+            AgentError::InternalError(format!("'{}' is not found", qi.value_column))
+        })?;
         // Check value column type
         // NB: PgType is unreachable and all relevant methods are hidden
         //     So using dumb implementation with strings.
@@ -139,28 +213,44 @@ impl TryFrom<(&QueryItem, &PgRow)> for RowFields {
                 )))
             }
         };
-        // help
-        let help = match &qi.help_column {
-            Some(h) => Some(
-                row.try_column(h.as_str())
-                    .map_err(|_| AgentError::InternalError(format!("'{}' is not found", h)))?
-                    .ordinal(),
-            ),
+        // Process label_columns if any
+        let label_columns = match &qi.label_columns {
+            Some(cols) => {
+                let mut r = Vec::with_capacity(cols.len());
+                for cn in cols.iter() {
+                    let lc = row
+                        .try_column(cn.as_str())
+                        .map_err(|_| AgentError::InternalError(format!("'{}' is not found", cn)))?;
+                    r.push(LabelColumn {
+                        name: cn.to_string(),
+                        ordinal: lc.ordinal(),
+                    });
+                }
+                Some(r)
+            }
             None => None,
         };
         Ok(RowFields {
-            name: name_column.ordinal(),
+            name,
             value: value_column.ordinal(),
             target,
-            labels: None,
             help,
+            labels: qi.labels.clone(),
+            label_columns,
         })
     }
 }
 
 impl RowFields {
     fn measure(&self, row: &PgRow) -> AgentResult<Measure> {
-        let name = row.get(self.name);
+        let name = match &self.name {
+            RowColumnReference::Fixed(x) => x.clone(),
+            RowColumnReference::Ordinal(x) => row.get(x),
+        };
+        let help = match &self.help {
+            RowColumnReference::Fixed(x) => x.clone(),
+            RowColumnReference::Ordinal(x) => row.get(x),
+        };
         let value = match self.target {
             TargetType::I16 => Value::GaugeI(row.get::<i16, usize>(self.value) as i64),
             TargetType::I32 => Value::GaugeI(row.get::<i32, usize>(self.value) as i64),
@@ -173,14 +263,25 @@ impl RowFields {
                     .ok_or(AgentError::ParseError("Failed to decode value".to_string()))?,
             ),
         };
-        let help = match self.help {
-            Some(h) => row.get(h),
-            None => "".into(),
+        //
+        let column_labels = match &self.label_columns {
+            Some(cols) => {
+                let mut r = Vec::with_capacity(cols.len());
+                for cl in cols.iter() {
+                    // @todo: Allow NULL fields
+                    r.push(Label::new(
+                        cl.name.clone(),
+                        row.get::<String, usize>(cl.ordinal),
+                    ));
+                }
+                Labels::new(r)
+            }
+            None => Labels::default(),
         };
         Ok(Measure {
             name,
             help,
-            labels: Labels::default(),
+            labels: Labels::merge_sort2(&column_labels, &self.labels),
             value,
         })
     }
@@ -234,10 +335,6 @@ impl Collectable for Collector {
     //     let cfg = Config;
     //     Ok(vec![ConfigItem::from_config(cfg)?])
     // }
-}
-
-fn default_name() -> String {
-    "name".into()
 }
 
 fn default_value() -> String {
