@@ -281,7 +281,7 @@ impl RowFields {
         Ok(Measure {
             name,
             help,
-            labels: Labels::merge_sort2(&column_labels, &self.labels),
+            labels: Labels::merge_sort2(&self.labels, &column_labels),
             value,
         })
     }

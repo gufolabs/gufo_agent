@@ -45,7 +45,6 @@ struct MetricFamilyData {
 #[derive(Debug)]
 struct MetricValue {
     value: Value,
-    collector_labels: Labels,
     ts: u64,
 }
 
@@ -106,6 +105,7 @@ impl MetricsDb {
                 name: measure.name.clone(),
             };
             // @todo: Use .get()
+            // Wait for map_try_insert feature to stabilize
             if !db.data.contains_key(&k) {
                 // Insert metric family info
                 db.data.insert(
@@ -119,11 +119,11 @@ impl MetricsDb {
             }
             //
             if let Some(family) = db.data.get_mut(&k) {
+                let effective_labels = Labels::merge_sort2(&data.labels, &measure.labels);
                 family.values.insert(
-                    measure.labels.clone(),
+                    effective_labels,
                     MetricValue {
                         value: measure.value,
-                        collector_labels: data.labels.clone(),
                         ts: data.ts,
                     },
                 );
@@ -145,12 +145,7 @@ impl MetricsDb {
                 .values
                 .iter()
                 .map(|(labels, value)| OutputItem {
-                    labels: Labels::merge_sort4(
-                        &db.labels,
-                        &collector_label,
-                        &value.collector_labels,
-                        labels,
-                    ),
+                    labels: Labels::merge_sort3(&db.labels, &collector_label, labels),
                     value: value.value.to_string(),
                     ts: value.ts,
                 })

@@ -75,16 +75,15 @@ impl Labels {
         v2.update_map(&mut map);
         Labels::new(map.iter().map(|(k, v)| Label::new(k, v)).collect())
     }
-    // Merge 4 sets of labels and return sorted summary
-    pub fn merge_sort4(v1: &Labels, v2: &Labels, v3: &Labels, v4: &Labels) -> Labels {
-        if v1.is_empty() && v2.is_empty() && v3.is_empty() && v4.is_empty() {
+    // Merge 3 sets of labels and return sorted summary
+    pub fn merge_sort3(v1: &Labels, v2: &Labels, v3: &Labels) -> Labels {
+        if v1.is_empty() && v2.is_empty() && v3.is_empty() {
             return Labels::default();
         }
         let mut map = BTreeMap::new();
         v1.update_map(&mut map);
         v2.update_map(&mut map);
         v3.update_map(&mut map);
-        v4.update_map(&mut map);
         Labels::new(map.iter().map(|(k, v)| Label::new(k, v)).collect())
     }
     pub fn to_openmetrics(&self) -> String {
