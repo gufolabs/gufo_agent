@@ -24,7 +24,15 @@ pub struct Agent {
     hostname: String,
     dump_metrics: bool,
     default_interval: u64,
-    test: bool,
+    mode: AgentMode,
+}
+
+#[derive(Debug, Clone, Default)]
+pub enum AgentMode {
+    Check,
+    Test,
+    #[default]
+    Run,
 }
 
 pub struct RunningCollector {
@@ -44,7 +52,7 @@ pub struct AgentBuilder {
     dump_metrics: bool,
     config: Option<String>,
     hostname: Option<String>,
-    test: bool,
+    mode: AgentMode,
 }
 
 impl AgentBuilder {
@@ -64,8 +72,8 @@ impl AgentBuilder {
         self.hostname = hostname;
         self
     }
-    pub fn set_test(&mut self, status: bool) -> &mut Self {
-        self.test = status;
+    pub fn set_mode(&mut self, mode: AgentMode) -> &mut Self {
+        self.mode = mode;
         self
     }
     pub fn build(&self) -> Agent {
@@ -82,24 +90,27 @@ impl AgentBuilder {
                 .unwrap_or_else(|| gethostname().into_string().unwrap_or("localhost".into())),
             dump_metrics: self.dump_metrics,
             default_interval: AGENT_DEFAULT_INTERVAL,
-            test: self.test,
+            mode: self.mode.clone(),
         }
     }
 }
 
 impl Agent {
-    pub fn run(&mut self) -> Result<(), AgentError> {
-        log::error!("Running agent on {}", self.hostname);
+    pub fn run(&mut self) -> AgentResult<()> {
         let runtime = Runtime::new()?;
-        if self.test {
-            runtime.block_on(async move { self.run_test().await })?;
-        } else {
-            runtime.block_on(async move { self.bootstrap().await })?;
-        }
-        log::error!("Stopping agent");
-        Ok(())
+        runtime.block_on(async move {
+            match self.mode {
+                AgentMode::Check | AgentMode::Test => self.run_test().await,
+                AgentMode::Run => {
+                    log::error!("Running agent on {}", self.hostname);
+                    let r = self.bootstrap().await;
+                    log::error!("Stopping agent");
+                    r
+                }
+            }
+        })
     }
-    async fn bootstrap(&mut self) -> Result<(), AgentError> {
+    async fn bootstrap(&mut self) -> AgentResult<()> {
         // Subscribe to SIGHUP
         let mut hup_stream = signal(SignalKind::hangup())?;
         // Initialize resolver
@@ -269,18 +280,22 @@ impl Agent {
             let config_id = config.id.clone();
             log::debug!("[{}] Starting collector", config_id);
             let mut schedule = Schedule::try_from(config)?;
-            schedule.set_sender(self.sender_tx.clone());
-            schedule.run_once().await;
+            if let AgentMode::Test = self.mode {
+                schedule.set_sender(self.sender_tx.clone());
+                schedule.run_once().await;
+            }
         }
         // Dump database
-        if let Some(tx) = &self.sender_tx {
-            tx.send(SenderCommand::Dump)
-                .await
-                .map_err(|e| AgentError::InternalError(e.to_string()))?;
-            tx.send(SenderCommand::Shutdown)
-                .await
-                .map_err(|e| AgentError::InternalError(e.to_string()))?;
-            tx.closed().await;
+        if let AgentMode::Test = self.mode {
+            if let Some(tx) = &self.sender_tx {
+                tx.send(SenderCommand::Dump)
+                    .await
+                    .map_err(|e| AgentError::InternalError(e.to_string()))?;
+                tx.send(SenderCommand::Shutdown)
+                    .await
+                    .map_err(|e| AgentError::InternalError(e.to_string()))?;
+                tx.closed().await;
+            }
         }
         //
         Ok(())

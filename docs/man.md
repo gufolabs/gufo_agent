@@ -22,6 +22,7 @@ Options:
       --config-discovery-opts <CONFIG_DISCOVERY_OPTS>  [env: GA_CONFIG_DISCOVERY_OPTS=]
       --config-scripts <CONFIG_SCRIPTS>
       --test
+      --check
   -h, --help             Print help
   -V, --version          Print version
 ```
@@ -51,6 +52,7 @@ The following options are available:
 * <a name="opt_config_scripts"></a>`--config-scripts` - A path to the directory containing
   config discovery scripts. See [Config Discovery](config_discovery.md) for details.
 * `--test` - Test run. Lauch all configured collectors once, dump resulting database and exit.
+* `--check` - Test configuration and return non-zero code on error.
 * `-h`, `--help` - Print help and exit.
 * `-V`, `--version` - Print agent version and exit.
 

@@ -3,7 +3,7 @@
 // --------------------------------------------------------------------
 // Copyright (C) 2021-2023, Gufo Labs
 // --------------------------------------------------------------------
-use agent::{config_from_discovery, Agent, Collectors};
+use agent::{config_from_discovery, Agent, AgentMode, Collectors};
 use clap::Parser;
 use common::ConfigDiscoveryOpts;
 use std::env;
@@ -35,6 +35,8 @@ struct Cli {
     pub config_scripts: Vec<String>,
     #[arg(long)]
     pub test: bool,
+    #[arg(long)]
+    pub check: bool,
 }
 
 const ERR_EX_OTHER: i32 = 1;
@@ -97,12 +99,19 @@ fn main() {
         })
         .init();
     // Setup agent
+    let mode = if cli.test {
+        AgentMode::Test
+    } else if cli.check {
+        AgentMode::Check
+    } else {
+        AgentMode::Run
+    };
     let mut agent = Agent::builder()
         .set_cert_validation(!cli.insecure)
         .set_dump_metrics(cli.dump_metrics)
         .set_config(cli.config)
         .set_hostname(cli.hostname)
-        .set_test(cli.test)
+        .set_mode(mode)
         .build();
     // Run agent and wait for complete
     if let Err(e) = agent.run() {
