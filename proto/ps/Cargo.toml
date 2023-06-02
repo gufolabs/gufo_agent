@@ -5,7 +5,10 @@ version = "0.1.0"
 
 [dependencies]
 common = {path = "../../common"}
-lazy_static = "1.4"
-nom = "7.1"
-page_size = "0.5"
 regex = "1.8"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+lazy_static = "1.4" 
+nom = "7.1" 
+page_size = "0.5" # @todo: Remove
+sysconf = "0.3"

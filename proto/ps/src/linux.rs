@@ -6,6 +6,7 @@
 
 use crate::{ProcStat, PsFinder};
 use common::{AgentError, AgentResult};
+use lazy_static::lazy_static;
 use nom::{
     branch::alt,
     bytes::complete::{is_not, tag},
@@ -19,14 +20,38 @@ use std::collections::HashSet;
 use std::fs::{read_dir, read_to_string};
 use std::path::{Path, PathBuf};
 use std::str::FromStr;
+use sysconf::{pagesize, sysconf, SysconfVariable};
 
 pub type Pid = u32;
 pub type Uid = u32;
 pub type Gid = u32;
 pub struct Ps;
 
+struct SysConf {
+    page_size: u64,
+    tick: f32,
+}
+
+impl Default for SysConf {
+    fn default() -> Self {
+        // Get Page Size
+        let page_size = pagesize() as u64;
+        // Get Tick
+        let tick = sysconf(SysconfVariable::ScClkTck).unwrap_or(100) as f32;
+        Self { page_size, tick }
+    }
+}
+
+lazy_static! {
+    static ref SYSCONF: SysConf = SysConf::default();
+}
+
 impl PsFinder for Ps {
     fn pids() -> Result<Vec<Pid>, AgentError> {
+        println!(
+            "SYSCONF page_size={} tick={}",
+            SYSCONF.page_size, SYSCONF.tick
+        );
         let mut r = Vec::new();
         for entry in read_dir("/proc")
             .map_err(|e| AgentError::InternalError(e.to_string()))?
@@ -52,9 +77,7 @@ impl PsFinder for Ps {
     }
     // Get stats for given pids
     fn get_stats(pids: &HashSet<Pid>) -> Vec<ProcStat> {
-        let p_size = page_size::get() as u64;
         let mut r = Vec::with_capacity(pids.len());
-        const F_TICKS: f32 = 100.0;
         const KB: u64 = 1024;
         for &pid in pids.iter() {
             let mut stats = ProcStat {
@@ -83,20 +106,23 @@ impl PsFinder for Ps {
                 stats.child_minor_faults = parse_field(parts[STAT_CMINFLT]);
                 stats.child_major_faults = parse_field(parts[STAT_CMAJFLT]);
                 // cpu
-                stats.cpu_time_user = parse_field(parts[STAT_UTIME]).map(|x: f32| x / F_TICKS);
-                stats.cpu_time_system = parse_field(parts[STAT_STIME]).map(|x: f32| x / F_TICKS);
+                stats.cpu_time_user = parse_field(parts[STAT_UTIME]).map(|x: f32| x / SYSCONF.tick);
+                stats.cpu_time_system =
+                    parse_field(parts[STAT_STIME]).map(|x: f32| x / SYSCONF.tick);
                 if parts.len() >= STAT_DELAYACCT_BLKIO_TICKS {
                     // Linux 2.6.18
-                    stats.cpu_time_iowait =
-                        parse_field(parts[STAT_DELAYACCT_BLKIO_TICKS]).map(|x: f32| x / F_TICKS);
+                    stats.cpu_time_iowait = parse_field(parts[STAT_DELAYACCT_BLKIO_TICKS])
+                        .map(|x: f32| x / SYSCONF.tick);
                 }
             }
             // Process /proc/<pid>/statm
             // See man 5 proc for detaults
             if let Some(data) = read_procfs(pid, "statm") {
                 let parts: Vec<&str> = data.split(' ').collect();
-                stats.mem_total = parse_field(parts[STATM_SIZE]).map(|x: u64| x * p_size);
-                stats.mem_rss = parse_field(parts[STATM_RESIDENT]).map(|x: u64| x * p_size);
+                stats.mem_total =
+                    parse_field(parts[STATM_SIZE]).map(|x: u64| x * SYSCONF.page_size);
+                stats.mem_rss =
+                    parse_field(parts[STATM_RESIDENT]).map(|x: u64| x * SYSCONF.page_size);
             }
             // Process /proc/<pid>/io
             // See man 5 proc for detaults
