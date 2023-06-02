@@ -30,6 +30,7 @@ pub struct Ps;
 struct SysConf {
     page_size: u64,
     tick: f32,
+    n_cpu: usize,
 }
 
 impl Default for SysConf {
@@ -38,7 +39,13 @@ impl Default for SysConf {
         let page_size = pagesize() as u64;
         // Get Tick
         let tick = sysconf(SysconfVariable::ScClkTck).unwrap_or(100) as f32;
-        Self { page_size, tick }
+        // Number of CPU online
+        let n_cpu = sysconf(SysconfVariable::ScNprocessorsOnln).unwrap_or(1) as usize;
+        Self {
+            page_size,
+            tick,
+            n_cpu,
+        }
     }
 }
 
@@ -83,6 +90,7 @@ impl PsFinder for Ps {
             let mut stats = ProcStat {
                 pid,
                 num_fds: get_num_fds(pid),
+                cpu_online: SYSCONF.n_cpu,
                 ..Default::default()
             };
             // Process /proc/<pid>/stat

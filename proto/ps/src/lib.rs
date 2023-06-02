@@ -25,6 +25,7 @@ pub struct ProcStat {
     pub major_faults: Option<u64>,
     pub child_major_faults: Option<u64>,
     // cpu
+    pub cpu_online: usize,
     pub cpu_time_user: Option<f32>,
     pub cpu_time_system: Option<f32>,
     pub cpu_time_iowait: Option<f32>,
@@ -42,6 +43,23 @@ pub struct ProcStat {
     pub io_write_count: Option<u64>,
     pub io_read_bytes: Option<u64>,
     pub io_write_bytes: Option<u64>,
+}
+
+impl ProcStat {
+    pub fn cpu_total(&self) -> Option<f32> {
+        if self.cpu_time_user.is_none()
+            && self.cpu_time_system.is_none()
+            && self.cpu_time_iowait.is_none()
+        {
+            None
+        } else {
+            Some(
+                self.cpu_time_user.unwrap_or_default()
+                    + self.cpu_time_system.unwrap_or_default()
+                    + self.cpu_time_iowait.unwrap_or_default(),
+            )
+        }
+    }
 }
 
 pub trait PsFinder {

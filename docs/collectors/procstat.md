@@ -41,6 +41,7 @@ Config example:
   | `ps_cpu_time_user`                | Counter     | Linux    | CPU time in user mode in seconds                                            |
   | `ps_cpu_time_system`              | Counter     | Linux    | CPU time in system mode in seconds                                          |
   | `ps_cpu_time_iowait`              | Counter     | Linux    | CPU time iowait in seconds                                                  |
+  | `ps_cpu_usage`                    | Gauge       | Linux    | Total CPU usage in percents                                                 |
   | `ps_mem_total`                    | Counter     | Linux    | Total memory                                                                |
   | `ps_mem_rss`                      | Counter     | Linux    | Resident set size                                                           |
   | `ps_mem_swap`                     | Gauge       | Linux    | Swapped-out virtual memory size                                             |

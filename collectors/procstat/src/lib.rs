@@ -6,16 +6,18 @@
 
 use async_trait::async_trait;
 use common::{
-    counter, gauge, gauge_f, AgentError, AgentResult, Collectable, ConfigDiscoveryOpts, ConfigItem,
-    Measure,
+    counter, counter_f, gauge, gauge_f, AgentError, AgentResult, Collectable, ConfigDiscoveryOpts,
+    ConfigItem, Measure,
 };
 use lazy_static::lazy_static;
 use ps::{Pid, Ps, PsFinder};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::collections::HashSet;
 use std::fs::read_to_string;
 use std::sync::Arc;
+use std::time::Instant;
 use tokio::sync::Mutex;
 use users::{Users, UsersCache};
 
@@ -38,6 +40,8 @@ pub struct Collector {
     pattern: Option<Regex>,
     self_pid: bool,
     expose_user: bool,
+    last_run: Option<Instant>,
+    cpu_totals: HashMap<Pid, f32>,
 }
 
 // Users cache
@@ -87,21 +91,27 @@ counter!(
     user
 );
 // CPU
-gauge_f!(
+counter_f!(
     ps_cpu_time_user,
     "CPU time in user mode in seconds",
     process_name,
     user
 );
-gauge_f!(
+counter_f!(
     ps_cpu_time_system,
     "CPU time in system mode in seconds",
     process_name,
     user
 );
-gauge_f!(
+counter_f!(
     ps_cpu_time_iowait,
     "CPU time iowait in seconds",
+    process_name,
+    user
+);
+gauge_f!(
+    ps_cpu_usage,
+    "Total CPU usage in percents",
     process_name,
     user
 );
@@ -165,6 +175,8 @@ impl TryFrom<Config> for Collector {
             pattern,
             self_pid,
             expose_user,
+            last_run: None,
+            cpu_totals: HashMap::default(),
         })
     }
 }
@@ -217,6 +229,11 @@ impl Collectable for Collector {
         }
         // Collect data
         let mut r = Vec::with_capacity(all_pids.len() * 20);
+        // Current timestamp and delta
+        let now = Instant::now();
+        let delta = self.last_run.map(|x| now.duration_since(x).as_secs_f32());
+        // New CPU totals
+        let mut new_cpu_totals = HashMap::default();
         // Collect before users lock
         let stats = Ps::get_stats(&all_pids);
         // Grab users lock
@@ -238,7 +255,7 @@ impl Collectable for Collector {
                 empty_string.clone()
             };
             //
-            let process_name = stat.process_name.unwrap_or_default();
+            let process_name = stat.process_name.clone().unwrap_or_default();
             apply_some!(
                 r,
                 stat.num_fds,
@@ -319,6 +336,21 @@ impl Collectable for Collector {
                 process_name.clone(),
                 user.clone()
             );
+            // CPU Totals
+            if let Some(total) = stat.cpu_total() {
+                if let Some(dt) = delta {
+                    // At least one run
+                    if let Some(last_total) = self.cpu_totals.get(&stat.pid) {
+                        // And already registered
+                        r.push(ps_cpu_usage(
+                            ((total - last_total) * 100.0 / dt) * stat.cpu_online as f32,
+                            process_name.clone(),
+                            user.clone(),
+                        ))
+                    }
+                }
+                new_cpu_totals.insert(stat.pid, total); // Remember new values
+            }
             // Memory
             apply_some!(
                 r,
@@ -406,6 +438,8 @@ impl Collectable for Collector {
                 user.clone()
             );
         }
+        self.last_run = Some(now);
+        self.cpu_totals = new_cpu_totals;
         // Push result
         Ok(r)
     }
