@@ -47,11 +47,37 @@ Supported platforms:
 View the [CHANGELOG](CHANGELOG.md) for the latest updates
 and changes by version.
 
+### Automated Install
+
+```
+curl https://sh.gufolabs.com/ga | sh
+```
+
 ### Binary Downloads
 
 The binary downloads are available from each of the
 [Github Releases](https://github.com/gufolabs/gufo_agent/releases)
 page in the "Assets" section.
+
+### Building from Source
+
+1. Clone Gufo Agent repository
+```
+git clone https://github.com/gufolabs/gufo_agent.git
+```
+2. Go to Gufo Agent directory
+```
+cd gufo_agent
+```
+3. Install proper Rust toolchain
+```
+./tools/build/setup-rust.sh
+```
+4. Build
+```
+cargo build --release
+```
+5. Resulting binary location is `./target/release/gufo-agent`
 
 ## Running
 
