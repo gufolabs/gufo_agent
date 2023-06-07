@@ -6,7 +6,7 @@
 
 use async_trait::async_trait;
 use common::{gauge, gauge_f, gauge_i, AgentError, AgentResult, Collectable, Measure};
-use redis::{Client, ConnectionAddr, ConnectionInfo, RedisConnectionInfo};
+use redis_client::{Client, ConnectionAddr, ConnectionInfo, RedisConnectionInfo};
 use serde::{Deserialize, Serialize};
 mod parser;
 use parser::{parse, InfoItem, InfoValue};
@@ -222,7 +222,7 @@ impl Collectable for Collector {
             }
         };
         // Collect data
-        let info: String = redis::cmd("INFO")
+        let info: String = redis_client::cmd("INFO")
             .query_async(&mut conn)
             .await
             .map_err(|e| AgentError::InternalError(e.to_string()))?;
