@@ -75,7 +75,7 @@ def check_deps(crates: Iterable[Crate]) -> bool:
     return status
 
 
-def main() -> int:
+def main(filter_name:Optional[str]=None) -> int:
     # Read dependencies
     versions = defaultdict(list)
     for crate_name in iter_crates():
@@ -86,6 +86,8 @@ def main() -> int:
     # Print dependencies
     status = True
     for name in sorted(versions):
+        if filter_name and name != filter_name:
+            continue
         vlist = defaultdict(list)
         for crate, version in versions[name]:
             vlist[version].append(crate)
@@ -105,4 +107,8 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    if len(sys.argv) > 1:
+        filter_name = sys.argv[1]
+    else:
+        filter_name = None
+    sys.exit(main(filter_name))

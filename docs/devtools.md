@@ -39,6 +39,14 @@ Parses and prints all dependencies versions and appropriate crates:
 ...
 ```
 
+To show single dependency use it as parameter
+
+```
+$ ./tools/dev/list-deps.py nom
+* nom v7.1:
+    proto/openmetrics
+```
+
 ## new-collector.py
 
 ```
