@@ -25,6 +25,7 @@ pub enum Collectors {
     Postgres(postgres::Collector),
     PostgresQuery(postgres_query::Collector),
     Procstat(procstat::Collector),
+    Redis(redis::Collector),
     Sockets(sockets::Collector),
     Spool(spool::Collector),
     TwampReflector(twamp_reflector::Collector),
@@ -80,6 +81,7 @@ impl TryFrom<CollectorConfig> for Collectors {
             "postgres" => Collectors::Postgres(from_value(value)?),
             "postgres_query" => Collectors::PostgresQuery(from_value(value)?),
             "procstat" => Collectors::Procstat(from_value(value)?),
+            "redis" => Collectors::Redis(from_value(value)?),
             "sockets" => Collectors::Sockets(from_value(value)?),
             "spool" => Collectors::Spool(from_value(value)?),
             "twamp_reflector" => Collectors::TwampReflector(from_value(value)?),
@@ -110,6 +112,7 @@ impl Collectors {
             Collectors::Postgres(_) => postgres::Collector::get_name(),
             Collectors::PostgresQuery(_) => postgres_query::Collector::get_name(),
             Collectors::Procstat(_) => procstat::Collector::get_name(),
+            Collectors::Redis(_) => redis::Collector::get_name(),
             Collectors::Sockets(_) => sockets::Collector::get_name(),
             Collectors::Spool(_) => spool::Collector::get_name(),
             Collectors::TwampReflector(_) => twamp_reflector::Collector::get_name(),
@@ -137,6 +140,7 @@ impl Collectors {
             Collectors::Postgres(_) => postgres::Collector::is_random_offset(),
             Collectors::PostgresQuery(_) => postgres_query::Collector::is_random_offset(),
             Collectors::Procstat(_) => procstat::Collector::is_random_offset(),
+            Collectors::Redis(_) => redis::Collector::is_random_offset(),
             Collectors::Sockets(_) => sockets::Collector::is_random_offset(),
             Collectors::Spool(_) => spool::Collector::is_random_offset(),
             Collectors::TwampReflector(_) => twamp_reflector::Collector::is_random_offset(),
@@ -164,6 +168,7 @@ impl Collectors {
             Collectors::Postgres(c) => c.collect().await,
             Collectors::PostgresQuery(c) => c.collect().await,
             Collectors::Procstat(c) => c.collect().await,
+            Collectors::Redis(c) => c.collect().await,
             Collectors::Sockets(c) => c.collect().await,
             Collectors::Spool(c) => c.collect().await,
             Collectors::TwampReflector(c) => c.collect().await,
@@ -190,6 +195,7 @@ impl Collectors {
             "postgres".to_string(),
             "postgres_query".to_string(),
             "procstat".to_string(),
+            "redis".to_string(),
             "sockets".to_string(),
             "spool".to_string(),
             "twamp_reflector".to_string(),
@@ -291,6 +297,12 @@ impl Collectors {
             let x = procstat::Collector::discover_config(opts)?;
             if !x.is_empty() {
                 r.push((procstat::Collector::get_name(), x));
+            }
+        }
+        if !opts.is_disabled("redis") {
+            let x = redis::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((redis::Collector::get_name(), x));
             }
         }
         if !opts.is_disabled("sockets") {

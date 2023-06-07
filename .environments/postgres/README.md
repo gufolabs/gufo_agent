@@ -1,6 +1,6 @@
 # Postgres testing environment
 
-Contains PostgreSQL and PgBouncer instaces.
+Contains PostgreSQL and PgBouncer instances.
 
 ## Starting
 
@@ -10,15 +10,10 @@ docker-compose up -d
 
 ## Running Tests
 
-Postgres:
+Redis:
 
 ```
-docker exec -ti postgres-postgres-1 /run.sh
-```
-
-PgBouncer:
-```
-docker exec -ti postgres-pgbouncer-1 /run.sh
+docker exec -ti redis-redis-1 /run.sh
 ```
 
 ## Stopping
@@ -26,7 +21,3 @@ docker exec -ti postgres-pgbouncer-1 /run.sh
 ```
 docker-compose down
 ```
-
-## Sample Database
-
-Check initdb.d/init.sql for the sample database schema

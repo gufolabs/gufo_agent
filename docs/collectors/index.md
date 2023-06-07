@@ -42,7 +42,7 @@ labels are set as key-value pairs:
 ```
 
 
-## Collectors
+## Available Collectors
 
 | Type                                  | Description                                       |
 | ------------------------------------- | ------------------------------------------------- |
@@ -60,6 +60,7 @@ labels are set as key-value pairs:
 | [postgres](postgres.md)               | PostgreSQL instance statistics                    |
 | [postgres_query](postgres_query.md)   | Perform PostgreSQL queries                        |
 | [procstat](procstat.md)               | Process' statistics                               |
+| [redis](redis.md)                     | Redis instance statistics                         |
 | [sockets](sockets.md)                 | Host's sockets statistics                         |
 | [spool](spool.md)                     | Read files in openmetrics format from a directory |
 | [twamp_reflector](twamp_reflector.md) | TWAMP reflector for SLA probing                   |

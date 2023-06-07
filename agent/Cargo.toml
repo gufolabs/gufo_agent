@@ -25,6 +25,7 @@ postgres = {path = "../collectors/postgres"}
 postgres_query = {path = "../collectors/postgres_query"}
 procstat = {path = "../collectors/procstat"}
 rand = "0.8"
+redis = {path = "../collectors/redis"}
 serde = {version = "1.0", features = ["derive"]}
 serde_yaml = "0.9"
 sockets = {path = "../collectors/sockets"}

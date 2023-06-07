@@ -1,0 +1,8 @@
+version: "2"
+services:
+  redis:
+    image: "redis:7.0-bullseye"
+    volumes:
+      - "../../target/release:/opt/ga"
+      - "./gufo-agent.yml:/etc/gufo-agent.yml"
+      - "./run.sh:/run.sh"
