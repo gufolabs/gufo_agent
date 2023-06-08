@@ -8,6 +8,5 @@ common = {path = "../../common"}
 regex = "1.8"
 
 [target.'cfg(target_os = "linux")'.dependencies]
-lazy_static = "1.4"
 nom = "7.1"
 sysconf = "0.3"
