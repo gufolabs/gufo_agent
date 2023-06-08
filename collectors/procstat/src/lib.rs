@@ -343,7 +343,7 @@ impl Collectable for Collector {
                     if let Some(last_total) = self.cpu_totals.get(&stat.pid) {
                         // And already registered
                         r.push(ps_cpu_usage(
-                            ((total - last_total) * 100.0 / dt) * stat.cpu_online as f32,
+                            (total - last_total) * 100.0 / dt,
                             process_name.clone(),
                             user.clone(),
                         ))
