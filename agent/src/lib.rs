@@ -14,8 +14,8 @@ pub(crate) mod resolver;
 pub(crate) mod schedule;
 pub(crate) mod sender;
 
+pub(crate) use crate::agent::AGENT_DEFAULT_INTERVAL;
 pub use crate::agent::{Agent, AgentBuilder, AgentMode};
-pub(crate) use agent::AGENT_DEFAULT_INTERVAL;
 pub(crate) use config::{AgentConfig, CollectorConfig, Config, SenderConfig};
 pub use discovery::config_from_discovery;
 pub(crate) use mdb::{MetricsData, MetricsDb};

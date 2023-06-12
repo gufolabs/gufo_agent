@@ -7,8 +7,9 @@ The rule set contains one or more relabeling rules, each one performing one or m
 * [replace](#replace) - Create or update labels basing on context of the other labels.
 * [drop](#drop) - Drop matched metrics.
 * [keep](#keep) - Keep matched metrics.
-* [labeldrop](#labeldrop) - Drop matched labels.
-* [labelkeep](#labelkeep) - Keep matched labels.
+* [labeldrop](#label-drop) - Drop matched labels.
+* [labelkeep](#label-keep) - Keep matched labels.
+* [labelmap](#label-map) - Map one or more label name to different label names.
 
 ## Virtual Labels
 
@@ -200,4 +201,37 @@ Keep only `mount` and `dev` labels.
 ``` yaml
 - action: labelkeep
   regex: mount|dev
+```
+
+### Label Map
+
+`labelmap` action maps one or more label names to the different label names. The configuration is:
+
+| Parameter     | Default | Description                                                                                                                            |
+| ------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `action`      |         | Must be `labelmap`                                                                                                                     |
+| `regex`       |         | The regular expression to match                                                                                                        |
+| `replacement` |         | The resulting expression. `regex` matching groups should be referred by number (i.e. `$1`, `$2`) or by name (i.e. `$first`, `$second`) |
+
+The `labelmap` rule perform following steps:
+
+1. All labels are matched against the `regex`. Matching labels are applied to the `replacement` and are renamed.
+2. Processing is passed to the next rule.
+
+Examples:
+
+Rename `dc` label to `datacenter`:
+
+``` yaml
+- action: labelmap
+  regex: dc
+  replacement: datacenter
+```
+
+Rename virtual labels started with `__meta_kubernetes_`:
+
+``` yaml
+- action: labelmap
+  regex: __meta_kubernetes_(.+)
+  replacement: k8s_$1
 ```

@@ -5,7 +5,8 @@
 // --------------------------------------------------------------------
 
 use super::{
-    ActiveLabels, DropRule, KeepRule, LabelDropRule, LabelKeepRule, RelabelRuleConfig, ReplaceRule,
+    ActiveLabels, DropRule, KeepRule, LabelDropRule, LabelKeepRule, LabelMapRule,
+    RelabelRuleConfig, ReplaceRule,
 };
 use common::{AgentError, AgentResult, Label, Labels, Measure};
 
@@ -22,7 +23,7 @@ pub(crate) enum RelabelRule {
     LabelKeep(LabelKeepRule),
     LabelDrop(LabelDropRule),
     // HashMod
-    // LabelMap
+    LabelMap(LabelMapRule),
 }
 
 #[derive(Debug)]
@@ -43,6 +44,7 @@ impl TryFrom<&RelabelRuleConfig> for RelabelRule {
                 "drop" => RelabelRule::Drop(DropRule::try_from(value)?),
                 "labeldrop" => RelabelRule::LabelDrop(LabelDropRule::try_from(value)?),
                 "labelkeep" => RelabelRule::LabelKeep(LabelKeepRule::try_from(value)?),
+                "labelmap" => RelabelRule::LabelMap(LabelMapRule::try_from(value)?),
                 "keep" => RelabelRule::Keep(KeepRule::try_from(value)?),
                 "replace" => RelabelRule::Replace(ReplaceRule::try_from(value)?),
                 _ => {
@@ -76,6 +78,7 @@ impl Relabeler for RelabelRule {
             RelabelRule::Drop(rule) => rule.apply(active_labels),
             RelabelRule::LabelDrop(rule) => rule.apply(active_labels),
             RelabelRule::LabelKeep(rule) => rule.apply(active_labels),
+            RelabelRule::LabelMap(rule) => rule.apply(active_labels),
             RelabelRule::Keep(rule) => rule.apply(active_labels),
             RelabelRule::Replace(rule) => rule.apply(active_labels),
         }

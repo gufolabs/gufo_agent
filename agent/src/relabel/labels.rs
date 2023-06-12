@@ -38,7 +38,7 @@ impl ActiveLabels {
         self.labels.get(name)
     }
     #[inline]
-    fn is_virtual(name: &String) -> bool {
+    pub(crate) fn is_virtual(name: &String) -> bool {
         name == NAME_LABEL
     }
     pub(crate) fn to_measure(&self, measure: &Measure) -> Measure {
@@ -67,5 +67,37 @@ impl ActiveLabels {
     {
         self.labels
             .retain(|name, _| Self::is_virtual(name) || f(name));
+    }
+    // Rename label. Keep virtual labels
+    pub(crate) fn rename(&mut self, src: String, dst: String) {
+        if let Some(value) = self.labels.get(&src) {
+            if Self::is_virtual(&src) {
+                // Copy
+                self.labels.insert(dst, value.to_owned());
+            } else {
+                // Move
+                if let Some(v) = self.labels.remove(&src) {
+                    // Always Some because of .get()
+                    // value is owned, so we need no .clone()
+                    self.labels.insert(dst, v);
+                }
+            }
+        }
+    }
+    // Rename label if function returns Some
+    pub(crate) fn rename_if<F>(&mut self, f: F)
+    where
+        F: Fn(&String) -> Option<String>,
+    {
+        let mut remap = Vec::with_capacity(self.labels.len());
+        for k in self.labels.keys() {
+            if let Some(new_name) = f(k) {
+                remap.push((k.to_owned(), new_name.to_owned()));
+            }
+        }
+        // Actual renaming
+        for (src, dst) in remap.drain(..) {
+            self.rename(src, dst);
+        }
     }
 }
