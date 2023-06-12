@@ -4,10 +4,12 @@
 // Copyright (C) 2021-2023, Gufo Labs
 // --------------------------------------------------------------------
 
+use crate::{ActiveLabels, RelabelRuleset};
 use bytes::BytesMut;
-use common::{AgentError, Label, Labels, Measure, Value};
+use common::{AgentError, Labels, Measure, Value};
 use std::collections::{BTreeMap, HashMap};
 use std::fmt;
+use std::ops::Deref;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
@@ -22,7 +24,9 @@ pub(crate) struct MetricsDb(Arc<RwLock<_Inner>>);
 pub(crate) struct MetricsData {
     pub collector: &'static str,
     // collector labels
-    pub labels: Labels,
+    pub labels: Arc<Labels>,
+    // Relabeling ruleset
+    pub relabel: Arc<Option<RelabelRuleset>>,
     // collector measures
     pub measures: Vec<Measure>,
     // Timestamp in UNIX format
@@ -55,8 +59,8 @@ enum ValueType {
 }
 
 #[derive(Ord, PartialOrd, Eq, PartialEq)]
-struct OutputItem {
-    labels: Labels,
+struct OutputItem<'a> {
+    labels: &'a Labels,
     value: String,
     ts: u64,
 }
@@ -99,34 +103,54 @@ impl MetricsDb {
     pub async fn apply_data(&mut self, data: &MetricsData) {
         let mut db = self.0.write().await;
         for measure in data.measures.iter() {
-            // Check for Metric Family
-            let k = MetricFamilyKey {
-                collector: data.collector,
-                name: measure.name.clone(),
-            };
-            // @todo: Use .get()
-            // Wait for map_try_insert feature to stabilize
-            if !db.data.contains_key(&k) {
-                // Insert metric family info
-                db.data.insert(
-                    k.clone(),
-                    MetricFamilyData {
-                        help: measure.help.clone(),
-                        r#type: measure.value.into(),
-                        values: HashMap::new(),
-                    },
-                );
-            }
-            //
-            if let Some(family) = db.data.get_mut(&k) {
-                let effective_labels = Labels::merge_sort2(&data.labels, &measure.labels);
-                family.values.insert(
-                    effective_labels,
-                    MetricValue {
-                        value: measure.value,
-                        ts: data.ts,
-                    },
-                );
+            // Relabeling
+            if let Some(measure) = match Option::as_ref(&data.relabel) {
+                Some(ruleset) => match ruleset.process(&db.labels, &data.labels, measure) {
+                    Ok(r) => r,
+                    Err(e) => {
+                        log::error!("Failed to relabel: {}", e);
+                        continue;
+                    }
+                },
+                None => {
+                    match ActiveLabels::try_from((&db.labels, data.labels.deref(), &measure.labels))
+                    {
+                        Ok(labels) => Some(labels.to_measure(measure)),
+                        Err(e) => {
+                            log::error!("Failed to expand labels: {}", e);
+                            continue;
+                        }
+                    }
+                }
+            } {
+                // Check for Metric Family
+                let k = MetricFamilyKey {
+                    collector: data.collector,
+                    name: measure.name.clone(),
+                };
+                // @todo: Use .get()
+                // Wait for map_try_insert feature to stabilize
+                if !db.data.contains_key(&k) {
+                    // Insert metric family info
+                    db.data.insert(
+                        k.clone(),
+                        MetricFamilyData {
+                            help: measure.help.clone(),
+                            r#type: measure.value.into(),
+                            values: HashMap::new(),
+                        },
+                    );
+                }
+                if let Some(family) = db.data.get_mut(&k) {
+                    // Install value if not dropped
+                    family.values.insert(
+                        measure.labels,
+                        MetricValue {
+                            value: measure.value,
+                            ts: data.ts,
+                        },
+                    );
+                }
             }
         }
     }
@@ -140,12 +164,11 @@ impl MetricsDb {
                 out,
                 format_args!("# TYPE {} {}\n", family.name, fv.r#type.as_str(),),
             )?;
-            let collector_label = Labels::new(vec![Label::new("collector", family.collector)]);
             let mut items: Vec<OutputItem> = fv
                 .values
                 .iter()
                 .map(|(labels, value)| OutputItem {
-                    labels: Labels::merge_sort3(&db.labels, &collector_label, labels),
+                    labels,
                     value: value.value.to_string(),
                     ts: value.ts,
                 })

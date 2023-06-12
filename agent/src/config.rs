@@ -3,7 +3,7 @@
 // --------------------------------------------------------------------
 // Copyright (C) 2021-2023, Gufo Labs
 // --------------------------------------------------------------------
-use crate::agent::AGENT_DEFAULT_INTERVAL;
+use crate::{RelabelRuleConfig, AGENT_DEFAULT_INTERVAL};
 use common::LabelsConfig;
 use serde::{Deserialize, Serialize};
 use std::collections::hash_map::DefaultHasher;
@@ -61,6 +61,8 @@ pub struct CollectorConfig {
     pub disabled: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub labels: LabelsConfig,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub relabel: Option<Vec<RelabelRuleConfig>>,
     #[serde(flatten)]
     pub config: serde_yaml::Value,
 }

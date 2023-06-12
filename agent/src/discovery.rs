@@ -41,6 +41,7 @@ fn config_from_collectors(opts: &ConfigDiscoveryOpts) -> Result<Vec<CollectorCon
                 disabled: false,
                 interval: None,
                 labels: None,
+                relabel: None,
                 config: cfg.config.clone(),
             });
         }

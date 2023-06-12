@@ -4,9 +4,10 @@
 // Copyright (C) 2021-2023, Gufo Labs
 // --------------------------------------------------------------------
 
-use crate::{CollectorConfig, Collectors, MetricsData, SenderCommand};
-use common::{AgentError, Labels, Measure};
+use crate::{CollectorConfig, Collectors, MetricsData, RelabelRuleset, SenderCommand};
+use common::{AgentError, Label, Labels, Measure};
 use rand::Rng;
+use std::sync::Arc;
 use std::time::{Instant, SystemTime, UNIX_EPOCH};
 use tokio::sync::mpsc;
 use tokio::time::Duration;
@@ -14,7 +15,8 @@ use tokio::time::Duration;
 pub(crate) struct Schedule {
     id: String,
     interval: u64,
-    labels: Labels,
+    labels: Arc<Labels>,
+    relabel: Arc<Option<RelabelRuleset>>,
     collector: Collectors,
     sender_tx: Option<mpsc::Sender<SenderCommand>>,
 }
@@ -22,12 +24,18 @@ pub(crate) struct Schedule {
 impl TryFrom<CollectorConfig> for Schedule {
     type Error = AgentError;
     fn try_from(value: CollectorConfig) -> Result<Self, Self::Error> {
+        let mut labels: Labels = value.labels.clone().into();
+        labels.push(Label::new("collector", value.r#type.clone()));
         Ok(Self {
             id: value.id.clone(),
             interval: value
                 .interval
                 .ok_or(AgentError::ParseError("invalid interval".to_string()))?,
-            labels: value.labels.clone().into(),
+            labels: Arc::new(labels),
+            relabel: Arc::new(match &value.relabel {
+                Some(v) => Some(RelabelRuleset::try_from(v)?),
+                None => None,
+            }),
             collector: Collectors::try_from(value)?,
             sender_tx: None,
         })
@@ -126,6 +134,7 @@ impl Schedule {
             tx.send(SenderCommand::Data(MetricsData {
                 collector: collector_name,
                 labels: self.labels.clone(),
+                relabel: self.relabel.clone(),
                 measures,
                 ts,
             }))

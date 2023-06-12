@@ -11,6 +11,7 @@ nav:
   - Installation: installation.md
   - Man Pages: man.md
   - Configuration: configuration.md
+  - Relabeling Rules: relabel.md
   - Config Discovery: config_discovery.md
   - Collectors Reference:
       - Overview: collectors/index.md

@@ -64,6 +64,7 @@ def define_env(env):
             f"| `type`     | String  |                           | Must be `{name}`                                 |",
             "| `interval` | Integer | `agent.defaults.interval` | Repetition interval in seconds                     |",
             "| `labels`   | Object  |                           | Additional collector-level labels                  |",
+            "| `relabel`  | Array   |                           | Optional relabeling rules. See [Relabeling Rules](../relabel.md) for details |"
             "",
         ]
         return "\n".join(r)

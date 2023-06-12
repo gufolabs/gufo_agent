@@ -1,0 +1,172 @@
+// --------------------------------------------------------------------
+// Gufo Agent: Label evaluation
+// --------------------------------------------------------------------
+// Copyright (C) 2021-2023, Gufo Labs
+// --------------------------------------------------------------------
+
+use super::{ActiveLabels, RelabelRuleConfig};
+use common::AgentError;
+use regex::Regex;
+
+#[derive(Debug)]
+pub(crate) struct Eval {
+    source_labels: Vec<String>,
+    separator: String,
+    regex: Option<Regex>,
+    replacement: Option<String>,
+}
+
+impl TryFrom<&RelabelRuleConfig> for Eval {
+    type Error = AgentError;
+
+    fn try_from(value: &RelabelRuleConfig) -> Result<Self, Self::Error> {
+        let source_labels = match &value.source_labels {
+            Some(labels) => labels.clone(),
+            None => {
+                return Err(AgentError::ConfigurationError(
+                    "target_labels must be set".to_string(),
+                ))
+            }
+        };
+        // Compile regex
+        let regex = match &value.regex {
+            Some(rx) => {
+                Some(Regex::new(rx).map_err(|e| AgentError::ConfigurationError(e.to_string()))?)
+            }
+            None => None,
+        };
+        //
+        Ok(Eval {
+            source_labels,
+            separator: value.separator.clone(),
+            regex,
+            replacement: value.replacement.clone(),
+        })
+    }
+}
+
+impl Eval {
+    // Resulting string, if match. None otherwise
+    pub(crate) fn apply(&self, labels: &ActiveLabels) -> Option<String> {
+        if self.source_labels.is_empty() {
+            return None;
+        }
+        let mut values = Vec::with_capacity(self.source_labels.len());
+        for n in self.source_labels.iter() {
+            match labels.get(n) {
+                Some(v) => values.push(v.clone()),
+                None => return None,
+            }
+        }
+        let mut r = values.join(self.separator.as_str());
+        // Apply regex
+        match &self.regex {
+            Some(rx) => {
+                match rx.captures(r.as_str()) {
+                    Some(caps) => {
+                        if let Some(repl) = &self.replacement {
+                            // Apply replacement
+                            let mut x = String::new();
+                            caps.expand(repl, &mut x);
+                            r = x;
+                        }
+                    }
+                    None => return None, // Not matched
+                }
+            }
+            None => {
+                if let Some(repl) = &self.replacement {
+                    r = repl.replace("$0", r.as_str());
+                }
+            }
+        }
+        Some(r)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::super::{ActiveLabels, Eval};
+    use common::Label;
+    use regex::Regex;
+
+    fn get_labels() -> ActiveLabels {
+        let mut labels = ActiveLabels::default();
+        labels.insert(Label::new("zzz", "xxx"));
+        labels.insert(Label::new("subsystem", "kata"));
+        labels.insert(Label::new("server", "web000"));
+        labels
+    }
+
+    #[test]
+    fn test_empty_rule() {
+        let labels = get_labels();
+        let rule = Eval {
+            source_labels: vec![],
+            separator: ";".into(),
+            regex: None,
+            replacement: None,
+        };
+        assert_eq!(rule.apply(&labels), None);
+    }
+
+    #[test]
+    fn test_concat() {
+        let labels = get_labels();
+        let rule = Eval {
+            source_labels: vec!["server".to_string(), "subsystem".to_string()],
+            separator: "@".into(),
+            regex: None,
+            replacement: None,
+        };
+        assert_eq!(rule.apply(&labels), Some("web000@kata".to_string()));
+    }
+
+    #[test]
+    fn test_wo_regex() {
+        let labels = get_labels();
+        let rule = Eval {
+            source_labels: vec!["server".to_string(), "subsystem".to_string()],
+            separator: "@".into(),
+            regex: None,
+            replacement: Some("@--->$0".into()),
+        };
+        assert_eq!(rule.apply(&labels), Some("@--->web000@kata".to_string()));
+    }
+    #[test]
+    fn test_regex_mismatch() {
+        let labels = get_labels();
+        let rule = Eval {
+            source_labels: vec!["server".to_string(), "subsystem".to_string()],
+            separator: "@".into(),
+            regex: Some(Regex::new("@bata").unwrap()),
+            replacement: None,
+        };
+        assert_eq!(rule.apply(&labels), None);
+    }
+    #[test]
+    fn test_regex() {
+        let labels = get_labels();
+        let rule = Eval {
+            source_labels: vec!["server".to_string(), "subsystem".to_string()],
+            separator: "@".into(),
+            regex: Some(Regex::new("@ka").unwrap()),
+            replacement: None,
+        };
+        assert_eq!(rule.apply(&labels), Some("web000@kata".to_string()));
+    }
+    #[test]
+    fn test_regex_and_replacement() {
+        let labels = get_labels();
+        let rule = Eval {
+            source_labels: vec!["server".to_string(), "subsystem".to_string()],
+            separator: "@".into(),
+            regex: Some(Regex::new("web(\\d+)@ka(.+)").unwrap()),
+            replacement: Some("$0-->$1->$2".into()),
+        };
+        assert_eq!(
+            rule.apply(&labels),
+            Some("web000@kata-->000->ta".to_string())
+        );
+    }
+}

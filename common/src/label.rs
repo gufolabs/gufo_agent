@@ -5,6 +5,7 @@
 // --------------------------------------------------------------------
 
 use std::collections::BTreeMap;
+use std::slice::Iter;
 
 #[derive(Debug, Hash, Eq, PartialEq, Clone, Ord, PartialOrd)]
 pub struct Label {
@@ -56,7 +57,15 @@ impl Labels {
         }
     }
     //
-    fn update_map(&self, map: &mut BTreeMap<String, String>) {
+    #[inline]
+    pub fn iter(&self) -> Iter<'_, Label> {
+        match &self.0 {
+            Some(x) => x.iter(),
+            None => Iter::default(),
+        }
+    }
+    //
+    pub fn update_map(&self, map: &mut BTreeMap<String, String>) {
         if let Some(v) = &self.0 {
             for x in v.iter() {
                 if !x.is_empty() {
