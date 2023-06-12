@@ -4,12 +4,7 @@
 
 ## Configuration
 
-| Parameter  | Type    | Default                   | Description                                        |
-| ---------- | ------- | ------------------------- | -------------------------------------------------- |
-| `id`       | String  |                           | Collector's ID. Must be unique per agent instance. |
-| `type`     | String  |                           | Must be `block_io`                                 |
-| `interval` | Integer | `agent.defaults.interval` | Repetition interval in seconds                     |
-| `labels`   | Object  |                           | Additional collector-level labels                  |
+{{ collector_config("block_io") }}
 
 Config example:
 

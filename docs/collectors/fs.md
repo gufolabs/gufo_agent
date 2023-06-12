@@ -1,15 +1,10 @@
 # fs collector
 
-`fs` collects the host's block devices' input/output statistics.
+`fs` collects the host's filesystems' statistics.
 
 ## Configuration
 
-| Parameter  | Type    | Default                   | Description                                        |
-| ---------- | ------- | ------------------------- | -------------------------------------------------- |
-| `id`       | String  |                           | Collector's ID. Must be unique per agent instance. |
-| `type`     | String  |                           | Must be `fs`                                       |
-| `interval` | Integer | `agent.defaults.interval` | Repetition interval in seconds                     |
-| `labels`   | Object  |                           | Additional collector-level labels                  |
+{{ collector_config("fs") }}
 
 Config example:
 

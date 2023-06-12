@@ -4,18 +4,18 @@
 
 ## Configuration
 
-| Parameter  | Type    | Default                   | Description                                        |
-| ---------- | ------- | ------------------------- | -------------------------------------------------- |
-| `id`       | String  |                           | Collector's ID. Must be unique per agent instance. |
-| `type`     | String  |                           | Must be `http`                                     |
-| `interval` | Integer | `agent.defaults.interval` | Repetition interval in seconds                     |
-| `labels`   | Object  |                           | Additional collector-level labels                  |
-| `host`     | String  |                           | Server instance host for TCP connection            |
-| `port`     | Integer |                           | Server instance port for TCP connection            |
-| `socket`   | String  |                           | Unix socket path                                   |
-| `username` | String  |                           | Username to connect database                       |
-| `password` | String  |                           | Password to connect database                       |
-| `database` | String  | `pgbouncer`               | The name of pgbouncer internal database            |
+{{ collector_config("pgbouncer") }}
+
+The collector-specific configuration is:
+
+| Parameter  | Type    | Default     | Description                             |
+| ---------- | ------- | ----------- | --------------------------------------- |
+| `host`     | String  |             | Server instance host for TCP connection |
+| `port`     | Integer |             | Server instance port for TCP connection |
+| `socket`   | String  |             | Unix socket path                        |
+| `username` | String  |             | Username to connect database            |
+| `password` | String  |             | Password to connect database            |
+| `database` | String  | `pgbouncer` | The name of pgbouncer internal database |
 
 
 Config example:

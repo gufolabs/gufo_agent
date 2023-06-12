@@ -4,27 +4,27 @@
 
 ## Configuration
 
-| Parameter                  | Type                | Default                   | Description                                                                              |
-| -------------------------- | ------------------- | ------------------------- | ---------------------------------------------------------------------------------------- |
-| `id`                       | String              |                           | Collector's ID. Must be unique per agent instance.                                       |
-| `type`                     | String              |                           | Must be `http`                                                                           |
-| `interval`                 | Integer             | `agent.defaults.interval` | Repetition interval in seconds                                                           |
-| `labels`                   | Object              |                           | Additional collector-level labels                                                        |
-| `host`                     | String              |                           | Server instance host for TCP connection                                                  |
-| `port`                     | Integer             |                           | Server instance port for TCP connection                                                  |
-| `socket`                   | String              |                           | Unix socket path                                                                         |
-| `database`                 | String              |                           | Database name                                                                            |
-| `username`                 | String              |                           | Username to connect database                                                             |
-| `password`                 | String              |                           | Password to connect database                                                             |
-| `items`                    | Array {{ complex }} |                           | List of query configurations                                                             |
-| {{ tab }} `query`          | String              |                           | SQL query                                                                                |
-| {{ tab }} `name`           | String              |                           | Metric name. Overriden by `name_column`.                                                 |
-| {{ tab }} `name_column`    | String              |                           | Column with metric name. Overrides `name` configuration.                                 |
-| {{ tab }} `help`           | String              |                           | Metric help. Overriden by `help_column`.                                                 |
-| {{ tab }} `help_column`    | String              |                           | Optional column with metric help. Overrides `help` connfiguration.                       |
-| {{ tab }} `value_column`   | String              | `value`                   | Column with metric value                                                                 |
-| {{ tab }} `labels`         | Object              |                           | Additional item-level labels.                                                            |
-| {{ tab }} `labels_columns` | Array               |                           | List of column names which to be exposed as labels. Label name matches with column name. |
+{{ collector_config("postgres_query") }}
+
+The collector-specific configuration is:
+
+| Parameter                  | Type                | Default | Description                                                                              |
+| -------------------------- | ------------------- | ------- | ---------------------------------------------------------------------------------------- |
+| `host`                     | String              |         | Server instance host for TCP connection                                                  |
+| `port`                     | Integer             |         | Server instance port for TCP connection                                                  |
+| `socket`                   | String              |         | Unix socket path                                                                         |
+| `database`                 | String              |         | Database name                                                                            |
+| `username`                 | String              |         | Username to connect database                                                             |
+| `password`                 | String              |         | Password to connect database                                                             |
+| `items`                    | Array {{ complex }} |         | List of query configurations                                                             |
+| {{ tab }} `query`          | String              |         | SQL query                                                                                |
+| {{ tab }} `name`           | String              |         | Metric name. Overriden by `name_column`.                                                 |
+| {{ tab }} `name_column`    | String              |         | Column with metric name. Overrides `name` configuration.                                 |
+| {{ tab }} `help`           | String              |         | Metric help. Overriden by `help_column`.                                                 |
+| {{ tab }} `help_column`    | String              |         | Optional column with metric help. Overrides `help` connfiguration.                       |
+| {{ tab }} `value_column`   | String              | `value` | Column with metric value                                                                 |
+| {{ tab }} `labels`         | Object              |         | Additional item-level labels.                                                            |
+| {{ tab }} `labels_columns` | Array               |         | List of column names which to be exposed as labels. Label name matches with column name. |
 
 Config example:
 

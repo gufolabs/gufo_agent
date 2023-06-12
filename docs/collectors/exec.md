@@ -6,15 +6,15 @@ format.
 
 ## Configuration
 
-| Parameter  | Type    | Default                   | Description                                           |
-| ---------- | ------- | ------------------------- | ----------------------------------------------------- |
-| `id`       | String  |                           | Collector's ID. Must be unique per agent instance.    |
-| `type`     | String  |                           | Must be `sockets`                                     |
-| `interval` | Integer | `agent.defaults.interval` | Repetition interval in seconds                        |
-| `labels`   | Object  |                           | Additional collector-level labels                     |
-| `cmd`      | List    |                           | Command and its arguments. Each as separate list item |
-| `cd`       | String  |                           | Change working directory, if set                      |
-| `env`      | Object  |                           | Set environment variables, if set                     |
+{{ collector_config("exec") }}
+
+The collector-specific configuration is:
+
+| Parameter | Type   | Default | Description                                           |
+| --------- | ------ | ------- | ----------------------------------------------------- |
+| `cmd`     | List   |         | Command and its arguments. Each as separate list item |
+| `cd`      | String |         | Change working directory, if set                      |
+| `env`     | Object |         | Set environment variables, if set                     |
 
 Config example:
 

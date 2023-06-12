@@ -4,17 +4,17 @@
 
 ## Configuration
 
-| Parameter  | Type    | Default                   | Description                                        |
-| ---------- | ------- | ------------------------- | -------------------------------------------------- |
-| `id`       | String  |                           | Collector's ID. Must be unique per agent instance. |
-| `type`     | String  |                           | Must be `http`                                     |
-| `interval` | Integer | `agent.defaults.interval` | Repetition interval in seconds                     |
-| `labels`   | Object  |                           | Additional collector-level labels                  |
-| `host`     | String  | `127.0.0.1`               | Redis server address                               |
-| `port`     | Integer | `6379`                    | Redis server port                                  |
-| `db`       | Integer | `0`                       | Redis database                                     |
-| `user`     | String  |                           | Optional database user                             |
-| `password` | String  |                           | Optional database password                         |
+{{ collector_config("redis") }}
+
+The collector-specific configuration is:
+
+| Parameter  | Type    | Default     | Description                |
+| ---------- | ------- | ----------- | -------------------------- |
+| `host`     | String  | `127.0.0.1` | Redis server address       |
+| `port`     | Integer | `6379`      | Redis server port          |
+| `db`       | Integer | `0`         | Redis database             |
+| `user`     | String  |             | Optional database user     |
+| `password` | String  |             | Optional database password |
 
 
 Config example:

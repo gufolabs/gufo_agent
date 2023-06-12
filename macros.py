@@ -54,6 +54,21 @@ def define_env(env):
             yield from iter_metrics_from_file(fn)
 
     @env.macro
+    def collector_config(name: str) -> str:
+        r = [
+            "The common collector's configuration is:",
+            "",
+            "| Parameter  | Type    | Default                   | Description                                        |",
+            "| ---------- | ------- | ------------------------- | -------------------------------------------------- |",
+            "| `id`       | String  |                           | Collector's ID. Must be unique per agent instance. |",
+            f"| `type`     | String  |                           | Must be `{name}`                                 |",
+            "| `interval` | Integer | `agent.defaults.interval` | Repetition interval in seconds                     |",
+            "| `labels`   | Object  |                           | Additional collector-level labels                  |",
+            "",
+        ]
+        return "\n".join(r)
+
+    @env.macro
     def metrics_table() -> str:
         """
         Generate and fill metrics table.

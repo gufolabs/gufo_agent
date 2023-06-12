@@ -5,15 +5,15 @@ and collects query statistics.
 
 ## Configuration
 
-| Parameter  | Type    | Default                   | Description                                        |
-| ---------- | ------- | ------------------------- | -------------------------------------------------- |
-| `id`       | String  |                           | Collector's ID. Must be unique per agent instance. |
-| `type`     | String  |                           | Must be `dns`                                      |
-| `interval` | Integer | `agent.defaults.interval` | Repetition interval in seconds                     |
-| `labels`   | Object  |                           | Additional collector-level labels                  |
-| `query`    | String  |                           | DNS Query to perform                               |
-| `type`     | String  | `A`                       | DNS Query type                                     |
-| `n`        | Integer | `1`                       | Number of queries in the serie.                    |
+{{ collector_config("dns") }}
+
+The collector-specific configuration is:
+
+| Parameter | Type    | Default | Description                     |
+| --------- | ------- | ------- | ------------------------------- |
+| `query`   | String  |         | DNS Query to perform            |
+| `type`    | String  | `A`     | DNS Query type                  |
+| `n`       | Integer | `1`     | Number of queries in the serie. |
 
 Config example:
 

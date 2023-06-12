@@ -5,18 +5,18 @@ client which is used along with a TWAMP reflector to perform the channel quality
 
 ## Configuration
 
-| Parameter        | Type    | Default                   | Description                                                                                 |
-| ---------------- | ------- | ------------------------- | ------------------------------------------------------------------------------------------- |
-| `id`             | String  |                           | Collector's ID. Must be unique per agent instance.                                          |
-| `type`           | String  |                           | Must be `twamp_sender`                                                                      |
-| `interval`       | Integer | `agent.defaults.interval` | Repetition interval in seconds                                                              |
-| `labels`         | Object  |                           | Additional collector-level labels                                                           |
-| `reflector`      | String  |                           | IP address of the reflector                                                                 |
-| `port`           | Integer | `862`                     | Port of the reflector's control channel                                                     |
-| `reflector_port` | Integer | `0`                       | Demand explicit reflector port, if not `0`. Used to fix weird TWAMP reflector implentations |
-| `dscp`           | String  | `be`                      | Mark outgoing test packets with appropriate DSCP label                                      |
-| `n_packets`      | Integer |                           | Number of packets to send                                                                   |
-| `model`          | String  |                           | Traffic model. See for [Traffic Models](#traffic_models) for details.                       |
+{{ collector_config("twamp_sender") }}
+
+The collector-specific configuration is:
+
+| Parameter        | Type    | Default | Description                                                                                 |
+| ---------------- | ------- | ------- | ------------------------------------------------------------------------------------------- |
+| `reflector`      | String  |         | IP address of the reflector                                                                 |
+| `port`           | Integer | `862`   | Port of the reflector's control channel                                                     |
+| `reflector_port` | Integer | `0`     | Demand explicit reflector port, if not `0`. Used to fix weird TWAMP reflector implentations |
+| `dscp`           | String  | `be`    | Mark outgoing test packets with appropriate DSCP label                                      |
+| `n_packets`      | Integer |         | Number of packets to send                                                                   |
+| `model`          | String  |         | Traffic model. See for [Traffic Models](#traffic_models) for details.                       |
 
 Config example:
 

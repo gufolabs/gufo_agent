@@ -7,14 +7,14 @@ TWAMP-compatible implementations.
 
 ## Configuration
 
-| Parameter  | Type    | Default                   | Description                                        |
-| ---------- | ------- | ------------------------- | -------------------------------------------------- |
-| `id`       | String  |                           | Collector's ID. Must be unique per agent instance. |
-| `type`     | String  |                           | Must be `twamp_reflector`                          |
-| `interval` | Integer | `agent.defaults.interval` | Repetition interval in seconds                     |
-| `labels`   | Object  |                           | Additional collector-level labels                  |
-| `listen`   | String  | `0.0.0.0`                 | Address to bind the control channel                |
-| `port`     | Integer | `862`                     | Port for the control channel                       |
+{{ collector_config("twamp_reflector") }}
+
+The collector-specifig configuration is:
+
+| Parameter | Type    | Default   | Description                         |
+| --------- | ------- | --------- | ----------------------------------- |
+| `listen`  | String  | `0.0.0.0` | Address to bind the control channel |
+| `port`    | Integer | `862`     | Port for the control channel        |
 
 Config example:
 

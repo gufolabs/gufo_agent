@@ -98,20 +98,14 @@ DOC = """# {name} collector
 
 ## Configuration
 
-| Parameter  | Type    | Default                   | Description                                        |
-| ---------- | ------- | ------------------------- | ---------------------------------------------------|
-| `id`       | String  |                           | Collector's ID. Must be unique per agent instance. |
-| `type`     | String  |                           | Must be `http`                                     |
-| `interval` | Integer | `agent.defaults.interval` | Repetition interval in seconds                     |
-| `labels`   | Object  |                           | Additional collector-level labels                  |
-
+{{ collector_config("{name}") }}
 
 Config example:
 
 ``` yaml
-- id: ???
+- id: {name}
   disabled: false
-  type: ???
+  type: {name}
 ```
 
 ## Collected Metrics
