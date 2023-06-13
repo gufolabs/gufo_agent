@@ -14,6 +14,8 @@ The collector-specific configuration is:
 | `self_pid`      | Boolean |         | Include agent's own pid                                                    |
 | `pid_file`      | String  |         | Optional path to pid file                                                  |
 | `pattern`       | String  |         | Optional regular expression that matches the process' command line         |
+| `cmd_separator` | String  | ` `     | Separaror for `cmd` and `__meta_cmd` labels                                |
+| `env_separator` | String  | `;`     | Separator for `__meta_env` label                                           |
 
 Config example:
 
