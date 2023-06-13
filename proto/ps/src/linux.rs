@@ -4,7 +4,7 @@
 // Copyright (C) 2021-2023, Gufo Labs
 // --------------------------------------------------------------------
 
-use crate::{ProcStat, PsFinder};
+use crate::{ProcStat, PsFinder, QueryConf};
 use common::{AgentError, AgentResult};
 use nom::{
     branch::alt,
@@ -77,7 +77,7 @@ impl PsFinder for Ps {
         Ok(vec![std::process::id()])
     }
     // Get stats for given pids
-    fn get_stats(pids: &HashSet<Pid>) -> Vec<ProcStat> {
+    fn get_stats(pids: &HashSet<Pid>, conf: &QueryConf) -> Vec<ProcStat> {
         let mut r = Vec::with_capacity(pids.len());
         const KB: u64 = 1024;
         let sys_conf = SYSCONF.get_or_init(SysConf::default);
@@ -162,6 +162,29 @@ impl PsFinder for Ps {
                             _ => {}
                         }
                     }
+                }
+            }
+            //
+            if conf.cmd {
+                // Fill cmd field
+                if let Some(data) = read_procfs(pid, "cmdline") {
+                    stats.cmd = Some(
+                        data[..data.len() - 1]
+                            .split('\0')
+                            .map(|x| x.to_owned())
+                            .collect(),
+                    )
+                }
+            }
+            if conf.env {
+                // Fill env field
+                if let Some(data) = read_procfs(pid, "environ") {
+                    stats.env = Some(
+                        data[..data.len() - 1]
+                            .split('\0')
+                            .map(|x| x.to_owned())
+                            .collect(),
+                    )
                 }
             }
             //

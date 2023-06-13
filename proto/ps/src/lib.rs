@@ -14,6 +14,8 @@ pub struct ProcStat {
     pub uid: Option<Uid>,
     pub gid: Option<Gid>,
     pub process_name: Option<String>,
+    pub cmd: Option<Vec<String>>,
+    pub env: Option<Vec<String>>,
     pub num_threads: Option<u64>,
     pub num_fds: Option<u64>,
     // ctx switch
@@ -43,6 +45,14 @@ pub struct ProcStat {
     pub io_write_count: Option<u64>,
     pub io_read_bytes: Option<u64>,
     pub io_write_bytes: Option<u64>,
+}
+
+#[derive(Debug, Default)]
+pub struct QueryConf {
+    // Fill cmd field
+    pub cmd: bool,
+    // Fill env field
+    pub env: bool,
 }
 
 impl ProcStat {
@@ -90,7 +100,7 @@ pub trait PsFinder {
             .collect())
     }
     // Get stats for given pids
-    fn get_stats(pids: &HashSet<Pid>) -> Vec<ProcStat>;
+    fn get_stats(pids: &HashSet<Pid>, conf: &QueryConf) -> Vec<ProcStat>;
 }
 
 #[cfg(target_os = "linux")]

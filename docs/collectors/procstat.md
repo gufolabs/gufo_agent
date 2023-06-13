@@ -59,14 +59,20 @@ Config example:
 
 `procstat` collector appends the following labels:
 
-| Label          | `expose_labels` | Description                  |
-| -------------- | --------------- | ---------------------------- |
-| `process_name` |                 | Name of the process          |
-| `user`         | `user`          | Process' effective user name |
+| Label          | `expose_labels` | Description                                                                                                    |
+| -------------- | --------------- | -------------------------------------------------------------------------------------------------------------- |
+| `process_name` |                 | Name of the process                                                                                            |
+| `user`         | `user`          | Process' effective user name                                                                                   |
+| `cmd`          | `cmd`           | Full command line separated by `cmd_separator`                                                                 |
+| `__meta_cmd`   | `__meta_cmd`    | [Virtual label](../relabel.md#virtual-labels) version of `cmd`                                                 |
+| `__meta_env`   | `__meta_env`    | [Virtual label](../relabel.md#virtual-labels) containing the process' environmenr separated by `env_separator` |
 
 `expose_labels` may take the following values:
 
 * `user` - Expose `user` label.
+* `cmd` - Expose `cmd` label. 
+* `__meta_cmd` - Expose `__meta_cmd` label.
+* `__meta_env` - Expose `__meta_env` label.
 
 ## Config Discovery
 
@@ -76,6 +82,32 @@ To disable a particular block use the `--config-discovery-opts` option:
 ``` shell
 gufo-agent --config-discovery --config-discovery-opts=-procstat
 ```
+
+## Process Name Rewritting
+
+Sometimes, the process name is non-unique and misleading. Then the [Relabeling Rules](../relabel.md)
+come to the resque. Consider we have a set of the services launched by `run` command using syntax
+
+```
+run <service>
+```
+
+Then we can configure `procstat` collector to fetch proper name to the labels:
+
+``` yaml
+- id: Procstat
+  type: procstat
+  ...
+  expose_labels: [__meta_cmd]
+  relabel:
+  - source_labels: ["__meta_cmd"]
+    regex: "run (.+)"
+    replacement: "$1"
+    target_label: process_name
+    action: replace
+```
+
+Then the `process_name` label will contain service name, instead of `run`.
 
 ## Sample Output
 
