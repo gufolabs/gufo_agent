@@ -46,7 +46,18 @@ macro_rules! counter {
             }
         }
     };
-    // With labels
+    // With Labels arguments
+    ($name:ident, $help:literal, Labels) => {
+        fn $name(v: u64, labels: common::Labels) -> Measure {
+            Measure {
+                name: stringify!($name).to_string(),
+                help: $help.to_string(),
+                value: common::Value::Counter(v),
+                labels,
+            }
+        }
+    };
+    // With labels as positional parameters
     ($name:ident, $help:literal, $($label:ident),+) => {
         common::metrics::paste! {
             fn $name<$([< T $label >]: ToString),+>(
@@ -109,7 +120,18 @@ macro_rules! counter_f {
             }
         }
     };
-    // With labels
+    // With Labels arguments
+    ($name:ident, $help:literal, Labels) => {
+        fn $name(v: f32, labels: common::Labels) -> Measure {
+            Measure {
+                name: stringify!($name).to_string(),
+                help: $help.to_string(),
+                value: common::Value::CounterF(v),
+                labels,
+            }
+        }
+    };
+    // With labels as positional parameters
     ($name:ident, $help:literal, $($label:ident),+) => {
         common::metrics::paste! {
             fn $name<$([< T $label >]: ToString),+>(
@@ -172,7 +194,17 @@ macro_rules! gauge {
             }
         }
     };
-    // With labels
+    // With Labels arguments
+    ($name:ident, $help:literal, Labels) => {
+        fn $name(v: u64, labels: common::Labels) -> Measure {
+            Measure {
+                name: stringify!($name).to_string(),
+                help: $help.to_string(),
+                value: common::Value::Gauge(v),
+                labels,
+            }
+        }
+    };
     ($name:ident, $help:literal, $($label:ident),+) => {
         common::metrics::paste! {
             fn $name<$([< T $label >]: ToString),+>(
@@ -235,7 +267,17 @@ macro_rules! gauge_i {
             }
         }
     };
-    // With labels
+    // With Labels arguments
+    ($name:ident, $help:literal, Labels) => {
+        fn $name(v: i64, labels: common::Labels) -> Measure {
+            Measure {
+                name: stringify!($name).to_string(),
+                help: $help.to_string(),
+                value: common::Value::GaugeI(v),
+                labels,
+            }
+        }
+    };
     ($name:ident, $help:literal, $($label:ident),+) => {
         common::metrics::paste! {
             fn $name<$([< T $label >]: ToString),+>(
@@ -297,7 +339,17 @@ macro_rules! gauge_f {
             }
         }
     };
-    // With labels
+    // With Labels arguments
+    ($name:ident, $help:literal, Labels) => {
+        fn $name(v: f32, labels: common::Labels) -> Measure {
+            Measure {
+                name: stringify!($name).to_string(),
+                help: $help.to_string(),
+                value: common::Value::GaugeF(v),
+                labels,
+            }
+        }
+    };
     ($name:ident, $help:literal, $($label:ident),+) => {
         common::metrics::paste! {
             fn $name<$([< T $label >]: ToString),+>(
