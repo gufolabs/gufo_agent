@@ -102,7 +102,7 @@ Then we can configure `procstat` collector to fetch proper name to the labels:
   ...
   expose_labels: [__meta_cmd]
   relabel:
-  - source_labels: ["__meta_cmd"]
+  - source_labels: [__meta_cmd]
     regex: "run (.+)"
     replacement: "$1"
     target_label: process_name
