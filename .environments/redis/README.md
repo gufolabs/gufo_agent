@@ -1,4 +1,4 @@
-# Postgres testing environment
+# Redis testing environment
 
 Contains Redis instance.
 

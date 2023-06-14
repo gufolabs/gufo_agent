@@ -1,0 +1,16 @@
+$version: "1.0"
+$type: zeroconf
+agent:
+  host: test
+  defaults:
+    interval: 10
+sender:
+  type: openmetrics
+  mode: pull
+  listen: 0.0.0.0:3000
+  path: /metrics
+collectors:
+  - id: MySQL
+    type: mysql
+    username: root
+    password: secret

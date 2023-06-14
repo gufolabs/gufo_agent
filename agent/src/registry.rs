@@ -20,6 +20,7 @@ pub enum Collectors {
     Memory(memory::Collector),
     ModbusRtu(modbus_rtu::Collector),
     ModbusTcp(modbus_tcp::Collector),
+    Mysql(mysql::Collector),
     Network(network::Collector),
     Pgbouncer(pgbouncer::Collector),
     Postgres(postgres::Collector),
@@ -76,6 +77,7 @@ impl TryFrom<CollectorConfig> for Collectors {
             "memory" => Collectors::Memory(from_value(value)?),
             "modbus_rtu" => Collectors::ModbusRtu(from_value(value)?),
             "modbus_tcp" => Collectors::ModbusTcp(from_value(value)?),
+            "mysql" => Collectors::Mysql(from_value(value)?),
             "network" => Collectors::Network(from_value(value)?),
             "pgbouncer" => Collectors::Pgbouncer(from_value(value)?),
             "postgres" => Collectors::Postgres(from_value(value)?),
@@ -107,6 +109,7 @@ impl Collectors {
             Collectors::Memory(_) => memory::Collector::get_name(),
             Collectors::ModbusRtu(_) => modbus_rtu::Collector::get_name(),
             Collectors::ModbusTcp(_) => modbus_tcp::Collector::get_name(),
+            Collectors::Mysql(_) => mysql::Collector::get_name(),
             Collectors::Network(_) => network::Collector::get_name(),
             Collectors::Pgbouncer(_) => pgbouncer::Collector::get_name(),
             Collectors::Postgres(_) => postgres::Collector::get_name(),
@@ -135,6 +138,7 @@ impl Collectors {
             Collectors::Memory(_) => memory::Collector::is_random_offset(),
             Collectors::ModbusRtu(_) => modbus_rtu::Collector::is_random_offset(),
             Collectors::ModbusTcp(_) => modbus_tcp::Collector::is_random_offset(),
+            Collectors::Mysql(_) => mysql::Collector::is_random_offset(),
             Collectors::Network(_) => network::Collector::is_random_offset(),
             Collectors::Pgbouncer(_) => pgbouncer::Collector::is_random_offset(),
             Collectors::Postgres(_) => postgres::Collector::is_random_offset(),
@@ -163,6 +167,7 @@ impl Collectors {
             Collectors::Memory(c) => c.collect().await,
             Collectors::ModbusRtu(c) => c.collect().await,
             Collectors::ModbusTcp(c) => c.collect().await,
+            Collectors::Mysql(c) => c.collect().await,
             Collectors::Network(c) => c.collect().await,
             Collectors::Pgbouncer(c) => c.collect().await,
             Collectors::Postgres(c) => c.collect().await,
@@ -190,6 +195,7 @@ impl Collectors {
             "memory".to_string(),
             "modbus_rtu".to_string(),
             "modbus_tcp".to_string(),
+            "mysql".to_string(),
             "network".to_string(),
             "pgbouncer".to_string(),
             "postgres".to_string(),
@@ -267,6 +273,12 @@ impl Collectors {
             let x = modbus_tcp::Collector::discover_config(opts)?;
             if !x.is_empty() {
                 r.push((modbus_tcp::Collector::get_name(), x));
+            }
+        }
+        if !opts.is_disabled("mysql") {
+            let x = mysql::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((mysql::Collector::get_name(), x));
             }
         }
         if !opts.is_disabled("network") {

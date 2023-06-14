@@ -24,6 +24,7 @@ nav:
       - memory: collectors/memory.md
       - modbus_rtu: collectors/modbus_rtu.md
       - modbus_tcp: collectors/modbus_tcp.md
+      - mysql: collectors/mysql.md
       - network: collectors/network.md
       - pgbouncer: collectors/pgbouncer.md
       - postgres: collectors/postgres.md

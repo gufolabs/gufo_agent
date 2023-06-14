@@ -55,6 +55,7 @@ labels are set as key-value pairs:
 | [memory](memory.md)                   | Host's memory statistics                          |
 | [modbus_rtu](modbus_rtu.md)           | Perform Modbus RTU requests                       |
 | [modbus_tcp](modbus_tcp.md)           | Perform Modbus TCP requests                       |
+| [mysql](mysql.md)                     | MySQL instance statistics                         |
 | [network](network.md)                 | Host's network interface statistics               |
 | [pgbouncer](pgbouncer.md)             | PgBouncer statistics                              |
 | [postgres](postgres.md)               | PostgreSQL instance statistics                    |

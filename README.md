@@ -110,6 +110,7 @@ See "Gufo Agent Man Pages" for details.
 | `memory`          | Host's memory statistics                          |
 | `modbus_rtu`      | Perform Modbus RTU requests                       |
 | `modbus_tcp`      | Perform Modbus TCP requests                       |
+| `mysql`           | MySQL instance statistics                         |
 | `network`         | Host's network interface statistics               |
 | `pgbouncer`       | PgBouncer statistics                              |
 | `postgres`        | PostgreSQL instance statistics                    |

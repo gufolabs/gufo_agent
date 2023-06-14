@@ -1,0 +1,10 @@
+version: "2"
+services:
+  mysql:
+    image: "mysql:8.0-debian"
+    volumes:
+      - "../../target/release:/opt/ga"
+      - "./gufo-agent.yml:/etc/gufo-agent.yml"
+      - "./run.sh:/run.sh"
+    environment:
+      MYSQL_ROOT_PASSWORD: secret

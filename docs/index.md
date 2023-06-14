@@ -97,6 +97,7 @@ See [Gufo Agent Man Pages](man.md) for details.
 | [memory](collectors/memory.md)                   | Host's memory statistics                          |
 | [modbus_rtu](collectors/modbus_rtu.md)           | Perform Modbus RTU requests                       |
 | [modbus_tcp](collectors/modbus_tcp.md)           | Perform Modbus TCP requests                       |
+| [mysql](collectors/mysql.md)                     | MySQL instance statistics                         |
 | [network](collectors/network.md)                 | Host's network interface statistics               |
 | [pgbouncer](collectors/pgbouncer.md)             | PgBouncer statistics                              |
 | [postgres](collectors/postgres.md)               | PostgreSQL instance statistics                    |
