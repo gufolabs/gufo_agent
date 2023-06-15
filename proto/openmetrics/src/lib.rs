@@ -223,10 +223,7 @@ fn metric_line(input: &str) -> IResult<&str, Token> {
     let (input, value) = recognize_value(input)?;
     // optional timestamp
     let (input, ts) = opt(tuple((space1, u64)))(input)?;
-    let timestamp = match ts {
-        Some((_, v)) => Some(v),
-        None => None,
-    };
+    let timestamp = ts.map(|(_, v)| v);
     // LF
     let (input, _) = alt((line_ending, eof))(input)?;
     // Result

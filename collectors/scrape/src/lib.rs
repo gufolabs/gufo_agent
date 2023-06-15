@@ -7,9 +7,7 @@
 mod sd;
 
 use async_trait::async_trait;
-use common::{
-    AgentError, AgentResult, Collectable, ConfigDiscoveryOpts, ConfigItem, Label, Measure,
-};
+use common::{AgentError, AgentResult, Collectable, Label, Measure};
 use openmetrics::ParsedMetrics;
 use sd::{Sd, SdConfig, ServiceDiscovery};
 use serde::{Deserialize, Serialize};
