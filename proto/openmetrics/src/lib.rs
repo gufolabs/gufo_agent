@@ -11,7 +11,7 @@ use common::{AgentError, Label, Labels, Measure, Value};
 use nom::{
     branch::alt,
     bytes::complete::{escaped, is_not, tag},
-    character::complete::{alpha1, alphanumeric1, char, line_ending, space0, space1},
+    character::complete::{alpha1, alphanumeric1, char, line_ending, space0, space1, u64},
     combinator::{eof, opt, recognize},
     multi::{many0, many0_count, separated_list0},
     number::complete::recognize_float_parts,
@@ -124,8 +124,7 @@ pub enum Token {
 // normal-char = %x00-09 / %x0B-21 / %x23-5B / %x5D-D7FF / %xE000-10FFFF
 
 // Parse input to a vec of tokens
-// @todo: Remove pub
-pub fn parse(input: &str) -> IResult<&str, Vec<Token>> {
+fn parse(input: &str) -> IResult<&str, Vec<Token>> {
     many0(line)(input)
 }
 
@@ -222,6 +221,12 @@ fn metric_line(input: &str) -> IResult<&str, Token> {
     let (input, _) = space1(input)?;
     // <value>
     let (input, value) = recognize_value(input)?;
+    // optional timestamp
+    let (input, ts) = opt(tuple((space1, u64)))(input)?;
+    let timestamp = match ts {
+        Some((_, v)) => Some(v),
+        None => None,
+    };
     // LF
     let (input, _) = alt((line_ending, eof))(input)?;
     // Result
@@ -231,7 +236,7 @@ fn metric_line(input: &str) -> IResult<&str, Token> {
             metric_name: metric_name.into(),
             labels,
             value,
-            timestamp: None,
+            timestamp,
         }),
     ))
 }
@@ -529,6 +534,49 @@ metric2 -15
                         labels: Labels::default(),
                         value: InternalValue::I64(-15),
                         timestamp: None
+                    }),
+                    Token::EmptyLine,
+                    Token::Eof,
+                ]
+            ))
+        );
+    }
+    #[test]
+    fn test_parse_ts() {
+        let input = r#"# HELP metric1 first metric
+# TYPE metric1 gauge
+# UNIT metric1 seconds
+metric1 12 1686823614
+
+# HELP metric2 second metric
+# TYPE metric2 counter
+# UNIT metric2 meters
+metric2 -15 1686823614
+
+# EOF"#;
+        assert_eq!(
+            parse(input),
+            Ok((
+                "",
+                vec![
+                    Token::DescHelp(Desc::new("metric1", "first metric")),
+                    Token::DescType(Desc::new("metric1", "gauge")),
+                    Token::DescUnit(Desc::new("metric1", "seconds")),
+                    Token::Metric(Metric {
+                        metric_name: "metric1".into(),
+                        labels: Labels::default(),
+                        value: InternalValue::U64(12),
+                        timestamp: Some(1686823614),
+                    }),
+                    Token::EmptyLine,
+                    Token::DescHelp(Desc::new("metric2", "second metric")),
+                    Token::DescType(Desc::new("metric2", "counter")),
+                    Token::DescUnit(Desc::new("metric2", "meters")),
+                    Token::Metric(Metric {
+                        metric_name: "metric2".into(),
+                        labels: Labels::default(),
+                        value: InternalValue::I64(-15),
+                        timestamp: Some(1686823614),
                     }),
                     Token::EmptyLine,
                     Token::Eof,
