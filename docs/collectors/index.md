@@ -62,6 +62,7 @@ labels are set as key-value pairs:
 | [postgres_query](postgres_query.md)   | Perform PostgreSQL queries                        |
 | [procstat](procstat.md)               | Process' statistics                               |
 | [redis](redis.md)                     | Redis instance statistics                         |
+| [scrape](scrape.md)                   | Fetch data from OpenMetrics/Prometheus endpoints  |
 | [sockets](sockets.md)                 | Host's sockets statistics                         |
 | [spool](spool.md)                     | Read files in openmetrics format from a directory |
 | [twamp_reflector](twamp_reflector.md) | TWAMP reflector for SLA probing                   |

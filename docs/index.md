@@ -104,6 +104,7 @@ See [Gufo Agent Man Pages](man.md) for details.
 | [postgres_query](collectors/postgres_query.md)   | Perform PostgreSQL queries                        |
 | [procstat](collectors/procstat.md)               | Process' statistics                               |
 | [redis](collectors/redis.md)                     | Redis instance statistics                         |
+| [scrape](collectors/scrape.md)                   | Fetch data from OpenMetrics/Prometheus endpoints  |
 | [sockets](collectors/sockets.md)                 | Host's sockets statistics                         |
 | [spool](collectors/spool.md)                     | Read files in openmetrics format from a directory |
 | [twamp_reflector](collectors/twamp_reflector.md) | TWAMP reflector for SLA probing                   |

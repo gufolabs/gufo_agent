@@ -27,6 +27,7 @@ pub enum Collectors {
     PostgresQuery(postgres_query::Collector),
     Procstat(procstat::Collector),
     Redis(redis::Collector),
+    Scrape(scrape::Collector),
     Sockets(sockets::Collector),
     Spool(spool::Collector),
     TwampReflector(twamp_reflector::Collector),
@@ -84,6 +85,7 @@ impl TryFrom<CollectorConfig> for Collectors {
             "postgres_query" => Collectors::PostgresQuery(from_value(value)?),
             "procstat" => Collectors::Procstat(from_value(value)?),
             "redis" => Collectors::Redis(from_value(value)?),
+            "scrape" => Collectors::Scrape(from_value(value)?),
             "sockets" => Collectors::Sockets(from_value(value)?),
             "spool" => Collectors::Spool(from_value(value)?),
             "twamp_reflector" => Collectors::TwampReflector(from_value(value)?),
@@ -116,6 +118,7 @@ impl Collectors {
             Collectors::PostgresQuery(_) => postgres_query::Collector::get_name(),
             Collectors::Procstat(_) => procstat::Collector::get_name(),
             Collectors::Redis(_) => redis::Collector::get_name(),
+            Collectors::Scrape(_) => scrape::Collector::get_name(),
             Collectors::Sockets(_) => sockets::Collector::get_name(),
             Collectors::Spool(_) => spool::Collector::get_name(),
             Collectors::TwampReflector(_) => twamp_reflector::Collector::get_name(),
@@ -145,6 +148,7 @@ impl Collectors {
             Collectors::PostgresQuery(_) => postgres_query::Collector::is_random_offset(),
             Collectors::Procstat(_) => procstat::Collector::is_random_offset(),
             Collectors::Redis(_) => redis::Collector::is_random_offset(),
+            Collectors::Scrape(_) => scrape::Collector::is_random_offset(),
             Collectors::Sockets(_) => sockets::Collector::is_random_offset(),
             Collectors::Spool(_) => spool::Collector::is_random_offset(),
             Collectors::TwampReflector(_) => twamp_reflector::Collector::is_random_offset(),
@@ -174,6 +178,7 @@ impl Collectors {
             Collectors::PostgresQuery(c) => c.collect().await,
             Collectors::Procstat(c) => c.collect().await,
             Collectors::Redis(c) => c.collect().await,
+            Collectors::Scrape(c) => c.collect().await,
             Collectors::Sockets(c) => c.collect().await,
             Collectors::Spool(c) => c.collect().await,
             Collectors::TwampReflector(c) => c.collect().await,
@@ -202,6 +207,7 @@ impl Collectors {
             "postgres_query".to_string(),
             "procstat".to_string(),
             "redis".to_string(),
+            "scrape".to_string(),
             "sockets".to_string(),
             "spool".to_string(),
             "twamp_reflector".to_string(),
@@ -315,6 +321,12 @@ impl Collectors {
             let x = redis::Collector::discover_config(opts)?;
             if !x.is_empty() {
                 r.push((redis::Collector::get_name(), x));
+            }
+        }
+        if !opts.is_disabled("scrape") {
+            let x = scrape::Collector::discover_config(opts)?;
+            if !x.is_empty() {
+                r.push((scrape::Collector::get_name(), x));
             }
         }
         if !opts.is_disabled("sockets") {

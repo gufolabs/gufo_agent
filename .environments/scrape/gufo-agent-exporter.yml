@@ -1,0 +1,37 @@
+$version: '1.0'
+$type: zeroconf
+agent:
+  defaults:
+    interval: 60
+sender:
+  type: openmetrics
+  mode: pull
+  listen: 0.0.0.0:3000
+  path: /metrics
+collectors:
+- id: block_io
+  type: block_io
+  disabled: false
+- id: cpu
+  type: cpu
+  disabled: false
+- id: fs
+  type: fs
+  disabled: false
+- id: memory
+  type: memory
+  disabled: false
+- id: network
+  type: network
+  disabled: false
+- id: procstat
+  type: procstat
+  disabled: false
+  self_pid: true
+- id: sockets
+  type: sockets
+  disabled: false
+- id: uptime
+  type: uptime
+  disabled: false
+

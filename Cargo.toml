@@ -29,6 +29,7 @@ members = [
   "collectors/postgres_query",
   "collectors/procstat",
   "collectors/redis",
+  "collectors/scrape",
   "collectors/sockets",
   "collectors/spool",
   "collectors/twamp_reflector",

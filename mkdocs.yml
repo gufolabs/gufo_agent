@@ -31,6 +31,7 @@ nav:
       - postgres_query: collectors/postgres_query.md
       - procstat: collectors/procstat.md
       - redis: collectors/redis.md
+      - scrape: collectors/scrape.md
       - sockets: collectors/sockets.md
       - spool: collectors/spool.md
       - twamp_reflector: collectors/twamp_reflector.md

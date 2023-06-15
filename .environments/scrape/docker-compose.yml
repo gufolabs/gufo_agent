@@ -1,0 +1,28 @@
+version: "2"
+services:
+  agent1:
+    image: "debian:bullseye-slim"
+    volumes:
+      - "../../target/release:/opt/ga"
+      - "./gufo-agent-exporter.yml:/etc/gufo-agent.yml"
+    environment:
+      GA_HOSTNAME: agent1
+    command: /opt/ga/gufo-agent --config=/etc/gufo-agent.yml
+  agent2:
+    image: "debian:bullseye-slim"
+    volumes:
+      - "../../target/release:/opt/ga"
+      - "./gufo-agent-exporter.yml:/etc/gufo-agent.yml"
+    environment:
+      GA_HOSTNAME: agent2
+    command: /opt/ga/gufo-agent --config=/etc/gufo-agent.yml
+  scrape-static:
+    image: "debian:bullseye-slim"
+    depends_on:
+      - agent1
+      - agent2
+    volumes:
+      - "../../target/release:/opt/ga"
+      - "./gufo-agent-scrape-static.yml:/etc/gufo-agent.yml"
+      - "./run.sh:/run.sh"
+    entrypoint: tail -f /dev/null

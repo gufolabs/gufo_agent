@@ -6,3 +6,4 @@ various services
 * `mysql` - MySQL instance to  test `mysql` collector.
 * `postgres` - PostgreSQL and pgbouncer to test `postgres` and `postgres_query` collectors.
 * `redis` - Redis instance to test `redis` collector.
+* `scrape` - Agent instancees to test `scrape` collector.

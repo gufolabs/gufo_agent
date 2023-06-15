@@ -117,6 +117,7 @@ See "Gufo Agent Man Pages" for details.
 | `postgres_query`  | Perform PostgreSQL queries                        |
 | `procstat`        | Process' statistics                               |
 | `redis`           | Redis instance statistics                         |
+| `scrape`          | Fetch data from OpenMetrics/Prometheus endpoints  |
 | `sockets`         | Host's sockets statistics                         |
 | `spool`           | Read files in openmetrics format from a directory |
 | `twamp_reflector` | TWAMP reflector for SLA probing                   |

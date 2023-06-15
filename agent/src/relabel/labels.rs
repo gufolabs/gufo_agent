@@ -8,6 +8,7 @@ use common::{AgentError, Label, Labels, Measure};
 use std::collections::BTreeMap;
 
 const NAME_LABEL: &str = "__name__";
+const ADDRESS_LABEL: &str = "__address__";
 const META_PREFIX: &str = "__meta_";
 
 #[derive(Default, Debug)]
@@ -40,7 +41,7 @@ impl ActiveLabels {
     }
     #[inline]
     pub(crate) fn is_virtual(name: &String) -> bool {
-        name == NAME_LABEL || name.starts_with(META_PREFIX)
+        name == NAME_LABEL || name == ADDRESS_LABEL || name.starts_with(META_PREFIX)
     }
     pub(crate) fn to_measure(&self, measure: &Measure) -> Measure {
         let name = match self.labels.get(NAME_LABEL) {
