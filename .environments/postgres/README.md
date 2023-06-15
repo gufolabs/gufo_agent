@@ -10,10 +10,21 @@ docker-compose up -d
 
 ## Running Tests
 
-Redis:
+Postgres:
 
 ```
-docker exec -ti redis-redis-1 /run.sh
+docker exec -ti postgres-postgres-1 /run.sh
+```
+
+PgBouncer:
+```
+docker exec -ti postgres-pgbouncer-1 /run.sh
+```
+
+Query:
+
+```
+docker exec -ti postgres-query-1 /run.sh
 ```
 
 ## Stopping

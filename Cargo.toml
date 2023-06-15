@@ -23,6 +23,7 @@ members = [
   "collectors/modbus_rtu",
   "collectors/modbus_tcp",
   "collectors/mysql",
+  "collectors/mysql_query",
   "collectors/network",
   "collectors/pgbouncer",
   "collectors/postgres",

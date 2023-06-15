@@ -4,7 +4,18 @@ services:
     image: "mysql:8.0-debian"
     volumes:
       - "../../target/release:/opt/ga"
-      - "./gufo-agent.yml:/etc/gufo-agent.yml"
+      - "./gufo-agent-mysql.yml:/etc/gufo-agent.yml"
       - "./run.sh:/run.sh"
+      - "./initdb.d:/docker-entrypoint-initdb.d/"
     environment:
+      MYSQL_DATABASE: metrics
       MYSQL_ROOT_PASSWORD: secret
+  query:
+    image: "debian:bullseye-slim"
+    depends_on:
+      - mysql
+    volumes:
+      - "../../target/release:/opt/ga"
+      - "./gufo-agent-query.yml:/etc/gufo-agent.yml"
+      - "./run.sh:/run.sh"
+    entrypoint: tail -f /dev/null

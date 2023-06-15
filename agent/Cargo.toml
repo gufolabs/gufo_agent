@@ -20,6 +20,7 @@ memory = {path = "../collectors/memory"}
 modbus_rtu = {path = "../collectors/modbus_rtu"}
 modbus_tcp = {path = "../collectors/modbus_tcp"}
 mysql = {path = "../collectors/mysql"}
+mysql_query = {path = "../collectors/mysql_query"}
 network = {path = "../collectors/network"}
 pgbouncer = {path = "../collectors/pgbouncer"}
 postgres = {path = "../collectors/postgres"}
