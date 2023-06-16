@@ -169,7 +169,7 @@ impl PsFinder for Ps {
                 // Fill cmd field
                 if let Some(data) = read_procfs(pid, "cmdline") {
                     stats.cmd = Some(
-                        data[..data.len() - 1]
+                        data.trim_end_matches('\0')
                             .split('\0')
                             .map(|x| x.to_owned())
                             .collect(),
