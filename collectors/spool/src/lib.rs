@@ -6,7 +6,7 @@
 
 use async_trait::async_trait;
 use common::{counter, AgentError, Collectable, Measure};
-use openmetrics::ParsedMetrics;
+use openmetrics::{parse, ParseConfig};
 use serde::{Deserialize, Serialize};
 use std::fs::{metadata, read_dir, read_to_string, remove_file};
 use std::path::Path;
@@ -17,12 +17,15 @@ pub struct Config {
     path: String,
     #[serde(default = "default_false")]
     dry_run: bool,
+    #[serde(default = "default_false")]
+    trust_timestamps: bool,
 }
 
 // Collector structure
 pub struct Collector {
     path: String,
     dry_run: bool,
+    parse_cfg: ParseConfig,
     // Stats
     spool_jobs: u64,
     spool_jobs_success: u64,
@@ -48,6 +51,9 @@ impl TryFrom<Config> for Collector {
         Ok(Self {
             path: value.path,
             dry_run: value.dry_run,
+            parse_cfg: ParseConfig {
+                trust_timestamps: value.trust_timestamps,
+            },
             spool_jobs: 0,
             spool_jobs_success: 0,
             spool_jobs_failed: 0,
@@ -117,14 +123,14 @@ impl Collector {
         }
         //
         let data = read_to_string(path)?;
-        let parsed = ParsedMetrics::try_from(data.as_str())?;
+        let parsed = parse(data.as_str(), &self.parse_cfg)?;
         if !self.dry_run {
             log::debug!("Removing {:?}", path);
             if let Err(e) = remove_file(path) {
                 log::error!("Cannot remove file {:?}: {}", path, e);
             }
         }
-        Ok(parsed.0)
+        Ok(parsed)
     }
 }
 

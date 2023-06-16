@@ -12,10 +12,11 @@ file format.
 
 The collector-specific configuration is:
 
-| Parameter | Type    | Default | Description                            |
-| --------- | ------- | ------- | -------------------------------------- |
-| `path`    | String  |         | Path to the spool directory            |
-| `dry_run` | Boolean | `false` | If set to `true` - do not remove files |
+| Parameter          | Type    | Default | Description                             |
+| ------------------ | ------- | ------- | --------------------------------------- |
+| `path`             | String  |         | Path to the spool directory             |
+| `trust_timestamps` | Bool    | `false` | Ignore timestamps in output, if `false` |
+| `dry_run`          | Boolean | `false` | If set to `true` - do not remove files  |
 
 Config example:
 

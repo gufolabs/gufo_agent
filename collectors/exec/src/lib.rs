@@ -6,7 +6,7 @@
 
 use async_trait::async_trait;
 use common::{counter, AgentError, Collectable, Measure};
-use openmetrics::ParsedMetrics;
+use openmetrics::{parse, ParseConfig};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::process::Stdio;
@@ -18,6 +18,8 @@ pub struct Config {
     cmd: Vec<String>,
     cd: Option<String>,
     env: Option<HashMap<String, String>>,
+    #[serde(default = "default_false")]
+    trust_timestamps: bool,
 }
 
 // Collector structure
@@ -25,6 +27,7 @@ pub struct Collector {
     cmd: Vec<String>,
     cd: Option<String>,
     env: Option<HashMap<String, String>>,
+    parse_cfg: ParseConfig,
     // Stats
     exec_parsed: u64,
 }
@@ -46,6 +49,9 @@ impl TryFrom<Config> for Collector {
             cmd: value.cmd,
             cd: value.cd,
             env: value.env,
+            parse_cfg: ParseConfig {
+                trust_timestamps: value.trust_timestamps,
+            },
             // Stats
             exec_parsed: 0,
         })
@@ -83,14 +89,18 @@ impl Collectable for Collector {
         // Parse stdout
         let out = String::from_utf8(output.stdout)
             .map_err(|e| AgentError::InternalError(e.to_string()))?;
-        let mut parsed = ParsedMetrics::try_from(out.as_str())?;
-        self.exec_parsed += parsed.0.len() as u64;
+        let mut parsed = parse(out.as_str(), &self.parse_cfg)?;
+        self.exec_parsed += parsed.len() as u64;
         // Push result
         let mut r = Vec::new();
-        r.append(&mut parsed.0);
+        r.append(&mut parsed);
         // Apply internal metrics
         r.push(exec_parsed(self.exec_parsed, self.cmd[0].clone()));
         //
         Ok(r)
     }
+}
+
+fn default_false() -> bool {
+    false
 }

@@ -8,7 +8,7 @@ mod sd;
 
 use async_trait::async_trait;
 use common::{AgentError, AgentResult, Collectable, Label, Measure};
-use openmetrics::ParsedMetrics;
+use openmetrics::{parse, ParseConfig};
 use sd::{Sd, SdConfig, ServiceDiscovery};
 use serde::{Deserialize, Serialize};
 
@@ -16,11 +16,14 @@ use serde::{Deserialize, Serialize};
 #[derive(Deserialize, Serialize)]
 pub struct Config {
     service_discovery: SdConfig,
+    #[serde(default = "default_false")]
+    trust_timestamps: bool,
 }
 
 // Collector structure
 pub struct Collector {
     sd: Sd,
+    parse_cfg: ParseConfig,
 }
 
 // Generated metrics
@@ -32,6 +35,9 @@ impl TryFrom<Config> for Collector {
     fn try_from(value: Config) -> Result<Self, Self::Error> {
         Ok(Self {
             sd: Sd::try_from(value.service_discovery)?,
+            parse_cfg: ParseConfig {
+                trust_timestamps: value.trust_timestamps,
+            },
         })
     }
 }
@@ -61,13 +67,13 @@ impl Collectable for Collector {
             let address_label = Label::new("__address__", item.target.to_owned());
             match client.get(&url).send().await {
                 Ok(resp) => match resp.text().await {
-                    Ok(data) => match ParsedMetrics::try_from(data.as_str()) {
+                    Ok(data) => match parse(data.as_str(), &self.parse_cfg) {
                         Ok(mut parsed) => {
                             // Install virtual labels
-                            for item in parsed.0.iter_mut() {
+                            for item in parsed.iter_mut() {
                                 item.labels.push(address_label.to_owned());
                             }
-                            r.append(&mut parsed.0);
+                            r.append(&mut parsed);
                         }
                         Err(e) => log::error!("Failed to parse from {}: {}", url, e),
                     },
@@ -84,4 +90,8 @@ impl Collectable for Collector {
     //     let cfg = Config;
     //     Ok(vec![ConfigItem::from_config(cfg)?])
     // }
+}
+
+fn default_false() -> bool {
+    false
 }

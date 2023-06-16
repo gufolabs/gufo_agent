@@ -10,11 +10,12 @@ format.
 
 The collector-specific configuration is:
 
-| Parameter | Type   | Default | Description                                           |
-| --------- | ------ | ------- | ----------------------------------------------------- |
-| `cmd`     | List   |         | Command and its arguments. Each as separate list item |
-| `cd`      | String |         | Change working directory, if set                      |
-| `env`     | Object |         | Set environment variables, if set                     |
+| Parameter          | Type   | Default | Description                                           |
+| ------------------ | ------ | ------- | ----------------------------------------------------- |
+| `cmd`              | List   |         | Command and its arguments. Each as separate list item |
+| `cd`               | String |         | Change working directory, if set                      |
+| `env`              | Object |         | Set environment variables, if set                     |
+| `trust_timestamps` | Bool   | `false` | Ignore timestamps in output, if `false`               |
 
 Config example:
 

@@ -9,9 +9,10 @@
 
 The collector-specific configuration is:
 
-| Parameter           | Type   | Default                                               | Description |
-| ------------------- | ------ | ----------------------------------------------------- | ----------- |
-| `service_discovery` | Object | [Service Discovery](#service-discovery) configuration |
+| Parameter           | Type   | Default | Description                                           |
+| ------------------- | ------ | ------- | ----------------------------------------------------- |
+| `service_discovery` | Object |         | [Service Discovery](#service-discovery) configuration |
+| `trust_timestamps`  | Bool   | `false` | Ignore timestamps in output, if `false`               |
 
 Config example:
 

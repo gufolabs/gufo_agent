@@ -27,7 +27,7 @@ impl ToString for Value {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Measure {
     pub name: String,
     pub help: String,

@@ -1,13 +1,11 @@
 // ---------------------------------------------------------------------
 // OpenMetrics parser
-// @todo: parse labels
-// @todo: parse timestamps
 // ---------------------------------------------------------------------
 // Copyright (C) 2021-2023, Gufo Labs
 // See LICENSE for details
 // ---------------------------------------------------------------------
 
-use common::{AgentError, Label, Labels, Measure, Value};
+use common::{AgentError, AgentResult, Label, Labels, Measure, Value};
 use nom::{
     branch::alt,
     bytes::complete::{escaped, is_not, tag},
@@ -124,7 +122,7 @@ pub enum Token {
 // normal-char = %x00-09 / %x0B-21 / %x23-5B / %x5D-D7FF / %xE000-10FFFF
 
 // Parse input to a vec of tokens
-fn parse(input: &str) -> IResult<&str, Vec<Token>> {
+fn parse_tokens(input: &str) -> IResult<&str, Vec<Token>> {
     many0(line)(input)
 }
 
@@ -289,9 +287,6 @@ fn label(input: &str) -> IResult<&str, Label> {
 }
 
 #[derive(Default)]
-pub struct ParsedMetrics(pub Vec<Measure>);
-
-#[derive(Default)]
 struct MetricDescriptor {
     metric_name: Option<String>,
     help: Option<String>,
@@ -350,49 +345,55 @@ impl MetricDescriptor {
     }
 }
 
-impl TryFrom<&str> for ParsedMetrics {
-    type Error = AgentError;
+#[derive(Debug, Default)]
+pub struct ParseConfig {
+    pub trust_timestamps: bool,
+}
 
-    fn try_from(value: &str) -> Result<Self, Self::Error> {
-        let (_, mut tokens) = parse(value).map_err(|e| AgentError::ParseError(e.to_string()))?;
-        if tokens.is_empty() {
-            return Ok(Self::default());
-        }
-        let mut desc = MetricDescriptor::default();
-        let mut r = Vec::with_capacity(tokens.len());
-        for t in tokens.drain(..) {
-            match t {
-                Token::DescType(d) => desc.set_type(d),
-                Token::DescHelp(d) => desc.set_help(d),
-                Token::DescUnit(d) => desc.set_units(d),
-                Token::Metric(metric) => {
-                    desc.ensure_name(metric.metric_name.clone());
-                    let value = match desc.value(metric.value) {
-                        Ok(x) => x,
-                        Err(_) => continue,
-                    };
-                    r.push(Measure {
-                        name: metric.metric_name,
-                        help: desc.help(),
-                        value,
-                        labels: metric.labels,
-                        timestamp: metric.timestamp,
-                    })
-                }
-                Token::Comment => {}
-                Token::Eof => {}
-                Token::EmptyLine => {}
-            }
-        }
-        Ok(Self(r))
+pub fn parse(value: &str, cfg: &ParseConfig) -> AgentResult<Vec<Measure>> {
+    let (_, mut tokens) = parse_tokens(value).map_err(|e| AgentError::ParseError(e.to_string()))?;
+    if tokens.is_empty() {
+        return Ok(Vec::default());
     }
+    let mut desc = MetricDescriptor::default();
+    let mut r = Vec::with_capacity(tokens.len());
+    for t in tokens.drain(..) {
+        match t {
+            Token::DescType(d) => desc.set_type(d),
+            Token::DescHelp(d) => desc.set_help(d),
+            Token::DescUnit(d) => desc.set_units(d),
+            Token::Metric(metric) => {
+                desc.ensure_name(metric.metric_name.clone());
+                let value = match desc.value(metric.value) {
+                    Ok(x) => x,
+                    Err(_) => continue,
+                };
+                r.push(Measure {
+                    name: metric.metric_name,
+                    help: desc.help(),
+                    value,
+                    labels: metric.labels,
+                    timestamp: if cfg.trust_timestamps {
+                        metric.timestamp
+                    } else {
+                        None
+                    },
+                })
+            }
+            Token::Comment => {}
+            Token::Eof => {}
+            Token::EmptyLine => {}
+        }
+    }
+    Ok(r)
 }
 
 #[cfg(test)]
 mod tests {
     use super::{
         empty_line, hash_comment, hash_eof, hash_help, hash_type, hash_unit, hashed_line,
-        metric_name, parse, Desc, InternalValue, Labels, Metric, Token,
+        metric_name, parse, parse_tokens, Desc, InternalValue, Labels, Measure, Metric,
+        ParseConfig, Token,
     };
 
     #[test]
@@ -497,7 +498,7 @@ mod tests {
         assert_eq!(hashed_line("# long comment"), Ok(("", Token::Comment)));
     }
     #[test]
-    fn test_parse() {
+    fn test_parse_tokens() {
         let input = r#"# HELP metric1 first metric
 # TYPE metric1 gauge
 # UNIT metric1 seconds
@@ -510,7 +511,7 @@ metric2 -15
 
 # EOF"#;
         assert_eq!(
-            parse(input),
+            parse_tokens(input),
             Ok((
                 "",
                 vec![
@@ -540,7 +541,7 @@ metric2 -15
         );
     }
     #[test]
-    fn test_parse_ts() {
+    fn test_parse_tokes_ts() {
         let input = r#"# HELP metric1 first metric
 # TYPE metric1 gauge
 # UNIT metric1 seconds
@@ -553,7 +554,7 @@ metric2 -15 1686823614
 
 # EOF"#;
         assert_eq!(
-            parse(input),
+            parse_tokens(input),
             Ok((
                 "",
                 vec![
@@ -580,6 +581,76 @@ metric2 -15 1686823614
                     Token::Eof,
                 ]
             ))
+        );
+    }
+    #[test]
+    fn test_parse_ts() {
+        let input = r#"# HELP metric1 first metric
+# TYPE metric1 gauge
+# UNIT metric1 seconds
+metric1 12 1686823614
+
+# HELP metric2 second metric
+# TYPE metric2 counter
+# UNIT metric2 meters
+metric2 15 1686823614
+
+# EOF"#;
+        let cfg = ParseConfig {
+            trust_timestamps: true,
+        };
+        assert_eq!(
+            parse(&input, &cfg).unwrap(),
+            vec![
+                Measure {
+                    name: "metric1".into(),
+                    help: "first metric".into(),
+                    value: common::Value::Gauge(12),
+                    labels: Labels::default(),
+                    timestamp: Some(1686823614),
+                },
+                Measure {
+                    name: "metric2".into(),
+                    help: "second metric".into(),
+                    value: common::Value::Counter(15),
+                    labels: Labels::default(),
+                    timestamp: Some(1686823614)
+                }
+            ]
+        );
+    }
+    #[test]
+    fn test_parse_no_ts() {
+        let input = r#"# HELP metric1 first metric
+# TYPE metric1 gauge
+# UNIT metric1 seconds
+metric1 12 1686823614
+
+# HELP metric2 second metric
+# TYPE metric2 counter
+# UNIT metric2 meters
+metric2 15 1686823614
+
+# EOF"#;
+        let cfg = ParseConfig::default();
+        assert_eq!(
+            parse(&input, &cfg).unwrap(),
+            vec![
+                Measure {
+                    name: "metric1".into(),
+                    help: "first metric".into(),
+                    value: common::Value::Gauge(12),
+                    labels: Labels::default(),
+                    timestamp: None,
+                },
+                Measure {
+                    name: "metric2".into(),
+                    help: "second metric".into(),
+                    value: common::Value::Counter(15),
+                    labels: Labels::default(),
+                    timestamp: None,
+                }
+            ]
         );
     }
 }
