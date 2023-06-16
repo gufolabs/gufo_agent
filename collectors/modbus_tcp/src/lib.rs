@@ -137,6 +137,7 @@ impl Collectable for Collector {
                 help: item.help.clone(),
                 labels: item.labels.clone(),
                 value,
+                timestamp: None,
             });
         }
         // Push result

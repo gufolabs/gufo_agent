@@ -82,6 +82,7 @@ impl Collectable for Collector {
                     help: String::default(),
                     value: common::Value::Gauge(v),
                     labels: Labels::default(),
+                    timestamp: None,
                 })
             }
         }

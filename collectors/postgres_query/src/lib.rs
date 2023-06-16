@@ -283,6 +283,7 @@ impl RowFields {
             help,
             labels: Labels::merge_sort2(&self.labels, &column_labels),
             value,
+            timestamp: None,
         })
     }
 }

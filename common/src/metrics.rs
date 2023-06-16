@@ -16,7 +16,8 @@ pub use paste::paste;
 //         name: "my_counter".to_string(),
 //         help: "Help string".to_string(),
 //         value: Value::Counter(v),
-//         labels: Labels::default()
+//         labels: Labels::default(),
+//         timestamp: None,
 //     }
 // }
 // ```
@@ -29,7 +30,8 @@ pub use paste::paste;
 //         name: "my_counter".to_string(),
 //         help: "Help string".to_string(),
 //         value: Value::Counter(v),
-//         labels: vec![Labels::new("query", l_query)]
+//         labels: vec![Labels::new("query", l_query)],
+//         timestamp: None,
 //     }
 // }
 // ```
@@ -43,6 +45,7 @@ macro_rules! counter {
                 help: $help.to_string(),
                 value: common::Value::Counter(v),
                 labels: common::Labels::default(),
+                timestamp: None,
             }
         }
     };
@@ -54,6 +57,7 @@ macro_rules! counter {
                 help: $help.to_string(),
                 value: common::Value::Counter(v),
                 labels,
+                timestamp: None,
             }
         }
     };
@@ -74,6 +78,7 @@ macro_rules! counter {
                             $(common::Label::new(stringify!($label), [< l_ $label >].clone()),)+
                         ]
                     ),
+                    timestamp: None,
                 }
             }
         }
@@ -90,7 +95,8 @@ macro_rules! counter {
 //         name: "my_counter".to_string(),
 //         help: "Help string".to_string(),
 //         value: Value::CounterF(v),
-//         labels: Labels::default()
+//         labels: Labels::default(),
+//         timestamp: None,
 //     }
 // }
 // ```
@@ -103,7 +109,8 @@ macro_rules! counter {
 //         name: "my_counter".to_string(),
 //         help: "Help string".to_string(),
 //         value: Value::CounterF(v),
-//         labels: vec![Labels::new("query", l_query)]
+//         labels: vec![Labels::new("query", l_query)],
+//         timestamp: None,
 //     }
 // }
 // ```
@@ -117,6 +124,7 @@ macro_rules! counter_f {
                 help: $help.to_string(),
                 value: common::Value::CounterF(v),
                 labels: common::Labels::default(),
+                timestamp: None,
             }
         }
     };
@@ -128,6 +136,7 @@ macro_rules! counter_f {
                 help: $help.to_string(),
                 value: common::Value::CounterF(v),
                 labels,
+                timestamp: None,
             }
         }
     };
@@ -148,6 +157,7 @@ macro_rules! counter_f {
                             $(common::Label::new(stringify!($label), [< l_ $label >].clone()),)+
                         ]
                     ),
+                    timestamp: None,
                 }
             }
         }
@@ -164,7 +174,8 @@ macro_rules! counter_f {
 //         name: "my_gauge".to_string(),
 //         help: "Help string".to_string(),
 //         value: Value::Gauge(v),
-//         labels: Labels::default()
+//         labels: Labels::default(),
+//         timestamp: None,
 //     }
 // }
 // ```
@@ -177,7 +188,8 @@ macro_rules! counter_f {
 //         name: "my_gauge".to_string(),
 //         help: "Help string".to_string(),
 //         value: Value::Gauge(v),
-//         labels: vec![Labels::new("query", l_query)]
+//         labels: vec![Labels::new("query", l_query)],
+//         timestamp: None,
 //     }
 // }
 // ```
@@ -191,6 +203,7 @@ macro_rules! gauge {
                 help: $help.to_string(),
                 value: common::Value::Gauge(v),
                 labels: common::Labels::default(),
+                timestamp: None,
             }
         }
     };
@@ -202,6 +215,7 @@ macro_rules! gauge {
                 help: $help.to_string(),
                 value: common::Value::Gauge(v),
                 labels,
+                timestamp: None,
             }
         }
     };
@@ -221,6 +235,7 @@ macro_rules! gauge {
                             $(common::Label::new(stringify!($label), [< l_ $label >].clone()),)+
                         ]
                     ),
+                    timestamp: None,
                 }
             }
         }
@@ -237,7 +252,8 @@ macro_rules! gauge {
 //         name: "my_gauge".to_string(),
 //         help: "Help string".to_string(),
 //         value: Value::GaugeI(v),
-//         labels: Labels::default()
+//         labels: Labels::default(),
+//         timestamp: None,
 //     }
 // }
 // ```
@@ -250,7 +266,8 @@ macro_rules! gauge {
 //         name: "my_gauge".to_string(),
 //         help: "Help string".to_string(),
 //         value: Value::GaugeI(v),
-//         labels: vec![Labels::new("query", l_query)]
+//         labels: vec![Labels::new("query", l_query)],
+//         timestamp: None,
 //     }
 // }
 // ```
@@ -264,6 +281,7 @@ macro_rules! gauge_i {
                 help: $help.to_string(),
                 value: common::Value::GaugeI(v),
                 labels: common::Labels::default(),
+                timestamp: None,
             }
         }
     };
@@ -275,6 +293,7 @@ macro_rules! gauge_i {
                 help: $help.to_string(),
                 value: common::Value::GaugeI(v),
                 labels,
+                timestamp: None,
             }
         }
     };
@@ -294,6 +313,7 @@ macro_rules! gauge_i {
                             $(common::Label::new(stringify!($label), [< l_ $label >].clone()),)+
                         ]
                     ),
+                    timestamp: None,
                 }
             }
         }
@@ -309,7 +329,8 @@ macro_rules! gauge_i {
 //         name: "requests_total".to_string(),
 //         help: "Total DNS requests performed".to_string(),
 //         value: Value::GaugeF(v),
-//         labels: Labels::default()
+//         labels: Labels::default(),
+//         timestamp: None,
 //     }
 // }
 // ```
@@ -322,7 +343,8 @@ macro_rules! gauge_i {
 //         name: "requests_total".to_string(),
 //         help: "Total DNS requests performed".to_string(),
 //         value: Value::GaugeF(v),
-//         labels: vec![Labels::new("query", l_query)]
+//         labels: vec![Labels::new("query", l_query)],
+//         timestamp: None,
 //     }
 // }
 // ```
@@ -336,6 +358,7 @@ macro_rules! gauge_f {
                 help: $help.to_string(),
                 value: common::Value::GaugeF(v),
                 labels: common::Labels::default(),
+                timestamp: None,
             }
         }
     };
@@ -347,6 +370,7 @@ macro_rules! gauge_f {
                 help: $help.to_string(),
                 value: common::Value::GaugeF(v),
                 labels,
+                timestamp: None,
             }
         }
     };
@@ -366,6 +390,7 @@ macro_rules! gauge_f {
                             $(common::Label::new(stringify!($label), [< l_ $label >].clone()),)+
                         ]
                     ),
+                    timestamp: None,
                 }
             }
         }

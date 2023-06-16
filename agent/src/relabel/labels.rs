@@ -60,6 +60,7 @@ impl ActiveLabels {
             help: measure.help.to_owned(),
             value: measure.value,
             labels,
+            timestamp: measure.timestamp,
         }
     }
     // Leave only virtual labels and labels matching function

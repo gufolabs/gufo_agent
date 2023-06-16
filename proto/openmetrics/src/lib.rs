@@ -376,6 +376,7 @@ impl TryFrom<&str> for ParsedMetrics {
                         help: desc.help(),
                         value,
                         labels: metric.labels,
+                        timestamp: metric.timestamp,
                     })
                 }
                 Token::Comment => {}

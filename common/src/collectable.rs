@@ -33,6 +33,7 @@ pub struct Measure {
     pub help: String,
     pub value: Value,
     pub labels: Labels,
+    pub timestamp: Option<u64>,
 }
 
 #[async_trait]

@@ -147,7 +147,7 @@ impl MetricsDb {
                         measure.labels,
                         MetricValue {
                             value: measure.value,
-                            ts: data.ts,
+                            ts: measure.timestamp.unwrap_or(data.ts),
                         },
                     );
                 }
