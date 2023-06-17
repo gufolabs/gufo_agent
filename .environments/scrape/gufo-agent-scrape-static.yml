@@ -17,3 +17,8 @@ collectors:
       targets:
         - "agent1:3000"
         - "agent2:3000"
+        - "127.0.0.1:7777"
+      relabel:
+        - source_labels: [__address__]
+          regex: "127.0.0.1:7777"
+          action: drop

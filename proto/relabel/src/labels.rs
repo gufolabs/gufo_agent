@@ -11,9 +11,19 @@ const NAME_LABEL: &str = "__name__";
 const ADDRESS_LABEL: &str = "__address__";
 const META_PREFIX: &str = "__meta_";
 
-#[derive(Default, Debug)]
+#[derive(Default, Debug, Clone)]
 pub struct ActiveLabels {
     labels: BTreeMap<String, String>,
+}
+
+impl TryFrom<&Labels> for ActiveLabels {
+    type Error = AgentError;
+
+    fn try_from(value: &Labels) -> Result<Self, Self::Error> {
+        let mut r = ActiveLabels::default();
+        value.update_map(&mut r.labels);
+        Ok(r)
+    }
 }
 
 impl TryFrom<(&Labels, &Labels, &Labels)> for ActiveLabels {
@@ -32,12 +42,20 @@ impl TryFrom<(&Labels, &Labels, &Labels)> for ActiveLabels {
 
 impl ActiveLabels {
     #[inline]
-    pub(crate) fn insert(&mut self, label: Label) {
+    pub fn new(labels: Vec<Label>) -> ActiveLabels {
+        let mut r = ActiveLabels::default();
+        for label in labels.into_iter() {
+            r.insert(label)
+        }
+        r
+    }
+    #[inline]
+    pub fn insert(&mut self, label: Label) {
         self.labels.insert(label.key.clone(), label.value);
     }
     #[inline]
-    pub(crate) fn get(&self, name: &String) -> Option<&String> {
-        self.labels.get(name)
+    pub fn get<K: ToString>(&self, name: K) -> Option<&String> {
+        self.labels.get(&name.to_string())
     }
     #[inline]
     pub(crate) fn is_virtual(name: &String) -> bool {

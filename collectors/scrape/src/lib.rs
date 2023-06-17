@@ -9,7 +9,7 @@ mod sd;
 use async_trait::async_trait;
 use common::{AgentError, AgentResult, Collectable, Label, Measure};
 use openmetrics::{parse, ParseConfig};
-use sd::{Sd, SdConfig, ServiceDiscovery};
+use sd::{Sd, SdConfig, ServiceDiscovery, LABEL_ADDRESS};
 use serde::{Deserialize, Serialize};
 
 // Collector config
@@ -62,9 +62,9 @@ impl Collectable for Collector {
             .build()
             .map_err(|e| AgentError::InternalError(e.to_string()))?;
         // @todo: Concurrency
-        for item in services.iter() {
-            let url = format!("http://{}/metrics", item.target);
-            let address_label = Label::new("__address__", item.target.to_owned());
+        for labels in services.iter() {
+            let url = self.sd.get_url(labels);
+            let address_label = Label::new(LABEL_ADDRESS, self.sd.get_address(labels).to_owned());
             match client.get(&url).send().await {
                 Ok(resp) => match resp.text().await {
                     Ok(data) => match parse(data.as_str(), &self.parse_cfg) {

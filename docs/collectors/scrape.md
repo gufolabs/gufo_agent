@@ -29,7 +29,16 @@ Config example:
 
 ## Service Discovery
 
-Target enpoints are obtained via the *Service Discovery*  process.
+Target endpoints are obtained via the *Service Discovery*  process.
+Service Discovey returns the set of labels for
+
+The common labels available for all types of the service discovery are:
+
+| Label              | Desciption                              |
+| ------------------ | --------------------------------------- |
+| `__address__`      | `<host>:<port>` for a target service    |
+| `__meta_sd_schema` | Request schema: `http` or `https`       |
+| `__meta_sd_path`   | Metrics endpoint path (i.e. `/metrics`) |
 
 ### Static
 
@@ -37,10 +46,13 @@ Target enpoints are obtained via the *Service Discovery*  process.
 
 Configuration:
 
-| Parameter | Type   | Default | Description                               |
-| --------- | ------ | ------- | ----------------------------------------- |
-| `type`    | String |         | Must be `static`                          |
-| `targets` | Array  |         | List of targets in `<host>:<port>` format |
+| Parameter | Type   | Default    | Description                                             |
+| --------- | ------ | ---------- | ------------------------------------------------------- |
+| `type`    | String |            | Must be `static`                                        |
+| `targets` | Array  |            | List of targets in `<host>:<port>` format               |
+| `relabel` | Array  |            | [Relabeling Rules](../relabel.md) for service discovery |
+| `schema`  | String | `http`     | Default service endpoint schema                         |
+| `path`    | String | `/metrics` | Default service endpoint path                           |
 
 Example:
 
