@@ -10,7 +10,7 @@ use super::{
 };
 use common::{AgentError, AgentResult, Label, Labels, Measure};
 
-pub(crate) enum ActionResult {
+pub enum ActionResult {
     Drop,
     Pass,
 }
@@ -27,11 +27,11 @@ pub(crate) enum RelabelRule {
 }
 
 #[derive(Debug)]
-pub(crate) struct RelabelRuleset {
+pub struct RelabelRuleset {
     rules: Vec<RelabelRule>,
 }
 
-pub(crate) trait Relabeler {
+pub trait Relabeler {
     fn apply(&self, active_labels: &mut ActiveLabels) -> AgentResult<ActionResult>;
 }
 
@@ -98,7 +98,7 @@ impl Relabeler for RelabelRuleset {
 }
 
 impl RelabelRuleset {
-    pub(crate) fn process(
+    pub fn process(
         &self,
         agent_labels: &Labels,
         collector_labels: &Labels,

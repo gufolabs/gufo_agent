@@ -12,7 +12,7 @@ const ADDRESS_LABEL: &str = "__address__";
 const META_PREFIX: &str = "__meta_";
 
 #[derive(Default, Debug)]
-pub(crate) struct ActiveLabels {
+pub struct ActiveLabels {
     labels: BTreeMap<String, String>,
 }
 
@@ -43,7 +43,7 @@ impl ActiveLabels {
     pub(crate) fn is_virtual(name: &String) -> bool {
         name == NAME_LABEL || name == ADDRESS_LABEL || name.starts_with(META_PREFIX)
     }
-    pub(crate) fn to_measure(&self, measure: &Measure) -> Measure {
+    pub fn to_measure(&self, measure: &Measure) -> Measure {
         let name = match self.labels.get(NAME_LABEL) {
             Some(x) => x,
             None => &measure.name, // __name__ has been dropped by rule

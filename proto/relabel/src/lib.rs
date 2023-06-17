@@ -22,6 +22,6 @@ pub(crate) use keep::KeepRule;
 pub(crate) use labeldrop::LabelDropRule;
 pub(crate) use labelkeep::LabelKeepRule;
 pub(crate) use labelmap::LabelMapRule;
-pub(crate) use labels::ActiveLabels;
+pub use labels::ActiveLabels;
 pub(crate) use replace::ReplaceRule;
-pub(crate) use ruleset::{ActionResult, RelabelRuleset, Relabeler};
+pub use ruleset::{ActionResult, RelabelRuleset, Relabeler};

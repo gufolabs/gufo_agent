@@ -28,7 +28,7 @@ postgres_query = {path = "../collectors/postgres_query"}
 procstat = {path = "../collectors/procstat"}
 rand = "0.8"
 redis = {path = "../collectors/redis"}
-regex = "1.8"
+relabel = {path = "../proto/relabel"}
 scrape = {path = "../collectors/scrape"}
 serde = {version = "1.0", features = ["derive"]}
 serde_yaml = "0.9"

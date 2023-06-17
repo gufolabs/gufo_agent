@@ -4,9 +4,9 @@
 // Copyright (C) 2021-2023, Gufo Labs
 // --------------------------------------------------------------------
 
-use crate::{ActiveLabels, RelabelRuleset};
 use bytes::BytesMut;
 use common::{AgentError, Labels, Measure, Value};
+use relabel::{ActiveLabels, RelabelRuleset};
 use std::collections::{BTreeMap, HashMap};
 use std::fmt;
 use std::ops::Deref;

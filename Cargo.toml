@@ -10,6 +10,7 @@ members = [
   "proto/modbus",
   "proto/openmetrics",
   "proto/ps",
+  "proto/relabel",
   "proto/tos",
   "proto/twamp",
   "proto/udp",

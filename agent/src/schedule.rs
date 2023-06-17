@@ -4,9 +4,10 @@
 // Copyright (C) 2021-2023, Gufo Labs
 // --------------------------------------------------------------------
 
-use crate::{CollectorConfig, Collectors, MetricsData, RelabelRuleset, SenderCommand};
+use crate::{CollectorConfig, Collectors, MetricsData, SenderCommand};
 use common::{AgentError, Label, Labels, Measure};
 use rand::Rng;
+use relabel::RelabelRuleset;
 use std::sync::Arc;
 use std::time::{Instant, SystemTime, UNIX_EPOCH};
 use tokio::sync::mpsc;

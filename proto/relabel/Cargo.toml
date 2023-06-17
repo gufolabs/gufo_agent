@@ -1,0 +1,10 @@
+[package]
+edition = "2021"
+name = "relabel"
+version = "0.1.0"
+
+[dependencies]
+common = {path = "../../common"}
+log = "0.4"
+regex = "1.8"
+serde = {version = "1.0", features = ["derive"]}
