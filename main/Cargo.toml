@@ -9,7 +9,7 @@ path = "src/main.rs"
 
 [dependencies]
 agent = {path = "../agent"}
-clap = {version = "4.2", features = ["derive", "env"]}
+clap = {version = "4.3", features = ["derive", "env"]}
 common = {path = "../common"}
 env_logger = "0.10"
 log = "0.4"
