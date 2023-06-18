@@ -8,6 +8,11 @@ services:
     environment:
       GA_HOSTNAME: agent1
     command: /opt/ga/gufo-agent --config=/etc/gufo-agent.yml
+    hostname: agent1.local
+    networks:
+      scrape_test:
+        aliases:
+          - agent1.local
   agent2:
     image: "debian:bullseye-slim"
     volumes:
@@ -16,6 +21,11 @@ services:
     environment:
       GA_HOSTNAME: agent2
     command: /opt/ga/gufo-agent --config=/etc/gufo-agent.yml
+    hostname: agent2.local
+    networks:
+      scrape_test:
+        aliases:
+          - agent2.local
   scrape-static:
     image: "debian:bullseye-slim"
     depends_on:
@@ -26,3 +36,19 @@ services:
       - "./gufo-agent-scrape-static.yml:/etc/gufo-agent.yml"
       - "./run.sh:/run.sh"
     entrypoint: tail -f /dev/null
+    networks:
+      - scrape_test
+  scrape-dns:
+    image: "debian:bullseye-slim"
+    depends_on:
+      - agent1
+      - agent2
+    volumes:
+      - "../../target/release:/opt/ga"
+      - "./gufo-agent-scrape-dns.yml:/etc/gufo-agent.yml"
+      - "./run.sh:/run.sh"
+    entrypoint: tail -f /dev/null
+    networks:
+      - scrape_test
+networks:
+  scrape_test:

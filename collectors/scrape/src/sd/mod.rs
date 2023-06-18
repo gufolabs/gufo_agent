@@ -4,9 +4,12 @@
 // Copyright (C) 2021-2023, Gufo Labs
 // --------------------------------------------------------------------
 
+pub(crate) mod dns;
 pub(crate) mod r#static;
 
+use async_trait::async_trait;
 use common::{AgentError, AgentResult, Label};
+use dns::{DnsSd, DnsSdConfig};
 use r#static::{StaticSd, StaticSdConfig};
 use relabel::{ActionResult, ActiveLabels, RelabelRuleConfig, RelabelRuleset, Relabeler};
 use serde::{Deserialize, Serialize};
@@ -33,6 +36,8 @@ pub(crate) struct SdConfig {
 #[derive(Serialize, Deserialize)]
 #[serde(tag = "type")]
 pub(crate) enum SdMethodConfig {
+    #[serde(rename = "dns")]
+    Dns(DnsSdConfig),
     #[serde(rename = "static")]
     Static(StaticSdConfig),
 }
@@ -45,11 +50,13 @@ pub(crate) struct Sd {
 }
 
 pub(crate) enum SdMethod {
+    Dns(DnsSd),
     Static(StaticSd),
 }
 
+#[async_trait]
 pub(crate) trait ServiceDiscovery {
-    fn get_services(&self) -> AgentResult<Vec<ActiveLabels>>;
+    async fn get_services(&self) -> AgentResult<Vec<ActiveLabels>>;
 }
 
 impl TryFrom<SdConfig> for Sd {
@@ -59,6 +66,7 @@ impl TryFrom<SdConfig> for Sd {
         Ok(Self {
             method: match value.method {
                 SdMethodConfig::Static(cfg) => SdMethod::Static(StaticSd::try_from(cfg)?),
+                SdMethodConfig::Dns(cfg) => SdMethod::Dns(DnsSd::try_from(cfg)?),
             },
             relabel: match &value.relabel {
                 Some(v) => Some(RelabelRuleset::try_from(v)?),
@@ -70,10 +78,12 @@ impl TryFrom<SdConfig> for Sd {
     }
 }
 
+#[async_trait]
 impl ServiceDiscovery for Sd {
-    fn get_services(&self) -> AgentResult<Vec<ActiveLabels>> {
+    async fn get_services(&self) -> AgentResult<Vec<ActiveLabels>> {
         let mut services = match &self.method {
-            SdMethod::Static(sd) => sd.get_services()?,
+            SdMethod::Dns(sd) => sd.get_services().await?,
+            SdMethod::Static(sd) => sd.get_services().await?,
         };
         Ok(match &self.relabel {
             Some(ruleset) => {

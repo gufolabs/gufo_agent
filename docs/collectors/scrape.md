@@ -64,6 +64,37 @@ service_discovery:
     - "agent2:3000"
 ```
 
+### DNS
+
+`dns` discovery performs DNS queries to resolve the targets.
+
+Configuration:
+
+| Parameter    | Type    | Default | Description                            |
+| ------------ | ------- | ------- | -------------------------------------- |
+| `type`       | String  |         | Must be `dns`                          |
+| `query`      | String  |         | DNS query                              |
+| `query_type` | String  | `A`     | DNS query type. Either `A` or `SRV`    |
+| `port`       | Integer |         | Target port. Mandatory for `A` queries |
+
+Example (`A` type):
+
+``` yaml
+service_discovery:
+  type: dns
+  query: agent1.local
+  port: 3000
+```
+
+Example (`SRV` type):
+
+``` yaml
+service_discovery:
+  type: dns
+  query: _dnssd._tcp.ga.test.gufolabs.com
+  query_type: SRV
+```
+
 ## Collected Metrics
 
 `scrape` collector re-exposes collected metrics.

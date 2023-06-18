@@ -10,10 +10,16 @@ docker-compose up -d
 
 ## Running Tests
 
-Redis:
+Static:
 
 ```
 docker exec -ti scrape-scrape-static-1 /run.sh
+```
+
+DNS:
+
+```
+docker exec -ti scrape-scrape-dns-1 /run.sh
 ```
 
 ## Stopping

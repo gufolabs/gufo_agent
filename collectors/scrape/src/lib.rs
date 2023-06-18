@@ -50,7 +50,7 @@ impl Collectable for Collector {
 
     async fn collect(&mut self) -> AgentResult<Vec<Measure>> {
         // Perform service discovery
-        let services = self.sd.get_services()?;
+        let services = self.sd.get_services().await?;
         if services.is_empty() {
             log::info!("No services discovered, exiting");
             return Ok(Vec::default());

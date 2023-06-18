@@ -1,0 +1,25 @@
+$version: "1.0"
+$type: zeroconf
+agent:
+  defaults:
+    interval: 60
+sender:
+  type: openmetrics
+  mode: pull
+  listen: 0.0.0.0:3000
+  path: /metrics
+collectors:
+  - id: Scrape DNS A
+    type: scrape
+    disabled: false
+    service_discovery:
+      type: dns
+      query: agent1
+      port: 3000
+  - id: Scrape DNS SRV
+    type: scrape
+    disabled: false
+    service_discovery:
+      type: dns
+      query: _dnssd._tcp.ga.test.gufolabs.com
+      query_type: SRV

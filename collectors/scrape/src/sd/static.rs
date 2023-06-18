@@ -5,6 +5,7 @@
 // --------------------------------------------------------------------
 
 use super::{ServiceDiscovery, LABEL_ADDRESS};
+use async_trait::async_trait;
 use common::{AgentError, AgentResult, Label};
 use relabel::ActiveLabels;
 use serde::{Deserialize, Serialize};
@@ -32,8 +33,9 @@ impl TryFrom<StaticSdConfig> for StaticSd {
     }
 }
 
+#[async_trait]
 impl ServiceDiscovery for StaticSd {
-    fn get_services(&self) -> AgentResult<Vec<ActiveLabels>> {
+    async fn get_services(&self) -> AgentResult<Vec<ActiveLabels>> {
         Ok(self.items.clone())
     }
 }
