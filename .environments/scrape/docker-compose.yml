@@ -1,7 +1,17 @@
 version: "2"
 services:
+  consul:
+    image: consul:1.15
+    volumes:
+      - "./consul:/etc/consul.d"
+    environment:
+      CONSUL_CONFIG_DIR: /etc/consul.d
+    networks:
+      - scrape_test
   agent1:
     image: "debian:bullseye-slim"
+    depends_on:
+      - consul
     volumes:
       - "../../target/release:/opt/ga"
       - "./gufo-agent-exporter.yml:/etc/gufo-agent.yml"
@@ -11,10 +21,13 @@ services:
     hostname: agent1.local
     networks:
       scrape_test:
+        ipv4_address: 172.16.11.3
         aliases:
           - agent1.local
   agent2:
     image: "debian:bullseye-slim"
+    depends_on:
+      - consul
     volumes:
       - "../../target/release:/opt/ga"
       - "./gufo-agent-exporter.yml:/etc/gufo-agent.yml"
@@ -24,6 +37,7 @@ services:
     hostname: agent2.local
     networks:
       scrape_test:
+        ipv4_address: 172.16.11.4
         aliases:
           - agent2.local
   scrape-static:
@@ -50,5 +64,22 @@ services:
     entrypoint: tail -f /dev/null
     networks:
       - scrape_test
+  scrape-consul:
+    image: "debian:bullseye-slim"
+    depends_on:
+      - consul
+      - agent1
+      - agent2
+    volumes:
+      - "../../target/release:/opt/ga"
+      - "./gufo-agent-scrape-consul.yml:/etc/gufo-agent.yml"
+      - "./run.sh:/run.sh"
+    entrypoint: tail -f /dev/null
+    networks:
+      - scrape_test
 networks:
   scrape_test:
+    ipam:
+      config:
+        - subnet: 172.16.11.0/24
+          gateway: 172.16.11.1

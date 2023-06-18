@@ -95,6 +95,40 @@ service_discovery:
   query_type: SRV
 ```
 
+### Consul
+
+`consul` discovery allows retrieving targets from 
+[Consul Agent API](https://developer.hashicorp.com/consul/api-docs/agent/service#list-services)
+
+Configuration:
+
+| Parameter       | Type   | Default          | Description                                  |
+| --------------- | ------ | ---------------- | -------------------------------------------- |
+| `type`          | String |                  | Must be `consul`                             |
+| `server`        | String | `127.0.0.1:8500` | Consul's server addreess                     |
+| `filter`        | String |                  | Optional Consul query filter                 |
+| `tag_separator` | String | `,`              | Separator to join `__meta_consul_tags` label |
+
+`consul` discovery defines additional labels for relabeling process:
+
+| Label                           | Desciption                                 |
+| ------------------------------- | ------------------------------------------ |
+| `__meta_consul_dc`              | Consul datacenter                          |
+| `__meta_consul_service`         | Consul service name                        |
+| `__meta_consul_service_id`      | Consul service id                          |
+| `__meta_consul_service_address` | Target address                             |
+| `__meta_consul_service_port`    | Target port                                |
+| `__meta_consul_tags`            | The list of tags joined by `tag_separator` |
+| `__meta_consul_meta_<key>`      | Each service metadata key/value for target |
+
+Example:
+
+``` yaml
+service_discovery:
+  type: consul
+  server: "127.0.0.1:8500"
+```
+
 ## Collected Metrics
 
 `scrape` collector re-exposes collected metrics.

@@ -22,6 +22,13 @@ DNS:
 docker exec -ti scrape-scrape-dns-1 /run.sh
 ```
 
+Consul:
+
+```
+docker exec -ti scrape-scrape-consul-1 /run.sh
+```
+
+
 ## Stopping
 
 ```

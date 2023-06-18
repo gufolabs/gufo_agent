@@ -1,0 +1,18 @@
+$version: "1.0"
+$type: zeroconf
+agent:
+  defaults:
+    interval: 60
+sender:
+  type: openmetrics
+  mode: pull
+  listen: 0.0.0.0:3000
+  path: /metrics
+collectors:
+  - id: Scrape Consul
+    type: scrape
+    disabled: false
+    service_discovery:
+      type: consul
+      server: "consul:8500"
+      #local_only: false
