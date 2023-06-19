@@ -6,6 +6,7 @@
 
 pub(crate) mod config;
 pub(crate) mod drop;
+pub(crate) mod dump;
 pub(crate) mod eval;
 pub(crate) mod keep;
 pub(crate) mod labeldrop;
@@ -17,6 +18,7 @@ pub(crate) mod ruleset;
 
 pub use config::RelabelRuleConfig;
 pub(crate) use drop::DropRule;
+pub(crate) use dump::DumpRule;
 pub(crate) use eval::Eval;
 pub(crate) use keep::KeepRule;
 pub(crate) use labeldrop::LabelDropRule;

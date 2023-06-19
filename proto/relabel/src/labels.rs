@@ -121,4 +121,7 @@ impl ActiveLabels {
             self.rename(src, dst);
         }
     }
+    pub(crate) fn iter(&self) -> std::collections::btree_map::Iter<String, String> {
+        self.labels.iter()
+    }
 }

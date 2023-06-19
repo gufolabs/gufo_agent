@@ -10,6 +10,7 @@ The rule set contains one or more relabeling rules, each one performing one or m
 * [labeldrop](#label-drop) - Drop matched labels.
 * [labelkeep](#label-keep) - Keep matched labels.
 * [labelmap](#label-map) - Map one or more label name to different label names.
+* [dump](#dump) - Dump active labels.
 
 ## Virtual Labels
 
@@ -245,4 +246,19 @@ Rename virtual labels started with `__meta_kubernetes_`:
 - action: labelmap
   regex: __meta_kubernetes_(.+)
   replacement: k8s_$1
+```
+
+### Dump
+
+`dump` action dumps effective labels to the log and cotinues processing. The configuration is:
+
+| Parameter | Default | Description    |
+| --------- | ------- | -------------- |
+| `action`  |         | Must be `dump` |
+
+
+Examples:
+
+``` yaml
+- action: dump
 ```
