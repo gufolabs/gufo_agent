@@ -262,3 +262,18 @@ Examples:
 ``` yaml
 - action: dump
 ```
+
+Sample output:
+
+``` text
+[2023-06-19T11:41:23.625Z INFO  relabel::dump] ===[START OF LABELS]==========
+[2023-06-19T11:41:23.625Z INFO  relabel::dump] __meta_cmd = ./target/release/gufo-agent -vv --config=var/config.yml --test
+[2023-06-19T11:41:23.625Z INFO  relabel::dump] __name__ = ps_write_bytes
+[2023-06-19T11:41:23.625Z INFO  relabel::dump] agent = gufo
+[2023-06-19T11:41:23.625Z INFO  relabel::dump] collector = procstat
+[2023-06-19T11:41:23.625Z INFO  relabel::dump] host = test
+[2023-06-19T11:41:23.625Z INFO  relabel::dump] process_name = gufo-agent
+[2023-06-19T11:41:23.625Z INFO  relabel::dump] user = root
+[2023-06-19T11:41:23.625Z INFO  relabel::dump] zone = DC1
+[2023-06-19T11:41:23.625Z INFO  relabel::dump] ===[END OF LABELS]============
+```
