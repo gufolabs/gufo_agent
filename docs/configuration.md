@@ -227,6 +227,32 @@ Example:
     "key_path": "/etc/gufo-agent/tls/agent.key"
     ```
 
+### client_auth_required_path
+
+Path to the trust ancors for the client authentication. Only authenticated clients
+are accepted. `client_auth_required_path` effectively enforces mTLS authentication.
+Used in combination with [listen_tls](#listen_tls) and other HTTPS endpoint configuration.
+
+Example:
+
+=== "YAML"
+
+    ``` yaml
+    listen_tls: "0.0.0.0:3001"
+    cert_path: /etc/gufo-agent/tls/agent.crt
+    key_path: /etc/gufo-agent/tls/agent.key
+    client_auth_requred_path: /etc/gufo-agent/tls/second_ca.crt
+    ```
+
+=== "JSON"
+
+    ``` json
+    "listen_tls": "0.0.0.0:3001",
+    "cert_path": "/etc/gufo-agent/tls/agent.crt",
+    "key_path": "/etc/gufo-agent/tls/agent.key",
+    "client_auth_requred_path": "/etc/gufo-agent/tls/second_ca.crt"
+    ```
+
 ### tls_redirect
 
 When set to `true`, HTTP endpoint will perform redirect to the HTTPS one.

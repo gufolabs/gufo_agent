@@ -30,6 +30,7 @@ pub(crate) struct SenderHttps {
     listen: SocketAddrV4,
     cert_path: String,
     key_path: String,
+    client_auth_required_path: Option<String>,
 }
 pub(crate) struct Sender {
     rx: mpsc::Receiver<SenderCommand>,
@@ -108,12 +109,26 @@ impl TryFrom<&SenderConfig> for Sender {
                         cert_path, e
                     ))
                 })?;
+                let client_auth_required_path = match &value.client_auth_requred_path {
+                    Some(path) => {
+                        // Check path
+                        fs::read_to_string(&path).map_err(|e| {
+                            AgentError::ConfigurationError(format!(
+                                "{} file is not readable: {}",
+                                path, e
+                            ))
+                        })?;
+                        Some(path.clone())
+                    }
+                    None => None,
+                };
                 Some(SenderHttps {
                     listen: addr.parse().map_err(|_| {
                         AgentError::ConfigurationError("Invalid `sender.listen_tls`".to_string())
                     })?,
                     key_path,
                     cert_path,
+                    client_auth_required_path,
                 })
             }
             None => {
@@ -228,13 +243,27 @@ impl Sender {
                 .and_then(Self::metrics_endpoint);
             let cert_path = https.cert_path.clone();
             let key_path = https.key_path.clone();
+            let client_auth_requred_path = https.client_auth_required_path.clone();
             tokio::spawn(async move {
-                warp::serve(endpoint)
-                    .tls()
-                    .cert_path(cert_path)
-                    .key_path(key_path)
-                    .run(listen)
-                    .await;
+                match client_auth_requred_path {
+                    Some(client_auth) => {
+                        warp::serve(endpoint)
+                            .tls()
+                            .cert_path(cert_path)
+                            .key_path(key_path)
+                            .client_auth_required_path(client_auth)
+                            .run(listen)
+                            .await
+                    }
+                    None => {
+                        warp::serve(endpoint)
+                            .tls()
+                            .cert_path(cert_path)
+                            .key_path(key_path)
+                            .run(listen)
+                            .await
+                    }
+                }
             });
         }
     }

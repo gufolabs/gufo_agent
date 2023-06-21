@@ -49,6 +49,7 @@ pub struct SenderConfig {
     pub tls_redirect: bool,
     pub cert_path: Option<String>,
     pub key_path: Option<String>,
+    pub client_auth_requred_path: Option<String>,
     #[serde(default = "default_metrics")]
     pub path: String,
     // tls
@@ -112,6 +113,7 @@ impl Default for SenderConfig {
             tls_redirect: false,
             cert_path: None,
             key_path: None,
+            client_auth_requred_path: None,
         }
     }
 }
