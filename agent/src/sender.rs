@@ -7,6 +7,7 @@
 use crate::{MetricsData, MetricsDb, SenderConfig};
 use common::{AgentError, Labels};
 use std::convert::Infallible;
+use std::fs;
 use std::net::SocketAddrV4;
 use tokio::sync::mpsc;
 use warp::{Filter, Reply};
@@ -85,7 +86,13 @@ impl TryFrom<&SenderConfig> for Sender {
                         ))
                     }
                 };
-                // @todo: Check file is readable
+                // Check key_path is readable
+                fs::read_to_string(&key_path).map_err(|e| {
+                    AgentError::ConfigurationError(format!(
+                        "{} file is not readable: {}",
+                        key_path, e
+                    ))
+                })?;
                 let cert_path = match &value.cert_path {
                     Some(path) => path.clone(),
                     None => {
@@ -94,6 +101,13 @@ impl TryFrom<&SenderConfig> for Sender {
                         ))
                     }
                 };
+                // Check cert_path is readable
+                fs::read_to_string(&cert_path).map_err(|e| {
+                    AgentError::ConfigurationError(format!(
+                        "{} file is not readable: {}",
+                        cert_path, e
+                    ))
+                })?;
                 Some(SenderHttps {
                     listen: addr.parse().map_err(|_| {
                         AgentError::ConfigurationError("Invalid `sender.listen_tls`".to_string())
