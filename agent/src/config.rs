@@ -43,8 +43,12 @@ pub struct SenderConfig {
     pub r#type: String,
     #[serde(default = "default_pull")]
     pub mode: String,
-    #[serde(default = "default_3000")]
-    pub listen: String,
+    pub listen: Option<String>,
+    pub listen_tls: Option<String>,
+    #[serde(default = "default_false", skip_serializing_if = "is_false")]
+    pub tls_redirect: bool,
+    pub cert_path: Option<String>,
+    pub key_path: Option<String>,
     #[serde(default = "default_metrics")]
     pub path: String,
     // tls
@@ -102,8 +106,12 @@ impl Default for SenderConfig {
         SenderConfig {
             r#type: "openmetrics".into(),
             mode: "pull".into(),
-            listen: "0.0.0.0:3000".into(),
+            listen: Some("0.0.0.0:3000".into()),
+            listen_tls: None,
             path: "/metrics".into(),
+            tls_redirect: false,
+            cert_path: None,
+            key_path: None,
         }
     }
 }
@@ -116,10 +124,6 @@ fn default_pull() -> String {
     "pull".into()
 }
 
-fn default_3000() -> String {
-    "0.0.0.0:3000".into()
-}
-
 fn default_metrics() -> String {
     "/metrics".into()
 }
@@ -130,4 +134,12 @@ fn default_none() -> Option<String> {
 
 fn default_interval() -> u64 {
     AGENT_DEFAULT_INTERVAL
+}
+
+fn default_false() -> bool {
+    false
+}
+
+fn is_false(v: &bool) -> bool {
+    !v
 }

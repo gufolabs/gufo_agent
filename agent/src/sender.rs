@@ -20,12 +20,24 @@ pub(crate) enum SenderCommand {
     Shutdown,
 }
 
+pub(crate) struct SenderHttp {
+    listen: SocketAddrV4,
+    tls_redirect: bool,
+}
+
+pub(crate) struct SenderHttps {
+    listen: SocketAddrV4,
+    cert_path: String,
+    key_path: String,
+}
 pub(crate) struct Sender {
     rx: mpsc::Receiver<SenderCommand>,
     tx: mpsc::Sender<SenderCommand>,
     db: MetricsDb,
     dump_metrics: bool,
-    listen: SocketAddrV4,
+    http: Option<SenderHttp>,
+    https: Option<SenderHttps>,
+    path: String,
 }
 
 const SENDER_CHANNEL_BUFFER: usize = 10_000;
@@ -44,17 +56,72 @@ impl TryFrom<&SenderConfig> for Sender {
                 "`sender.mode` must be `pull`".into(),
             ));
         }
-        let sock_addr: SocketAddrV4 = value
-            .listen
-            .parse()
-            .map_err(|_| AgentError::ConfigurationError("Invalid `listen`".to_string()))?;
+        // Check HTTP settings
+        let http = match &value.listen {
+            Some(addr) => Some(SenderHttp {
+                listen: addr.parse().map_err(|_| {
+                    AgentError::ConfigurationError("Invalid `sender.listen`".to_string())
+                })?,
+                tls_redirect: value.tls_redirect,
+            }),
+            None => {
+                if value.tls_redirect {
+                    return Err(AgentError::ConfigurationError(
+                        "`sender.tls_redirect` must not be set when HTTP endpoint is disabled"
+                            .into(),
+                    ));
+                }
+                None
+            }
+        };
+        // Check HTTPS settings
+        let https = match &value.listen_tls {
+            Some(addr) => {
+                let key_path = match &value.key_path {
+                    Some(path) => path.clone(),
+                    None => {
+                        return Err(AgentError::ConfigurationError(
+                            "`sender.key_path` must be set for HTTPS endpoint".to_string(),
+                        ))
+                    }
+                };
+                // @todo: Check file is readable
+                let cert_path = match &value.cert_path {
+                    Some(path) => path.clone(),
+                    None => {
+                        return Err(AgentError::ConfigurationError(
+                            "`sender.cert_path` must be set for HTTPS endpoint".to_string(),
+                        ))
+                    }
+                };
+                Some(SenderHttps {
+                    listen: addr.parse().map_err(|_| {
+                        AgentError::ConfigurationError("Invalid `sender.listen_tls`".to_string())
+                    })?,
+                    key_path,
+                    cert_path,
+                })
+            }
+            None => {
+                if value.tls_redirect {
+                    return Err(AgentError::ConfigurationError(
+                        "`sender.tls_redirect` must not be set when HTTPS endpoint is disabled"
+                            .into(),
+                    ));
+                }
+                None
+            }
+        };
+        //
         let (tx, rx) = mpsc::channel::<SenderCommand>(SENDER_CHANNEL_BUFFER);
         Ok(Self {
             rx,
             tx,
             db: MetricsDb::default(),
+            path: value.path.to_owned(),
             dump_metrics: false,
-            listen: sock_addr,
+            http,
+            https,
         })
     }
 }
@@ -72,7 +139,7 @@ impl Sender {
     // Run sender message processing
     pub async fn run(&mut self) {
         log::info!("Running sender");
-        self.run_endpoint();
+        self.run_endpoints();
         while let Some(msg) = self.rx.recv().await {
             match msg {
                 SenderCommand::Data(data) => {
@@ -98,20 +165,83 @@ impl Sender {
         log::info!("Shutting down");
     }
     //
-    fn run_endpoint(&self) {
-        log::info!("Starting openmetrics endpoint");
-        let endpoint = warp::path("metrics")
-            .and(warp::get())
-            .and(Self::with_db(self.db.clone()))
-            .and_then(Self::metrics_endpoint);
-        let listen = self.listen;
-        tokio::spawn(async move {
-            warp::serve(endpoint).run(listen).await;
-        });
+    fn run_endpoints(&self) {
+        self.run_http_endpoint();
+        self.run_https_endpoint();
+    }
+    //
+    fn run_http_endpoint(&self) {
+        if let Some(http) = &self.http {
+            let listen = http.listen;
+            let path = String::from(&self.path[1..]);
+            if http.tls_redirect {
+                log::info!(
+                    "Starting TLS redirect HTTP endpoint at http://{}/{}",
+                    listen,
+                    path
+                );
+                let tls_port = self.https.as_ref().map(|x| x.listen.port()).unwrap_or(443);
+                let endpoint = warp::path(path)
+                    .and(warp::get())
+                    .map(move || tls_port)
+                    .and(warp::header::<String>("host"))
+                    .and(warp::path::full())
+                    .and_then(Self::tls_redirect_endpoint);
+                tokio::spawn(async move {
+                    warp::serve(endpoint).run(listen).await;
+                });
+            } else {
+                log::info!("Starting HTTP endpoint at http://{}/{}", listen, path);
+                let endpoint = warp::path(path)
+                    .and(warp::get())
+                    .and(Self::with_db(self.db.clone()))
+                    .and_then(Self::metrics_endpoint);
+                tokio::spawn(async move {
+                    warp::serve(endpoint).run(listen).await;
+                });
+            };
+        }
+    }
+
+    fn run_https_endpoint(&self) {
+        if let Some(https) = &self.https {
+            log::info!("Starting HTTPS endpoint at {}", https.listen);
+            let listen = https.listen;
+            let path = String::from(&self.path[1..]);
+            let endpoint = warp::path(path)
+                .and(warp::get())
+                .and(Self::with_db(self.db.clone()))
+                .and_then(Self::metrics_endpoint);
+            let cert_path = https.cert_path.clone();
+            let key_path = https.key_path.clone();
+            tokio::spawn(async move {
+                warp::serve(endpoint)
+                    .tls()
+                    .cert_path(cert_path)
+                    .key_path(key_path)
+                    .run(listen)
+                    .await;
+            });
+        }
     }
 
     fn with_db(db: MetricsDb) -> impl Filter<Extract = (MetricsDb,), Error = Infallible> + Clone {
         warp::any().map(move || db.clone())
+    }
+    async fn tls_redirect_endpoint(
+        tls_port: u16,
+        host: String,
+        path: warp::path::FullPath,
+    ) -> Result<impl warp::Reply, Infallible> {
+        // @todo: Get TLS port
+        let tls_host = match host.find(':') {
+            Some(idx) => &host[..idx],
+            None => &host,
+        };
+        let redirect_url = format!("https://{}:{}{}", tls_host, tls_port, path.as_str());
+        Ok(warp::redirect::found(
+            redirect_url.parse::<warp::http::Uri>().unwrap(),
+        ))
     }
 
     async fn metrics_endpoint(db: MetricsDb) -> Result<impl warp::Reply, Infallible> {

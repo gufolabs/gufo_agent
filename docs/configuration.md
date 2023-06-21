@@ -103,8 +103,6 @@ Example:
 
 Default collectors' repetition interval in seconds.
 
-
-
 ## sender
 
 Metrics sender configuration.
@@ -142,7 +140,8 @@ Sender's mode of operation. Must be `pull`.
 
 ### listen
 
-Address and port to listen the metrics endpoint.
+Address and port to listen the HTTP metrics endpoint. Don't run HTTP
+endpoint when ommmited.
 
 Example:
 
@@ -156,6 +155,100 @@ Example:
 
     ``` json
     "listen": "0.0.0.0:3000"
+    ```
+
+### listen_tls
+
+Address and port to listen the HTTPS metrics endpoint. Don't run HTTPS
+endpoint when ommmited. When `listen_tls` is set, [cert_path](#cert_path)
+and [key_path](#key_path) configuration parameters must be set
+
+Example:
+
+=== "YAML"
+
+    ``` yaml
+    listen_tls: "0.0.0.0:3001"
+    cert_path: /etc/gufo-agent/tls/agent.crt
+    key_path: /etc/gufo-agent/tls/agent.key
+    ```
+
+=== "JSON"
+
+    ``` json
+    "listen_tls": "0.0.0.0:3000",
+    "cert_path": "/etc/gufo-agent/tls/agent.crt",
+    "key_path": "/etc/gufo-agent/tls/agent.key"
+    ```
+
+### cert_path
+
+A path to the TLS certificate (public key) for TLS endpoint.
+Must be set only with [listen_tls](#listen_tls) parameter.
+
+Example:
+
+=== "YAML"
+
+    ``` yaml
+    listen_tls: "0.0.0.0:3001"
+    cert_path: /etc/gufo-agent/tls/agent.crt
+    key_path: /etc/gufo-agent/tls/agent.key
+    ```
+
+=== "JSON"
+
+    ``` json
+    "listen_tls": "0.0.0.0:3000",
+    "cert_path": "/etc/gufo-agent/tls/agent.crt",
+    "key_path": "/etc/gufo-agent/tls/agent.key"
+    ```
+
+### key_path
+
+A path to the TLS private key for TLS endpoint.
+Must be set only with [listen_tls](#listen_tls) parameter.
+
+Example:
+
+=== "YAML"
+
+    ``` yaml
+    listen_tls: "0.0.0.0:3001"
+    cert_path: /etc/gufo-agent/tls/agent.crt
+    key_path: /etc/gufo-agent/tls/agent.key
+    ```
+
+=== "JSON"
+
+    ``` json
+    "listen_tls": "0.0.0.0:3001",
+    "cert_path": "/etc/gufo-agent/tls/agent.crt",
+    "key_path": "/etc/gufo-agent/tls/agent.key"
+    ```
+
+### tls_redirect
+
+When set to `true`, HTTP endpoint will perform redirect to the HTTPS one.
+Must be used only when [listen](#listen) and [listen_tls](#listen_tls) parameters
+are set.
+
+Example:
+
+=== "YAML"
+
+    ``` yaml
+    listen: "0.0.0.0:3000"
+    listen_tls: "0.0.0.0:3001"
+    tls_redirect: true
+    ```
+
+=== "JSON"
+
+    ``` json
+    "listen": "0.0.0.0:3000",
+    "listen_tls": "0.0.0.0:3001",
+    "tls_redirect": true,
     ```
 
 ## collectors
