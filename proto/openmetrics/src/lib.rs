@@ -345,7 +345,7 @@ impl MetricDescriptor {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct ParseConfig {
     pub trust_timestamps: bool,
 }

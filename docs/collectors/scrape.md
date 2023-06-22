@@ -9,10 +9,11 @@
 
 The collector-specific configuration is:
 
-| Parameter           | Type   | Default | Description                                           |
-| ------------------- | ------ | ------- | ----------------------------------------------------- |
-| `service_discovery` | Object |         | [Service Discovery](#service-discovery) configuration |
-| `trust_timestamps`  | Bool   | `false` | Ignore timestamps in output, if `false`               |
+| Parameter           | Type    | Default | Description                                           |
+| ------------------- | ------- | ------- | ----------------------------------------------------- |
+| `service_discovery` | Object  |         | [Service Discovery](#service-discovery) configuration |
+| `trust_timestamps`  | Bool    | `false` | Ignore timestamps in output, if `false`               |
+| `concurrency`       | Integer | `10`    | Limit amount of parralel tasks                        |
 
 Config example:
 
