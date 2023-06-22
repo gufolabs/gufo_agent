@@ -112,7 +112,7 @@ impl TryFrom<&SenderConfig> for Sender {
                 let client_auth_required_path = match &value.client_auth_requred_path {
                     Some(path) => {
                         // Check path
-                        fs::read_to_string(&path).map_err(|e| {
+                        fs::read_to_string(path).map_err(|e| {
                             AgentError::ConfigurationError(format!(
                                 "{} file is not readable: {}",
                                 path, e
