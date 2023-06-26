@@ -6,6 +6,7 @@
 
 use crate::{AgentConfig, CollectorConfig, Collectors, Config, SenderConfig};
 use common::{AgentError, ConfigDiscoveryOpts};
+use std::collections::HashMap;
 use std::fs::{metadata, read_dir};
 use std::path::Path;
 use std::process::Command;
@@ -32,11 +33,22 @@ pub fn config_from_discovery(opts: &ConfigDiscoveryOpts) -> Result<String, Agent
 // Run collector-level config discovery
 fn config_from_collectors(opts: &ConfigDiscoveryOpts) -> Result<Vec<CollectorConfig>, AgentError> {
     let mut r = Vec::new();
-    for (name, configs) in Collectors::discover_config(opts)?.iter() {
+    let mut names = HashMap::new();
+    for (name, configs) in Collectors::discover_config(opts)?.into_iter() {
         for cfg in configs.iter() {
+            let id = match names.get_mut(name) {
+                Some(x) => {
+                    *x += 1;
+                    format!("{} ({})", name, x)
+                }
+                None => {
+                    names.insert(name, 1);
+                    name.to_string()
+                }
+            };
             // @todo: Build name
             r.push(CollectorConfig {
-                id: name.to_string(),
+                id,
                 r#type: name.to_string(),
                 disabled: false,
                 interval: None,
