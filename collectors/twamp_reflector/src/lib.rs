@@ -333,10 +333,13 @@ impl ClientSession {
                 "cannot send reflector port".into(),
             ));
         }
+        // Peek first packet to adjust receiver address
+        let addr = timeout(recv_timeout, socket.connect_to_sender()).await??;
+        log::debug!("Reflecting packets from {}", addr);
         //
         let mut seq = 0u32;
         loop {
-            let (req, addr) = match timeout(recv_timeout, socket.recv_from::<TestRequest>()).await {
+            let req = match timeout(recv_timeout, socket.recv::<TestRequest>()).await {
                 Ok(Ok(r)) => r,
                 // recv_from returns an error
                 // We'd expected truncated frames on high load, so count it as a loss
@@ -358,8 +361,7 @@ impl ClientSession {
                 pad_to: req.pad_to,
             };
             //
-            stats.reflected_octets +=
-                socket.send_to(&resp, addr).await? as u64 + IP_OVERHEAD + UDP_OVERHEAD;
+            stats.reflected_octets += socket.send(&resp).await? as u64 + IP_OVERHEAD + UDP_OVERHEAD;
             stats.reflected_pkt += 1;
             seq += 1;
         }
