@@ -49,7 +49,7 @@ impl FrameReader for TestRequest {
         // Sequence number, 4 octets
         let seq = s.get_u32();
         // Timestamp, 8 octets
-        let ts = NtpTimeStamp::new(s.get_u32(), s.get_u32());
+        let ts = NtpTimeStamp::from(s.get_u64());
         // Err estimate, 2 octets
         let err_estimate = s.get_u16();
         // Skip padding
@@ -76,8 +76,7 @@ impl FrameWriter for TestRequest {
         s.put_u32(self.seq);
         // Timestamp, 8 octets
         let ts: NtpTimeStamp = self.timestamp.into();
-        s.put_u32(ts.secs());
-        s.put_u32(ts.fracs());
+        s.put_u64(ts.into());
         // Err estimate, 2 octets
         s.put_u16(self.err_estimate);
         // Add padding

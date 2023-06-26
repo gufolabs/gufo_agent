@@ -66,17 +66,17 @@ impl FrameReader for TestResponse {
         // Sequence number, 4 octets
         let seq = s.get_u32();
         // Timestamp, 8 octets
-        let ts = NtpTimeStamp::new(s.get_u32(), s.get_u32());
+        let ts = NtpTimeStamp::from(s.get_u64());
         // Err estimate, 2 octets
         let err_estimate = s.get_u16();
         // MBZ, 2 octets
         s.advance(2);
         // Receive timestamp, 8 octets
-        let recv_ts = NtpTimeStamp::new(s.get_u32(), s.get_u32());
+        let recv_ts = NtpTimeStamp::from(s.get_u64());
         // Sender sequence number, 4 octets
         let sender_seq = s.get_u32();
         // Sender timestamp
-        let sender_ts = NtpTimeStamp::new(s.get_u32(), s.get_u32());
+        let sender_ts = NtpTimeStamp::from(s.get_u64());
         // Sender err estimate, 2 octets
         let sender_err_estimate = s.get_u16();
         // MBZ, 2 octets
@@ -112,22 +112,19 @@ impl FrameWriter for TestResponse {
         s.put_u32(self.seq);
         // Timestamp, 8 octets
         let ts: NtpTimeStamp = self.timestamp.into();
-        s.put_u32(ts.secs());
-        s.put_u32(ts.fracs());
+        s.put_u64(ts.into());
         // Err estimate, 2 octets
         s.put_u16(self.err_estimate);
         // MBZ, 2 octets
         s.put_u16(0);
         // Receive timestamp, 8 octets
         let ts: NtpTimeStamp = self.recv_timestamp.into();
-        s.put_u32(ts.secs());
-        s.put_u32(ts.fracs());
+        s.put_u64(ts.into());
         // Sender sequence number, 4 octets
         s.put_u32(self.sender_seq);
         // Sender timestamp
         let ts: NtpTimeStamp = self.sender_timestamp.into();
-        s.put_u32(ts.secs());
-        s.put_u32(ts.fracs());
+        s.put_u64(ts.into());
         // Sender err estimate, 2 octets
         s.put_u16(self.sender_err_estimate);
         // MBZ, 2 octets

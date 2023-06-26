@@ -50,6 +50,21 @@ impl From<NtpTimeStamp> for UtcDateTime {
     }
 }
 
+impl From<u64> for NtpTimeStamp {
+    fn from(value: u64) -> Self {
+        NtpTimeStamp {
+            secs: (value >> 32) as u32,
+            fracs: (value & 0xFFFFFFFF) as u32,
+        }
+    }
+}
+
+impl From<NtpTimeStamp> for u64 {
+    fn from(value: NtpTimeStamp) -> Self {
+        ((value.secs as u64) << 32) + value.fracs as u64
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::{NtpTimeStamp, UtcDateTime};
