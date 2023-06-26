@@ -137,37 +137,37 @@ Config example:
 ## Collected Metrics
 
 === "OpenMetrics"
-| Metric             | Type  | Description                                   |
-| ------------------ | ----- | --------------------------------------------- |
-| `tx_packets`       | Gauge | Transmitted packets                           |
-| `rx_packets`       | Gauge | Received packets                              |
-| `tx_bytes`         | Gauge | Transmitted octets                            |
-| `rx_bytes`         | Gauge | Received octets                               |
-| `duration_ns`      | Gauge | Session duration in nanoseconds               |
-| `tx_pps`           | Gauge | Transmitted packets-per-second rate           |
-| `rx_pps`           | Gauge | Received packet-per-second rate               |
-| `tx_bitrate`       | Gauge | Transmitted bitrate                           |
-| `rx_bitrate`       | Gauge | Received bitrate                              |
-| **Inbound**        |       |                                               |
-| `in_min_delay_ns`  | Gauge | Minimum inbound delay in nanoseconds          |
-| `in_max_delay_ns`  | Gauge | Maximum inbound delay in nanoseconds          |
-| `in_avg_delay_ns`  | Gauge | Average inbound delay in nanoseconds          |
-| `in_jitter_ns`     | Gauge | Jitter of the inbound delay in nanoseconds    |
-| `in_loss`          | Gauge | Packet loss in inbound direction              |
-| `in_mos`           | Gauge | eMOS for local end                            |
-| **Outbound**       |       |                                               |
-| `out_min_delay_ns` | Gauge | Minimum outbound delay in nanoseconds         |
-| `out_max_delay_ns` | Gauge | Maximum outbound delay in nanoseconds         |
-| `out_avg_delay_ns` | Gauge | Average outbound delay in nanoseconds         |
-| `out_jitter_ns`    | Gauge | Jitter of the outbound delay in nanoseconds   |
-| `out_loss`         | Gauge | Packet loss in outbound direction             |
-| `out_mos`          | Gauge | eMOS for remote end                           |
-| **Round-trip**     |       |                                               |
-| `rt_min_delay_ns`  | Gauge | Minimum round-trip delay in nanoseconds       |
-| `rt_max_delay_ns`  | Gauge | Maximum round-trip delay in nanoseconds       |
-| `rt_avg_delay_ns`  | Gauge | Average round-trip delay in nanoseconds       |
-| `rt_jitter_ns`     | Gauge | Jitter of the round-trip delay in nanoseconds |
-| `rt_loss`          | Gauge | Packet loss in both directions                |
+| Metric                   | Type  | Description                                   |
+| ------------------------ | ----- | --------------------------------------------- |
+| `twamp_tx_packets`       | Gauge | Transmitted packets                           |
+| `twamp_rx_packets`       | Gauge | Received packets                              |
+| `twamp_tx_bytes`         | Gauge | Transmitted octets                            |
+| `twamp_rx_bytes`         | Gauge | Received octets                               |
+| `twamp_duration_ns`      | Gauge | Session duration in nanoseconds               |
+| `twamp_tx_pps`           | Gauge | Transmitted packets-per-second rate           |
+| `twamp_rx_pps`           | Gauge | Received packet-per-second rate               |
+| `twamp_tx_bitrate`       | Gauge | Transmitted bitrate                           |
+| `twamp_rx_bitrate`       | Gauge | Received bitrate                              |
+| **Inbound**              |       |                                               |
+| `twamp_in_min_delay_ns`  | Gauge | Minimum inbound delay in nanoseconds          |
+| `twamp_in_max_delay_ns`  | Gauge | Maximum inbound delay in nanoseconds          |
+| `twamp_in_avg_delay_ns`  | Gauge | Average inbound delay in nanoseconds          |
+| `twamp_in_jitter_ns`     | Gauge | Jitter of the inbound delay in nanoseconds    |
+| `twamp_in_loss`          | Gauge | Packet loss in inbound direction              |
+| `twamp_in_mos`           | Gauge | eMOS for local end                            |
+| **Outbound**             |       |                                               |
+| `twamp_out_min_delay_ns` | Gauge | Minimum outbound delay in nanoseconds         |
+| `twamp_out_max_delay_ns` | Gauge | Maximum outbound delay in nanoseconds         |
+| `twamp_out_avg_delay_ns` | Gauge | Average outbound delay in nanoseconds         |
+| `twamp_out_jitter_ns`    | Gauge | Jitter of the outbound delay in nanoseconds   |
+| `twamp_out_loss`         | Gauge | Packet loss in outbound direction             |
+| `twamp_out_mos`          | Gauge | eMOS for remote end                           |
+| **Round-trip**           |       |                                               |
+| `twamp_rt_min_delay_ns`  | Gauge | Minimum round-trip delay in nanoseconds       |
+| `twamp_rt_max_delay_ns`  | Gauge | Maximum round-trip delay in nanoseconds       |
+| `twamp_rt_avg_delay_ns`  | Gauge | Average round-trip delay in nanoseconds       |
+| `twamp_rt_jitter_ns`     | Gauge | Jitter of the round-trip delay in nanoseconds |
+| `twamp_rt_loss`          | Gauge | Packet loss in both directions                |
 
 ## Labels
 

@@ -55,35 +55,50 @@ pub struct Collector {
 }
 
 // Generated metrics
-counter!(tx_packets, "Transmitted packets");
-counter!(rx_packets, "Received packets");
-counter!(tx_bytes, "Transmitted octets");
-gauge!(rx_bytes, "Received octets");
-gauge!(duration_ns, "Session duration in nanoseconds ");
-gauge!(tx_pps, "Transmitted packets-per-second rate");
-gauge!(rx_pps, "Received packet-per-second rate");
-gauge!(tx_bitrate, "Transmitted bitrate");
-gauge!(rx_bitrate, "Received bitrate");
+counter!(twamp_tx_packets, "Transmitted packets");
+counter!(twamp_rx_packets, "Received packets");
+counter!(twamp_tx_bytes, "Transmitted octets");
+gauge!(twamp_rx_bytes, "Received octets");
+gauge!(twamp_duration_ns, "Session duration in nanoseconds ");
+gauge!(twamp_tx_pps, "Transmitted packets-per-second rate");
+gauge!(twamp_rx_pps, "Received packet-per-second rate");
+gauge!(twamp_tx_bitrate, "Transmitted bitrate");
+gauge!(twamp_rx_bitrate, "Received bitrate");
 // Inbound
-gauge!(in_min_delay, "Minimum inbound delay in nanoseconds");
-gauge!(in_max_delay, "Maximum inbound delay in nanoseconds");
-gauge!(in_avg_delay, "Average inbound delay in nanoseconds");
-gauge!(in_jitter, "itter of the inbound delay in nanoseconds");
-gauge!(in_loss, "Packet loss in inbound direction");
-gauge_f!(in_mos, "eMOS for local end");
+gauge!(twamp_in_min_delay, "Minimum inbound delay in nanoseconds");
+gauge!(twamp_in_max_delay, "Maximum inbound delay in nanoseconds");
+gauge!(twamp_in_avg_delay, "Average inbound delay in nanoseconds");
+gauge!(twamp_in_jitter, "itter of the inbound delay in nanoseconds");
+gauge!(twamp_in_loss, "Packet loss in inbound direction");
+gauge_f!(twamp_in_mos, "eMOS for local end");
 // Outbound
-gauge!(out_min_delay, "Minimum outbound delay in nanoseconds");
-gauge!(out_max_delay, "Maximum outbound delay in nanoseconds");
-gauge!(out_avg_delay, "Average outbound delay in nanoseconds");
-gauge!(out_jitter, "Jitter of the outbound delay in nanoseconds");
-gauge!(out_loss, "Packet loss in outbound direction");
-gauge_f!(out_mos, "eMOS for remote end");
+gauge!(twamp_out_min_delay, "Minimum outbound delay in nanoseconds");
+gauge!(twamp_out_max_delay, "Maximum outbound delay in nanoseconds");
+gauge!(twamp_out_avg_delay, "Average outbound delay in nanoseconds");
+gauge!(
+    twamp_out_jitter,
+    "Jitter of the outbound delay in nanoseconds"
+);
+gauge!(twamp_out_loss, "Packet loss in outbound direction");
+gauge_f!(twamp_out_mos, "eMOS for remote end");
 // Round-trip
-gauge!(rt_min_delay, "Minimum round-trip delay in nanoseconds");
-gauge!(rt_max_delay, "Maximum round-trip delay in nanoseconds");
-gauge!(rt_avg_delay, "Average round-trip delay in nanoseconds");
-gauge!(rt_jitter, "Jitter of the round-trip delay in nanoseconds");
-gauge!(rt_loss, "Packet loss in both directions");
+gauge!(
+    twamp_rt_min_delay,
+    "Minimum round-trip delay in nanoseconds"
+);
+gauge!(
+    twamp_rt_max_delay,
+    "Maximum round-trip delay in nanoseconds"
+);
+gauge!(
+    twamp_rt_avg_delay,
+    "Average round-trip delay in nanoseconds"
+);
+gauge!(
+    twamp_rt_jitter,
+    "Jitter of the round-trip delay in nanoseconds"
+);
+gauge!(twamp_rt_loss, "Packet loss in both directions");
 
 // Instantiate collector from given config
 impl TryFrom<Config> for Collector {
@@ -650,42 +665,42 @@ impl TestSession {
             loss = (r_stats.rt_loss as f64) * 100.0 / total,
         );
         let mut r = vec![
-            tx_packets(s_stats.pkt_sent),
-            rx_packets(r_stats.pkt_received),
-            tx_bytes(s_stats.out_octets),
-            rx_bytes(r_stats.in_octets),
-            duration_ns(s_stats.time_ns),
-            tx_pps(out_pps),
-            rx_pps(in_pps),
-            tx_bitrate(out_bitrate),
-            rx_bitrate(in_bitrate),
+            twamp_tx_packets(s_stats.pkt_sent),
+            twamp_rx_packets(r_stats.pkt_received),
+            twamp_tx_bytes(s_stats.out_octets),
+            twamp_rx_bytes(r_stats.in_octets),
+            twamp_duration_ns(s_stats.time_ns),
+            twamp_tx_pps(out_pps),
+            twamp_rx_pps(in_pps),
+            twamp_tx_bitrate(out_bitrate),
+            twamp_rx_bitrate(in_bitrate),
             // Inbound
-            in_min_delay(r_stats.in_timing.min_ns),
-            in_max_delay(r_stats.in_timing.max_ns),
-            in_avg_delay(r_stats.in_timing.avg_ns),
-            in_jitter(r_stats.in_timing.jitter_ns),
-            in_loss(r_stats.in_loss),
+            twamp_in_min_delay(r_stats.in_timing.min_ns),
+            twamp_in_max_delay(r_stats.in_timing.max_ns),
+            twamp_in_avg_delay(r_stats.in_timing.avg_ns),
+            twamp_in_jitter(r_stats.in_timing.jitter_ns),
+            twamp_in_loss(r_stats.in_loss),
             // Outbound
-            out_min_delay(r_stats.out_timing.min_ns),
-            out_max_delay(r_stats.out_timing.max_ns),
-            out_avg_delay(r_stats.out_timing.avg_ns),
-            out_jitter(r_stats.out_timing.jitter_ns),
-            out_loss(r_stats.out_loss),
+            twamp_out_min_delay(r_stats.out_timing.min_ns),
+            twamp_out_max_delay(r_stats.out_timing.max_ns),
+            twamp_out_avg_delay(r_stats.out_timing.avg_ns),
+            twamp_out_jitter(r_stats.out_timing.jitter_ns),
+            twamp_out_loss(r_stats.out_loss),
             // Round-trip
-            rt_min_delay(r_stats.rt_timing.min_ns),
-            rt_max_delay(r_stats.rt_timing.max_ns),
-            rt_avg_delay(r_stats.rt_timing.avg_ns),
-            rt_jitter(r_stats.rt_timing.jitter_ns),
-            rt_loss(r_stats.rt_loss),
+            twamp_rt_min_delay(r_stats.rt_timing.min_ns),
+            twamp_rt_max_delay(r_stats.rt_timing.max_ns),
+            twamp_rt_avg_delay(r_stats.rt_timing.avg_ns),
+            twamp_rt_jitter(r_stats.rt_timing.jitter_ns),
+            twamp_rt_loss(r_stats.rt_loss),
         ];
         // Apply MOS if available
         if let Some(emodel) = self.model.get_emodel() {
-            r.push(in_mos(emodel.get_mos(
+            r.push(twamp_in_mos(emodel.get_mos(
                 (r_stats.in_loss as f32) * 100.0 / total as f32,
                 r_stats.in_timing.avg_ns as f32 / 1_000_000.0,
                 r_stats.in_timing.jitter_ns as f32 / 1_000_000.0,
             )));
-            r.push(out_mos(emodel.get_mos(
+            r.push(twamp_out_mos(emodel.get_mos(
                 (r_stats.out_loss as f32) * 100.0 / total as f32,
                 r_stats.out_timing.avg_ns as f32 / 1_000_000.0,
                 r_stats.out_timing.jitter_ns as f32 / 1_000_000.0,

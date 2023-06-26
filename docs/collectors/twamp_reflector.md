@@ -28,12 +28,12 @@ Config example:
 ## Collected Metrics
 
 === "OpenMetrics"
-  | Metric             | Metric Type | Description                            |
-  | ------------------ | ----------- | -------------------------------------- |
-  | `session_attempts` | Counter     | Total amount of the attempted sessions |
-  | `session_started`  | Counter     | Total amount of the started sessions   |
-  | `reflected_pkt`    | Counter     | Total amount of the reflected packets  |
-  | `reflected_octets` | Counter     | Total amount of the reflected octets   |
+  | Metric                   | Metric Type | Description                            |
+  | ------------------------ | ----------- | -------------------------------------- |
+  | `twamp_session_attempts` | Counter     | Total amount of the attempted sessions |
+  | `twamp_session_started`  | Counter     | Total amount of the started sessions   |
+  | `twamp_reflected_pkt`    | Counter     | Total amount of the reflected packets  |
+  | `twamp_reflected_octets` | Counter     | Total amount of the reflected octets   |
 
 ## Labels
 

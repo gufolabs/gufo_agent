@@ -53,10 +53,19 @@ struct CollectorStats {
 }
 
 // Generated metrics
-counter!(session_attempts, "Total amount of the attempted sessions");
-counter!(session_started, "Total amount of the started sessions");
-counter!(reflected_pkt, "Total amount of the reflected packets");
-counter!(reflected_octets, "Total amount of the reflected octets");
+counter!(
+    twamp_session_attempts,
+    "Total amount of the attempted sessions"
+);
+counter!(
+    twamp_session_started,
+    "Total amount of the started sessions"
+);
+counter!(twamp_reflected_pkt, "Total amount of the reflected packets");
+counter!(
+    twamp_reflected_octets,
+    "Total amount of the reflected octets"
+);
 
 // Instantiate collector from given config
 impl TryFrom<Config> for Collector {
@@ -362,10 +371,10 @@ impl ClientSession {
 impl CollectorStats {
     pub fn get_stats(&self) -> Vec<Measure> {
         vec![
-            session_attempts(self.session_attempts),
-            session_started(self.session_started),
-            reflected_pkt(self.reflected_pkt),
-            reflected_octets(self.reflected_octets),
+            twamp_session_attempts(self.session_attempts),
+            twamp_session_started(self.session_started),
+            twamp_reflected_pkt(self.reflected_pkt),
+            twamp_reflected_octets(self.reflected_octets),
         ]
     }
 }
