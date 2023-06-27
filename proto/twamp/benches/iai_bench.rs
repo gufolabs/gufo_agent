@@ -6,10 +6,12 @@
 // ------------------------------------------------------------------------
 
 use bytes::BytesMut;
-use chrono::{DateTime, TimeZone, Utc};
 use frame::{FrameReader, FrameWriter};
 use iai_callgrind::{black_box, main};
-use twamp::{TestRequest, TestResponse};
+use twamp::{NtpTimeStamp, TestRequest, TestResponse};
+
+//Utc.with_ymd_and_hms(2021, 2, 12, 10, 0, 2).unwrap()
+const REF_TIMESTAMP: u64 = 16415849486212923392;
 
 #[export_name = "bench::get_buffer"]
 #[inline(never)]
@@ -17,10 +19,8 @@ pub fn get_buffer() -> BytesMut {
     BytesMut::with_capacity(1024)
 }
 
-#[export_name = "bench::get_timestamp"]
-#[inline(never)]
-pub fn get_timestamp() -> DateTime<Utc> {
-    Utc.with_ymd_and_hms(2021, 2, 12, 10, 0, 2).unwrap()
+pub fn get_timestamp() -> NtpTimeStamp {
+    REF_TIMESTAMP.into()
 }
 
 #[inline(never)]
@@ -84,6 +84,6 @@ pub fn parse_test_response() {
 }
 
 main!(
-    callgrind_args = "toggle-collect=bench::get_timestamp,bench::get_buffer";
+    callgrind_args = "toggle-collect=bench::bench::get_buffer";
     functions = write_test_request, parse_test_request, write_test_response, parse_test_response
 );

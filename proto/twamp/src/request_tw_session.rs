@@ -5,7 +5,7 @@
 // See LICENSE for details
 // ---------------------------------------------------------------------
 
-use crate::{NtpTimeStamp, UtcDateTime, CMD_REQUEST_TW_SESSION, MBZ};
+use crate::{NtpTimeStamp, CMD_REQUEST_TW_SESSION, MBZ};
 use bytes::{Buf, BufMut, BytesMut};
 use common::AgentError;
 use frame::{FrameReader, FrameWriter};
@@ -91,7 +91,7 @@ pub struct RequestTwSession {
     pub sender_address: IpAddr,
     pub receiver_address: IpAddr,
     pub padding_length: u32,
-    pub start_time: UtcDateTime,
+    pub start_time: NtpTimeStamp,
     pub timeout: u64,
     pub type_p: u32,
     pub octets_reflected: u16,
@@ -172,7 +172,7 @@ impl FrameReader for RequestTwSession {
         // Padding length, 4 octets
         let padding_length = s.get_u32();
         // Start-Time, 8 octets
-        let ts = NtpTimeStamp::new(s.get_u32(), s.get_u32());
+        let start_time = NtpTimeStamp::from(s.get_u64());
         // Timeout, 8 octets
         let timeout = s.get_u64();
         // Type-P, 4 octets
@@ -192,7 +192,7 @@ impl FrameReader for RequestTwSession {
             sender_address,
             receiver_address,
             padding_length,
-            start_time: ts.into(),
+            start_time,
             timeout,
             type_p,
             octets_reflected,
@@ -248,9 +248,7 @@ impl FrameWriter for RequestTwSession {
         // Padding length, 4 octets
         s.put_u32(self.padding_length);
         // Start time, 8 octets
-        let ts: NtpTimeStamp = self.start_time.into();
-        s.put_u32(ts.secs());
-        s.put_u32(ts.fracs());
+        s.put_u64(self.start_time.into());
         // Timeout, 8 octets
         s.put_u64(self.timeout);
         // Type-P, 4 octets
@@ -271,7 +269,6 @@ impl FrameWriter for RequestTwSession {
 mod tests {
     use super::{IpVn, RequestTwSession};
     use bytes::{Buf, BytesMut};
-    use chrono::{TimeZone, Utc};
     use frame::{FrameReader, FrameWriter};
     use std::net::{IpAddr, Ipv4Addr};
 
@@ -309,7 +306,7 @@ mod tests {
             sender_address: IpAddr::V4(Ipv4Addr::UNSPECIFIED),
             receiver_address: IpAddr::V4(Ipv4Addr::UNSPECIFIED),
             padding_length: 0,
-            start_time: Utc.with_ymd_and_hms(2021, 2, 12, 10, 0, 0).unwrap(),
+            start_time: 0xe3d0d02000000000u64.into(),
             timeout: 255,
             type_p: 46,
             octets_reflected: 0,

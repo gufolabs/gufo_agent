@@ -4,78 +4,88 @@
 // Copyright (C) 2021-2023, Gufo Labs
 // See LICENSE for details
 // ---------------------------------------------------------------------
-use chrono::{DateTime, TimeZone, Utc};
+use std::fmt::Display;
+use std::ops::Sub;
+use std::time::{SystemTime, UNIX_EPOCH};
 
-#[derive(Debug, PartialEq, Clone, Copy)]
-pub struct NtpTimeStamp {
-    secs: u32,
-    fracs: u32,
-}
+#[derive(Debug, PartialEq, Clone, Copy, Eq, PartialOrd)]
+pub struct NtpTimeStamp(u64);
 
-pub type UtcDateTime = DateTime<Utc>;
-const NTP_OFFSET: i64 = 2_208_988_800;
+pub struct NtpDuration(u64);
+
+const NTP_OFFSET: u64 = 2_208_988_800;
 const NTP_SCALE: f64 = 4_294_967_295.0;
 const MAX_NANOS: f64 = 1_000_000_000.0;
 
 impl NtpTimeStamp {
-    pub fn new(secs: u32, fracs: u32) -> NtpTimeStamp {
-        NtpTimeStamp { secs, fracs }
+    pub fn now() -> NtpTimeStamp {
+        let now = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("system time before Unix epoch");
+        NtpTimeStamp(
+            ((now.as_secs() + NTP_OFFSET) << 32)
+                + (now.subsec_nanos() as f64 * NTP_SCALE / MAX_NANOS) as u64,
+        )
     }
     pub fn secs(&self) -> u32 {
-        self.secs
+        (self.0 >> 32) as u32
     }
     pub fn fracs(&self) -> u32 {
-        self.fracs
+        (self.0 & 0xffffffff) as u32
     }
 }
 
-impl From<UtcDateTime> for NtpTimeStamp {
-    fn from(ts: DateTime<Utc>) -> NtpTimeStamp {
-        let secs = ts.timestamp();
-        let nanos = ts.timestamp_subsec_nanos();
-        NtpTimeStamp {
-            secs: (secs + NTP_OFFSET) as u32,
-            fracs: (nanos as f64 * NTP_SCALE / MAX_NANOS) as u32,
-        }
+impl NtpDuration {
+    pub fn num_nanoseconds(&self) -> u64 {
+        (self.0 >> 32) * 1_000_000_000
+            + ((((self.0 & 0xffffffff) as f64) * MAX_NANOS / NTP_SCALE) as u64)
     }
 }
 
-impl From<NtpTimeStamp> for UtcDateTime {
-    fn from(ts: NtpTimeStamp) -> UtcDateTime {
-        Utc.timestamp_opt(
-            ts.secs as i64 - NTP_OFFSET,
-            (ts.fracs as f64 * MAX_NANOS / NTP_SCALE) as u32,
-        )
-        .unwrap()
+impl Sub for NtpTimeStamp {
+    type Output = NtpDuration;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        NtpDuration(self.0 - rhs.0)
+    }
+}
+
+impl Sub for NtpDuration {
+    type Output = NtpDuration;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        NtpDuration(self.0 - rhs.0)
     }
 }
 
 impl From<u64> for NtpTimeStamp {
     fn from(value: u64) -> Self {
-        NtpTimeStamp {
-            secs: (value >> 32) as u32,
-            fracs: (value & 0xFFFFFFFF) as u32,
-        }
+        NtpTimeStamp(value)
     }
 }
 
 impl From<NtpTimeStamp> for u64 {
     fn from(value: NtpTimeStamp) -> Self {
-        ((value.secs as u64) << 32) + value.fracs as u64
+        value.0
+    }
+}
+
+impl Display for NtpTimeStamp {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.0.fmt(f)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{NtpTimeStamp, UtcDateTime};
-    use chrono::{Duration, TimeZone, Utc};
+    use super::NtpTimeStamp;
 
-    fn get_utc_timestamp() -> UtcDateTime {
-        Utc.timestamp_millis_opt(1613124000500).unwrap()
-    }
+    // fn get_utc_timestamp() -> UtcDateTime {
+    //     Utc.timestamp_millis_opt(1613124000500).unwrap()
+    // }
 
     fn get_ntp_timestamp() -> NtpTimeStamp {
-        NtpTimeStamp::new(3822112800, 2147483647)
+        NtpTimeStamp::from((3822112800 << 32) + 2147483647)
     }
 
     #[test]
@@ -87,20 +97,5 @@ mod tests {
     fn test_fracs() {
         let ts = get_ntp_timestamp();
         assert_eq!(ts.fracs(), 2147483647);
-    }
-    #[test]
-    fn test_from_utc() {
-        let utc_ts = get_utc_timestamp();
-        let ntp_ts: NtpTimeStamp = utc_ts.into();
-        let expected = get_ntp_timestamp();
-        assert_eq!(ntp_ts, expected);
-    }
-    #[test]
-    fn test_from_ntp() {
-        let ntp_ts = get_ntp_timestamp();
-        let utc_ts: UtcDateTime = ntp_ts.into();
-        let expected = get_utc_timestamp();
-        let delta = utc_ts - expected;
-        assert!(delta < Duration::microseconds(1));
     }
 }

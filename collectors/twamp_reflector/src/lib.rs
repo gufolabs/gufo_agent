@@ -6,7 +6,6 @@
 
 use async_trait::async_trait;
 use bytes::Bytes;
-use chrono::Utc;
 use common::{counter, AgentError, Collectable, Measure};
 use connection::Connection;
 use rand::Rng;
@@ -22,8 +21,9 @@ use tokio::{
     time::timeout,
 };
 use twamp::{
-    AcceptSession, RequestTwSession, ServerGreeting, ServerStart, SetupResponse, StartAck,
-    StartSessions, StopSessions, TestRequest, TestResponse, DEFAULT_COUNT, MODE_UNAUTHENTICATED,
+    AcceptSession, NtpTimeStamp, RequestTwSession, ServerGreeting, ServerStart, SetupResponse,
+    StartAck, StartSessions, StopSessions, TestRequest, TestResponse, DEFAULT_COUNT,
+    MODE_UNAUTHENTICATED,
 };
 use udp::UdpConnection;
 
@@ -248,7 +248,7 @@ impl ClientSession {
         let ss = ServerStart {
             accept: 0,
             server_iv: Bytes::copy_from_slice(&server_iv),
-            start_time: Utc::now(),
+            start_time: NtpTimeStamp::now(),
         };
         self.connection.write_frame(&ss).await?;
         Ok(())
@@ -348,7 +348,7 @@ impl ClientSession {
                 Err(_) => break,
             };
             // Build response
-            let ts = Utc::now();
+            let ts = NtpTimeStamp::now();
             let resp = TestResponse {
                 seq,
                 timestamp: ts,

@@ -5,7 +5,7 @@
 // See LICENSE for details
 // ---------------------------------------------------------------------
 
-use super::{NtpTimeStamp, UtcDateTime, MBZ};
+use super::{NtpTimeStamp, MBZ};
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 use common::AgentError;
 use frame::{FrameReader, FrameWriter};
@@ -37,7 +37,7 @@ use frame::{FrameReader, FrameWriter};
 pub struct ServerStart {
     pub accept: u8,
     pub server_iv: Bytes,
-    pub start_time: UtcDateTime,
+    pub start_time: NtpTimeStamp,
 }
 
 impl FrameReader for ServerStart {
@@ -52,14 +52,14 @@ impl FrameReader for ServerStart {
         // Server-IV, 16 octets
         let server_iv = s.copy_to_bytes(16);
         // Start-Time, 8 octets
-        let ts = NtpTimeStamp::new(s.get_u32(), s.get_u32());
+        let ts = NtpTimeStamp::from(s.get_u64());
         // MBZ, 8 octets
         s.advance(8);
         //
         Ok(ServerStart {
             accept,
             server_iv,
-            start_time: ts.into(),
+            start_time: ts,
         })
     }
 }
@@ -83,9 +83,7 @@ impl FrameWriter for ServerStart {
         }
         s.put(&*self.server_iv);
         // Start-Time, 8 octets
-        let ts: NtpTimeStamp = self.start_time.into();
-        s.put_u32(ts.secs());
-        s.put_u32(ts.fracs());
+        s.put_u64(self.start_time.into());
         // MBZ, 8 octets
         s.put(&MBZ[..8]);
         Ok(())
@@ -96,7 +94,6 @@ impl FrameWriter for ServerStart {
 mod tests {
     use super::ServerStart;
     use bytes::{Buf, Bytes, BytesMut};
-    use chrono::{TimeZone, Utc};
     use frame::{FrameReader, FrameWriter};
 
     static SERVER_START: &[u8] = &[
@@ -118,7 +115,7 @@ mod tests {
         ServerStart {
             accept: 0,
             server_iv: Bytes::from_static(SERVER_IV),
-            start_time: Utc.with_ymd_and_hms(2021, 2, 12, 10, 0, 0).unwrap(),
+            start_time: 0xe3d0d02000000000u64.into(),
         }
     }
 

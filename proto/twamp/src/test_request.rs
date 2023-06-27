@@ -5,7 +5,7 @@
 // See LICENSE for details
 // ---------------------------------------------------------------------
 
-use super::{NtpTimeStamp, UtcDateTime};
+use super::NtpTimeStamp;
 use bytes::{Buf, BufMut, BytesMut};
 use common::AgentError;
 use frame::{FrameReader, FrameWriter};
@@ -34,7 +34,7 @@ use frame::{FrameReader, FrameWriter};
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub struct TestRequest {
     pub seq: u32,
-    pub timestamp: UtcDateTime,
+    pub timestamp: NtpTimeStamp,
     pub err_estimate: u16,
     // Padding to size, excluding IP + UDP
     pub pad_to: usize,
@@ -58,7 +58,7 @@ impl FrameReader for TestRequest {
         }
         Ok(TestRequest {
             seq,
-            timestamp: ts.into(),
+            timestamp: ts,
             err_estimate,
             pad_to,
         })
@@ -75,8 +75,7 @@ impl FrameWriter for TestRequest {
         // Sequence number, 4 octets
         s.put_u32(self.seq);
         // Timestamp, 8 octets
-        let ts: NtpTimeStamp = self.timestamp.into();
-        s.put_u64(ts.into());
+        s.put_u64(self.timestamp.into());
         // Err estimate, 2 octets
         s.put_u16(self.err_estimate);
         // Add padding
@@ -92,7 +91,6 @@ impl FrameWriter for TestRequest {
 mod tests {
     use super::TestRequest;
     use bytes::{Buf, BytesMut};
-    use chrono::{TimeZone, Utc};
     use frame::{FrameReader, FrameWriter};
 
     static TEST_REQUEST: &[u8] = &[
@@ -105,7 +103,7 @@ mod tests {
     fn get_test_request() -> TestRequest {
         TestRequest {
             seq: 1024,
-            timestamp: Utc.with_ymd_and_hms(2021, 2, 12, 10, 0, 0).unwrap(),
+            timestamp: 0xe3d0d02000000000u64.into(),
             err_estimate: 15,
             pad_to: 20,
         }

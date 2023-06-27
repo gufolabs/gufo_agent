@@ -9,7 +9,6 @@ mod pkt;
 use crate::pkt::{GetPacket, PacketModel};
 use async_trait::async_trait;
 use bytes::{Bytes, BytesMut};
-use chrono::Utc;
 use common::{counter, gauge, gauge_f, AgentError, Collectable, Measure, Timing};
 use connection::Connection;
 use frame::{FrameReader, FrameWriter};
@@ -23,9 +22,9 @@ use tokio::{
 };
 use tos::dscp_to_tos;
 use twamp::{
-    AcceptSession, IpVn, RequestTwSession, ServerGreeting, ServerStart, SetupResponse, StartAck,
-    StartSessions, StopSessions, TestRequest, TestResponse, UtcDateTime, ACCEPT_OK, MODE_REFUSED,
-    MODE_UNAUTHENTICATED, PAD_UNAUTHENTICATED,
+    AcceptSession, IpVn, NtpTimeStamp, RequestTwSession, ServerGreeting, ServerStart,
+    SetupResponse, StartAck, StartSessions, StopSessions, TestRequest, TestResponse, ACCEPT_OK,
+    MODE_REFUSED, MODE_UNAUTHENTICATED, PAD_UNAUTHENTICATED,
 };
 
 // Collector config
@@ -282,7 +281,7 @@ impl TestSession {
             sender_address: local_addr.ip(),
             receiver_address: remote_addr.ip(),
             padding_length,
-            start_time: Utc::now(),
+            start_time: NtpTimeStamp::now(),
             timeout: 255, // @todo: Make configurable
             type_p: self.tos as u32,
             octets_reflected: 0,
@@ -407,7 +406,7 @@ impl TestSession {
             let pkt = model.get_packet(seq);
             let req = TestRequest {
                 seq: pkt.seq as u32,
-                timestamp: Utc::now(),
+                timestamp: NtpTimeStamp::now(),
                 err_estimate: 0,
                 pad_to: pkt.size - udp_overhead,
             };
@@ -478,7 +477,7 @@ impl TestSession {
         let mut buf = BytesMut::with_capacity(16384);
         let t0 = Instant::now();
         'main: for count in 0..n_packets {
-            let mut ts: UtcDateTime;
+            let mut ts: NtpTimeStamp;
             let n: u64;
             // Try to read response,
             // @todo: Replace with UDPConnection
@@ -492,7 +491,7 @@ impl TestSession {
                         break 'main;
                     }
                 }
-                ts = Utc::now();
+                ts = NtpTimeStamp::now();
                 n = match socket.try_recv_buf(&mut buf) {
                     Ok(n) => n as u64,
                     Err(ref e) if e.kind() == std::io::ErrorKind::WouldBlock => {
@@ -520,7 +519,7 @@ impl TestSession {
             // Measured as delta between received response and sending request,
             // except for reflector internal delay.
             let rt_delay = ts - resp.sender_timestamp - reflector_delay;
-            rt_timing.apply_ns(rt_delay.num_nanoseconds().unwrap() as u64);
+            rt_timing.apply_ns(rt_delay.num_nanoseconds());
             // Estimate of inbound time,
             // Delta between sender timestamp and local time
             // @todo: Apply error estimate
@@ -529,7 +528,7 @@ impl TestSession {
             } else {
                 resp.timestamp - ts
             };
-            in_timing.apply_ns(in_delay.num_nanoseconds().unwrap() as u64);
+            in_timing.apply_ns(in_delay.num_nanoseconds());
             // Estimate of outbound time,
             // Delta between sender timestamp and receiver timestamp
             // @todo: Apply error estimate
@@ -538,7 +537,7 @@ impl TestSession {
             } else {
                 resp.sender_timestamp - resp.recv_timestamp
             };
-            out_timing.apply_ns(out_delay.num_nanoseconds().unwrap() as u64);
+            out_timing.apply_ns(out_delay.num_nanoseconds());
             // Detect loss
             in_loss = resp.seq as u64 - count;
             out_loss = (resp.sender_seq - resp.seq) as u64;

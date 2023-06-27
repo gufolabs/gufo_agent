@@ -5,7 +5,7 @@
 // See LICENSE for details
 // ---------------------------------------------------------------------
 
-use super::{NtpTimeStamp, UtcDateTime};
+use super::NtpTimeStamp;
 use bytes::{Buf, BufMut, BytesMut};
 use common::AgentError;
 use frame::{FrameReader, FrameWriter};
@@ -46,11 +46,11 @@ use frame::{FrameReader, FrameWriter};
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub struct TestResponse {
     pub seq: u32,
-    pub timestamp: UtcDateTime,
+    pub timestamp: NtpTimeStamp,
     pub err_estimate: u16,
-    pub recv_timestamp: UtcDateTime,
+    pub recv_timestamp: NtpTimeStamp,
     pub sender_seq: u32,
-    pub sender_timestamp: UtcDateTime,
+    pub sender_timestamp: NtpTimeStamp,
     pub sender_err_estimate: u16,
     pub sender_ttl: u8,
     // Padding to size, excluding IP + UDP
@@ -89,11 +89,11 @@ impl FrameReader for TestResponse {
         }
         Ok(TestResponse {
             seq,
-            timestamp: ts.into(),
+            timestamp: ts,
             err_estimate,
-            recv_timestamp: recv_ts.into(),
+            recv_timestamp: recv_ts,
             sender_seq,
-            sender_timestamp: sender_ts.into(),
+            sender_timestamp: sender_ts,
             sender_err_estimate,
             sender_ttl,
             pad_to,
@@ -111,20 +111,18 @@ impl FrameWriter for TestResponse {
         // Sequence number, 4 octets
         s.put_u32(self.seq);
         // Timestamp, 8 octets
-        let ts: NtpTimeStamp = self.timestamp.into();
+        let ts: NtpTimeStamp = self.timestamp;
         s.put_u64(ts.into());
         // Err estimate, 2 octets
         s.put_u16(self.err_estimate);
         // MBZ, 2 octets
         s.put_u16(0);
         // Receive timestamp, 8 octets
-        let ts: NtpTimeStamp = self.recv_timestamp.into();
-        s.put_u64(ts.into());
+        s.put_u64(self.recv_timestamp.into());
         // Sender sequence number, 4 octets
         s.put_u32(self.sender_seq);
         // Sender timestamp
-        let ts: NtpTimeStamp = self.sender_timestamp.into();
-        s.put_u64(ts.into());
+        s.put_u64(self.sender_timestamp.into());
         // Sender err estimate, 2 octets
         s.put_u16(self.sender_err_estimate);
         // MBZ, 2 octets
@@ -144,7 +142,6 @@ impl FrameWriter for TestResponse {
 mod tests {
     use super::TestResponse;
     use bytes::{Buf, BytesMut};
-    use chrono::{TimeZone, Utc};
     use frame::{FrameReader, FrameWriter};
 
     static TEST_RESPONSE: &[u8] = &[
@@ -164,11 +161,11 @@ mod tests {
     fn get_test_response() -> TestResponse {
         TestResponse {
             seq: 1024,
-            timestamp: Utc.with_ymd_and_hms(2021, 2, 12, 10, 0, 2).unwrap(),
+            timestamp: 0xe3d0d02200000000u64.into(),
             err_estimate: 15,
-            recv_timestamp: Utc.with_ymd_and_hms(2021, 2, 12, 10, 0, 1).unwrap(),
+            recv_timestamp: 0xe3d0d02100000000u64.into(),
             sender_seq: 1025,
-            sender_timestamp: Utc.with_ymd_and_hms(2021, 2, 12, 10, 0, 0).unwrap(),
+            sender_timestamp: 0xe3d0d02000000000u64.into(),
             sender_err_estimate: 14,
             sender_ttl: 250,
             pad_to: 50,
