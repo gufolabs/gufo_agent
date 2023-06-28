@@ -4,33 +4,34 @@
 
 ## Configuration
 
-{{ collector_config("modbus_tcp") }}
+{{ collector_config("modbus_rtu") }}
 
 The collector-specific configuration is:
 
-| Parameter                | Type                | Default   | Description                                                                   |
-| ------------------------ | ------------------- | --------- | ----------------------------------------------------------------------------- |
-| `timeout_ms`             | Integer             | 5000      | Request timeout, ms.                                                          |
-| `default_serial_path`    | String              |           | Default path to the serial port device (i.e. `/dev/ttyS1`)                    |
-| `default_slave`          | Integer             |           | Default modbus RTU slave id                                                   |
-| `default_baud_rate`      | Integer             |           | Default serial port speed                                                     |
-| `default_data_bits`      | Integer             |           | Default serial port data bits: 5, 6, 7 or 8                                   |
-| `default_parity`         | String              | `none`    | Default serial port parity, either `none`, `even` or `odd`                    |
-| `default_stop_bits`      | Integer             |           | Default serial port stop bits, either `1` or `2`                              |
-| `items`                  | Array {{ complex }} |           | Metrics to collect as a list of items                                         |
-| {{ tab }}`name`          | String              |           | Metric name, as to be exposed                                                 |
-| {{ tab }}`help`          | String              |           | Short help to be exposed along with metric                                    |
-| {{ tab }}`labels`        | Object              |           | Metric labels                                                                 |
-| {{ tab }}`serial_path`   | String              |           | Path to the serial port device (i.e. `/dev/ttyS1`). Use defaults when not set |
-| {{ tab }}`slave`         | Integer             |           | Modbus RTU slave id. Use defaults when not set                                |
-| {{ tab }}`baud_rate`     | Integer             |           | Serial port speed. Use defaults when not set                                  |
-| {{ tab }}`data_bits`     | Integer             |           | Serial port data bits: 5, 6, 7 or 8. Use defaults when not set                |
-| {{ tab }}`parity`        | String              | `none`    | Serial port parity, either `none`, `even` or `odd`. Use defaults when not set |
-| {{ tab }}`stop_bits`     | Integer             |           | Serial port stop bits, either `1` or `2`. Use defaults when not set           |
-| {{ tab }}`register`      | Integer             |           | Starting register of modbus request, zero-based                               |
-| {{ tab }}`register_type` | String              | `holding` | Modbus request type. Either `holding`, `input` or `coil`                      |
-| {{ tab }}`format`        | String              |           | Expected response format. See [Response format](#response-format) for details |
-| {{ tab }}`slave`         | Integer             | 255       | Optional slave id, see note below.                                            |
+| Parameter                | Type                 | Default                | Description                                                                   |
+| ------------------------ | -------------------- | ---------------------- | ----------------------------------------------------------------------------- |
+| `timeout_ms`             | Integer              | 5000                   | Request timeout, ms.                                                          |
+| `defaults`               | Object {{ complex }} |                        | Items defaults                                                                |
+| {{ tab }}`serial_path`   | String               |                        | Default path to the serial port device (i.e. `/dev/ttyS1`)                    |
+| {{ tab }}`slave`         | Integer              |                        | Default modbus RTU slave id                                                   |
+| {{ tab }}`baud_rate`     | Integer              | 115200                 | Default serial port speed                                                     |
+| {{ tab }}`data_bits`     | Integer              | 8                      | Default serial port data bits: 5, 6, 7 or 8                                   |
+| {{ tab }}`parity`        | String               | `none`                 | Default serial port parity, either `none`, `even` or `odd`                    |
+| {{ tab }}`stop_bits`     | Integer              | 1                      | Default serial port stop bits, either `1` or `2`                              |
+| `items`                  | Array {{ complex }}  |                        | Metrics to collect as a list of items                                         |
+| {{ tab }}`name`          | String               |                        | Metric name, as to be exposed                                                 |
+| {{ tab }}`help`          | String               |                        | Short help to be exposed along with metric                                    |
+| {{ tab }}`labels`        | Object               |                        | Metric labels                                                                 |
+| {{ tab }}`serial_path`   | String               | `defaults.serial_path` | Path to the serial port device (i.e. `/dev/ttyS1`). Use defaults when not set |
+| {{ tab }}`slave`         | Integer              | `defaults.slave`       | Modbus RTU slave id. Use defaults when not set                                |
+| {{ tab }}`baud_rate`     | Integer              | `defaults.baud_rate`   | Serial port speed. Use defaults when not set                                  |
+| {{ tab }}`data_bits`     | Integer              | `defaults.data_bits`   | Serial port data bits: 5, 6, 7 or 8. Use defaults when not set                |
+| {{ tab }}`parity`        | String               | `defaults.parity`      | Serial port parity, either `none`, `even` or `odd`. Use defaults when not set |
+| {{ tab }}`stop_bits`     | Integer              | `defaults.stop_bits`   | Serial port stop bits, either `1` or `2`. Use defaults when not set           |
+| {{ tab }}`register`      | Integer              |                        | Starting register of modbus request, zero-based                               |
+| {{ tab }}`register_type` | String               | `holding`              | Modbus request type. Either `holding`, `input` or `coil`                      |
+| {{ tab }}`format`        | String               |                        | Expected response format. See [Response format](#response-format) for details |
+| {{ tab }}`slave`         | Integer              | 255                    | Optional slave id, see note below.                                            |
 
 !!! warning "Check address notation"
 
@@ -43,10 +44,11 @@ Config Example:
 ``` yaml
 - id: Modbus
   type: modbus_rtu
-  default_serial_path: /dev/ttyS1
-  default_baud_rate: 9600
-  default_bits: 8
-  default_stop_bits: 1
+  defaults:
+    serial_path: /dev/ttyS1
+    baud_rate: 9600
+    bits: 8
+    stop_bits: 1
   items:
     - name: dc_temp
       help: Temperature in celsius
