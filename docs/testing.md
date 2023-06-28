@@ -38,6 +38,46 @@ cargo clippy
 cargo test
 ```
 
+## Profiling
+
+### Prerequisites
+
+Before running profiler install Valgrind:
+
+```
+apt-get install build-essential valgrind
+```
+
+Then install `iai-callgrind-runner`:
+
+```
+cargo install --version 0.3.1 iai-callgrind-runner
+```
+
+Docker devcontainer must be run in `--priveleged` mode, i.e.
+ensure, that `.devcontainer/devcontainer.json` has proper `runArgs` setting:
+
+```
+    "runArgs": [
+        "--init",
+        "--privileged"
+    ],
+```
+
+### Run Benchmarks
+
+Run all benchmarks:
+
+```
+cargo bench
+```
+
+Run benchmarks for specific crate  (i.e. `twamp`):
+
+```
+cargo bench -p twamp
+```
+
 ## Building Documentation
 
 To rebuild and check documentation run
