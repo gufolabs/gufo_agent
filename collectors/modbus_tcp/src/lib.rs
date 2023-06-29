@@ -13,6 +13,9 @@ use std::net::SocketAddr;
 use tokio::time::{timeout, Duration};
 use tokio_modbus::{client::tcp::connect_slave, prelude::Reader, Address, Quantity, Slave};
 
+const DEFAULT_SLAVE: u8 = 255;
+const DEFAULT_FIRST_REFERENCE: u16 = 0;
+
 // Collector config
 #[derive(Deserialize, Serialize)]
 pub struct Config {
@@ -21,7 +24,15 @@ pub struct Config {
     pub port: u16,
     #[serde(default = "default_5000")]
     pub timeout_ms: u64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    defaults: Option<ConfigDefaults>,
     items: Vec<CollectorConfigItem>,
+}
+
+#[derive(Deserialize, Serialize)]
+pub struct ConfigDefaults {
+    #[serde(default = "default_first_reference")]
+    first_reference: u16,
 }
 
 #[derive(Deserialize, Serialize)]
@@ -33,7 +44,7 @@ pub struct CollectorConfigItem {
     #[serde(default = "default_holding")]
     pub register_type: RegisterType,
     pub format: ModbusFormat,
-    #[serde(default = "default_255")]
+    #[serde(default = "default_slave")]
     pub slave: u8,
 }
 
@@ -60,6 +71,8 @@ impl TryFrom<Config> for Collector {
     type Error = AgentError;
 
     fn try_from(value: Config) -> Result<Self, Self::Error> {
+        // defaults
+        let defaults = value.defaults.unwrap_or_default();
         // Parse address
         let sock_addr = format!("{}:{}", value.address, value.port)
             .parse()
@@ -75,7 +88,7 @@ impl TryFrom<Config> for Collector {
                     name: x.name.clone(),
                     help: x.help.clone(),
                     labels: x.labels.clone().into(),
-                    register: x.register,
+                    register: x.register - defaults.first_reference,
                     count: x.format.min_count(),
                     register_type: x.register_type.clone(),
                     format: x.format,
@@ -145,6 +158,14 @@ impl Collectable for Collector {
     }
 }
 
+impl Default for ConfigDefaults {
+    fn default() -> Self {
+        ConfigDefaults {
+            first_reference: default_first_reference(),
+        }
+    }
+}
+
 fn default_502() -> u16 {
     502
 }
@@ -157,6 +178,10 @@ fn default_5000() -> u64 {
     5_000
 }
 
-fn default_255() -> u8 {
-    255
+fn default_slave() -> u8 {
+    DEFAULT_SLAVE
+}
+
+fn default_first_reference() -> u16 {
+    DEFAULT_FIRST_REFERENCE
 }

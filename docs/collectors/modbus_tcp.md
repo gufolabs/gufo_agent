@@ -8,25 +8,27 @@
 
 The collector-specific configuration is:
 
-| Parameter                | Type                | Default   | Description                                                                   |
-| ------------------------ | ------------------- | --------- | ----------------------------------------------------------------------------- |
-| `address`                | String              |           | IP address of Modbus TCP server                                               |
-| `port`                   | Integer             | 502       | Port of Modbus TCP server                                                     |
-| `timeout_ms`             | Integer             | 5000      | Request timeout, ms.                                                          |
-| `items`                  | Array {{ complex }} |           | Metrics to collect as a list of items                                         |
-| {{ tab }}`name`          | String              |           | Metric name, as to be exposed                                                 |
-| {{ tab }}`help`          | String              |           | Short help to be exposed along with metric                                    |
-| {{ tab }}`labels`        | Object              |           | Metric labels                                                                 |
-| {{ tab }}`register`      | Integer             |           | Starting register of modbus request, zero-based                               |
-| {{ tab }}`register_type` | String              | `holding` | Modbus request type. Either `holding`, `input` or `coil`                      |
-| {{ tab }}`format`        | String              |           | Expected response format. See [Response format](#response-format) for details |
-| {{ tab }}`slave`         | Integer             | 255       | Optional slave id, see note below.                                            |
+| Parameter                  | Type                 | Default   | Description                                                                   |
+| -------------------------- | -------------------- | --------- | ----------------------------------------------------------------------------- |
+| `address`                  | String               |           | IP address of Modbus TCP server                                               |
+| `port`                     | Integer              | 502       | Port of Modbus TCP server                                                     |
+| `timeout_ms`               | Integer              | 5000      | Request timeout, ms.                                                          |
+| `defaults`                 | Object {{ complex }} |           | Items defaults                                                                |
+| {{ tab }}`first_reference` | Integer              | 0         | Starting register. Adjusts `items.register` by this value.                    |
+| `items`                    | Array {{ complex }}  |           | Metrics to collect as a list of items                                         |
+| {{ tab }}`name`            | String               |           | Metric name, as to be exposed                                                 |
+| {{ tab }}`help`            | String               |           | Short help to be exposed along with metric                                    |
+| {{ tab }}`labels`          | Object               |           | Metric labels                                                                 |
+| {{ tab }}`register`        | Integer              |           | Starting register of modbus request, based on `defaults.first_reference`      |
+| {{ tab }}`register_type`   | String               | `holding` | Modbus request type. Either `holding`, `input` or `coil`                      |
+| {{ tab }}`format`          | String               |           | Expected response format. See [Response format](#response-format) for details |
+| {{ tab }}`slave`           | Integer              | 255       | Optional slave id, see note below.                                            |
 
 !!! warning "Check address notation"
 
     Take note the starting register address is zero-based, while vendors
     can document the registers starting from 1. Refer to the vendor documentation
-    and subtract 1 when necessary.
+    and set `defaults.first_reference` to 1 when neccessary.
 
 !!! note "On Slave ID"
 
@@ -88,6 +90,12 @@ approaches widely used between modbus devices:
 | Low-endian (le)          |   04 |   03 |   02 |   01 |
 | Big-endian, swapped (bs) |   02 |   01 |   04 |   03 |
 | Low-endian, swapped (ls) |   03 |   04 |   01 |   02 |
+
+!!! warning "Little-Endian Notice"
+
+    There is some mess with 32-bit low-endian types. Some vendors
+    and tools call the low-endian swapped format merely as low-endian.
+    So try to change `le` suffix to `ls` if the result is really wierd.
 
 ## Collected Metrics
 
