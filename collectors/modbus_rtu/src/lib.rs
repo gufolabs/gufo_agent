@@ -16,6 +16,7 @@ use tokio_serial::{DataBits, Parity, SerialPortBuilderExt, StopBits};
 const DEFAULT_BAUD_RATE: u32 = 115_200;
 const DEFAULT_DATA_BITS: usize = 8;
 const DEFAULT_STOP_BITS: usize = 1;
+const DEFAULT_FIRST_REFERENCE: u16 = 0;
 
 // Collector config
 #[derive(Deserialize, Serialize)]
@@ -39,6 +40,8 @@ pub struct ConfigDefaults {
     parity: CfgParity,
     #[serde(default = "default_stop_bits")]
     stop_bits: usize,
+    #[serde(default = "default_first_reference")]
+    first_reference: u16,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -137,7 +140,7 @@ impl TryFrom<Config> for Collector {
                 data_bits,
                 parity,
                 stop_bits,
-                register: c.register,
+                register: c.register - defaults.first_reference,
                 count: c.format.min_count(),
                 register_type: c.register_type.clone(),
                 format: c.format,
@@ -245,6 +248,7 @@ impl Default for ConfigDefaults {
             data_bits: default_data_bits(),
             parity: default_parity(),
             stop_bits: default_stop_bits(),
+            first_reference: default_first_reference(),
         }
     }
 }
@@ -271,4 +275,8 @@ fn default_stop_bits() -> usize {
 
 fn default_parity() -> CfgParity {
     CfgParity::None
+}
+
+fn default_first_reference() -> u16 {
+    DEFAULT_FIRST_REFERENCE
 }
