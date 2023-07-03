@@ -24,7 +24,7 @@ impl TryFrom<&RelabelRuleConfig> for Eval {
             Some(labels) => labels.clone(),
             None => {
                 return Err(AgentError::ConfigurationError(
-                    "target_labels must be set".to_string(),
+                    "source_labels must be set".to_string(),
                 ))
             }
         };
