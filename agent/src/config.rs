@@ -43,17 +43,20 @@ pub struct SenderConfig {
     pub r#type: String,
     #[serde(default = "default_pull")]
     pub mode: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub listen: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub listen_tls: Option<String>,
     #[serde(default = "default_false", skip_serializing_if = "is_false")]
     pub tls_redirect: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cert_path: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key_path: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub client_auth_requred_path: Option<String>,
     #[serde(default = "default_metrics")]
     pub path: String,
-    // tls
-    // cert_path, key_path
     // auth
 }
 
