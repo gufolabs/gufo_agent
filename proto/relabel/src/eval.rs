@@ -7,6 +7,7 @@
 use super::{ActiveLabels, RelabelRuleConfig};
 use common::{AgentError, AgentResult};
 use regex::Regex;
+use std::sync::OnceLock;
 
 #[derive(Debug)]
 pub(crate) struct Eval {
@@ -15,6 +16,8 @@ pub(crate) struct Eval {
     regex: Option<Regex>,
     replacement: Option<String>,
 }
+
+static CAP_RX: OnceLock<Regex> = OnceLock::new();
 
 impl TryFrom<&RelabelRuleConfig> for Eval {
     type Error = AgentError;
@@ -28,12 +31,17 @@ impl TryFrom<&RelabelRuleConfig> for Eval {
             }
             None => None,
         };
+        // Rewrite $1 -> ${1}
+        let replacement = value.replacement.clone().map(|x| {
+            let cap_rx = CAP_RX.get_or_init(|| Regex::new("(^|[^$])\\$(\\d+)").unwrap());
+            cap_rx.replace_all(&x, "${1}$${${2}}").to_string()
+        });
         //
         Ok(Eval {
             source_labels,
             separator: value.separator.clone(),
             regex,
-            replacement: value.replacement.clone(),
+            replacement,
         })
     }
 }
