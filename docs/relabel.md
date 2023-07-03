@@ -6,6 +6,7 @@ The rule set contains one or more relabeling rules, each one performing one or m
 
 * [replace](#replace) - Create or update labels basing on context of the other labels.
 * [drop](#drop) - Drop matched metrics.
+* [drop_if_equal](#drop-if-equal) - Drop metrics if values of labels are equal.
 * [keep](#keep) - Keep matched metrics.
 * [labeldrop](#label-drop) - Drop matched labels.
 * [labelkeep](#label-keep) - Keep matched labels.
@@ -96,7 +97,7 @@ Rewrite `ps_write_count` metric name to `total_writes`:
 | `separator`     | `;`     | The separator                           |
 | `regex`         | `(.+)`  | The regular expression to match         |
 
-The `replace` rule performs the following steps:
+The `drop` rule performs the following steps:
 
 1. Extracts the values of the all labels specified in `source_labels`. 
    If any of the `source_labels` is missed, the rule is considered failed and the processing
@@ -123,6 +124,34 @@ Drop `ps_write_count` metric for user `scott` in zone `tiger`:
 - source_labels: [__name__, user, zone]
   regex: "ps_write_count;scott;tiger"
   action: drop
+```
+
+### Drop If Equal
+
+`drop_if_equal` action drops metric if the values of labels are equal. The configuration is:
+
+| Parameter       | Default | Description                                                              |
+| --------------- | ------- | ------------------------------------------------------------------------ |
+| `action`        |         | Must be `drop_if_equal`                                                  |
+| `source_labels` |         | The list of label names to be evaluated. Must contain two or more names. |
+
+The `drop_if_equal` rule performs the following steps:
+
+1. Extracts the values of the all labels specified in `source_labels`.
+2. If all extracted values are the same, rule is considered matcheed and the metric is discarded.
+3. Processing is stopped.
+
+!!! note
+
+    `drop_if_equal` rule matches if all the labels in `source_labels` are missed.
+
+Examples:
+
+Drop metric if `prev_label` and `new_label` is matched:
+
+``` yaml
+- source_labels: [prev_label, new_label]
+  action: drop_if_equal
 ```
 
 ### Keep
