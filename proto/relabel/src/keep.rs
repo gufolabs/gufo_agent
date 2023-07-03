@@ -25,9 +25,11 @@ impl TryFrom<&RelabelRuleConfig> for KeepRule {
                 ));
             }
         }
-        Ok(KeepRule {
-            eval: Eval::try_from(value)?,
-        })
+        // Parse
+        let eval = Eval::try_from(value)?;
+        // source_labels must be set
+        eval.require_source_labels()?;
+        Ok(KeepRule { eval })
     }
 }
 

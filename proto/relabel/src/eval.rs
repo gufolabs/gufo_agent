@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------
 
 use super::{ActiveLabels, RelabelRuleConfig};
-use common::AgentError;
+use common::{AgentError, AgentResult};
 use regex::Regex;
 
 #[derive(Debug)]
@@ -20,14 +20,7 @@ impl TryFrom<&RelabelRuleConfig> for Eval {
     type Error = AgentError;
 
     fn try_from(value: &RelabelRuleConfig) -> Result<Self, Self::Error> {
-        let source_labels = match &value.source_labels {
-            Some(labels) => labels.clone(),
-            None => {
-                return Err(AgentError::ConfigurationError(
-                    "source_labels must be set".to_string(),
-                ))
-            }
-        };
+        let source_labels = value.source_labels.clone().unwrap_or_default();
         // Compile regex
         let regex = match &value.regex {
             Some(rx) => {
@@ -46,6 +39,14 @@ impl TryFrom<&RelabelRuleConfig> for Eval {
 }
 
 impl Eval {
+    pub(crate) fn require_source_labels(&self) -> AgentResult<()> {
+        if self.source_labels.is_empty() {
+            return Err(AgentError::ConfigurationError(
+                "'source_labels' must be set".to_string(),
+            ));
+        }
+        Ok(())
+    }
     // Resulting string, if match. None otherwise
     pub(crate) fn apply(&self, labels: &ActiveLabels) -> Option<String> {
         if self.source_labels.is_empty() {
