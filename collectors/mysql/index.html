@@ -1,0 +1,3525 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Gufo Agent Documentation">
+      
+      
+        <meta name="author" content="Gufo Labs">
+      
+      
+        <link rel="canonical" href="https://docs.gufolabs.com/gufo_agent/collectors/mysql/">
+      
+      <link rel="icon" href="../../assets/logo.png">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-8.5.8">
+    
+    
+      
+        <title>mysql - Gufo Agent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.20d9efc8.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.815d1a91.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#mysql-collector" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Gufo Agent" class="md-header__button md-logo" aria-label="Gufo Agent" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Gufo Agent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              mysql
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_3" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_3">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/gufolabs/gufo_agent/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Gufo Agent" class="md-nav__button md-logo" aria-label="Gufo Agent" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    Gufo Agent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/gufolabs/gufo_agent/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../man/" class="md-nav__link">
+        Man Pages
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        Configuration
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../relabel/" class="md-nav__link">
+        Relabeling Rules
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../config_discovery/" class="md-nav__link">
+        Config Discovery
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          Collectors Reference
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Collectors Reference" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Collectors Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../block_io/" class="md-nav__link">
+        block_io
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpu/" class="md-nav__link">
+        cpu
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dns/" class="md-nav__link">
+        dns
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exec/" class="md-nav__link">
+        exec
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fs/" class="md-nav__link">
+        fs
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../http/" class="md-nav__link">
+        http
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memory/" class="md-nav__link">
+        memory
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modbus_rtu/" class="md-nav__link">
+        modbus_rtu
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modbus_tcp/" class="md-nav__link">
+        modbus_tcp
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          mysql
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        mysql
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#collected-metrics" class="md-nav__link">
+    Collected Metrics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#labels" class="md-nav__link">
+    Labels
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sample-output" class="md-nav__link">
+    Sample Output
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mysql_query/" class="md-nav__link">
+        mysql_query
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../network/" class="md-nav__link">
+        network
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pgbouncer/" class="md-nav__link">
+        pgbouncer
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgres/" class="md-nav__link">
+        postgres
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgres_query/" class="md-nav__link">
+        postgres_query
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procstat/" class="md-nav__link">
+        procstat
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../redis/" class="md-nav__link">
+        redis
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../scrape/" class="md-nav__link">
+        scrape
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sockets/" class="md-nav__link">
+        sockets
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spool/" class="md-nav__link">
+        spool
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../twamp_reflector/" class="md-nav__link">
+        twamp_reflector
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../twamp_sender/" class="md-nav__link">
+        twamp_sender
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uptime/" class="md-nav__link">
+        uptime
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../metrics/" class="md-nav__link">
+        Metrics Reference
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          Developers' Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Developers' Guide" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Developers' Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../environment/" class="md-nav__link">
+        Developer's Environment
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/" class="md-nav__link">
+        Building and Testing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../creating_new_collector/" class="md-nav__link">
+        Creating New Collector
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openmetrics/" class="md-nav__link">
+        OpenMetrics Format
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../devcommon/" class="md-nav__link">
+        Common Tasks
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../devtools/" class="md-nav__link">
+        Developer's Tools
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../codebase/" class="md-nav__link">
+        Code Base
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CONTRIBUTING/" class="md-nav__link">
+        Contributing Guide
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CODE_OF_CONDUCT/" class="md-nav__link">
+        Code of Conduct
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        FAQ
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CHANGELOG/" class="md-nav__link">
+        Changelog
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../LICENSE/" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#collected-metrics" class="md-nav__link">
+    Collected Metrics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#labels" class="md-nav__link">
+    Labels
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sample-output" class="md-nav__link">
+    Sample Output
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/gufolabs/gufo_agent/edit/master/docs/collectors/mysql.md" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="mysql-collector">mysql collector<a class="headerlink" href="#mysql-collector" title="Permanent link">&para;</a></h1>
+<p><code>mysql</code> collects MySQL instance statistics</p>
+<p>The common collector's configuration is:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>String</td>
+<td></td>
+<td>Collector's ID. Must be unique per agent instance.</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>String</td>
+<td></td>
+<td>Must be <code>mysql</code></td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td>Integer</td>
+<td><code>agent.defaults.interval</code></td>
+<td>Repetition interval in seconds</td>
+</tr>
+<tr>
+<td><code>labels</code></td>
+<td>Object</td>
+<td></td>
+<td>Additional collector-level labels</td>
+</tr>
+<tr>
+<td><code>relabel</code></td>
+<td>Array</td>
+<td></td>
+<td>Optional relabeling rules. See <a href="../../relabel/">Relabeling Rules</a> for details</td>
+</tr>
+</tbody>
+</table>
+<p>The collector-specific configuration is:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>host</code></td>
+<td>String</td>
+<td></td>
+<td>Server instance host for TCP connection</td>
+</tr>
+<tr>
+<td><code>port</code></td>
+<td>Integer</td>
+<td></td>
+<td>Server instance port for TCP connection</td>
+</tr>
+<tr>
+<td><code>username</code></td>
+<td>String</td>
+<td></td>
+<td>Username to connect database</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>String</td>
+<td></td>
+<td>Password to connect database</td>
+</tr>
+</tbody>
+</table>
+<p>Config example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mysql</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">disabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mysql</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">127.0.0.1</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">root</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secret</span>
+</code></pre></div>
+<h2 id="collected-metrics">Collected Metrics<a class="headerlink" href="#collected-metrics" title="Permanent link">&para;</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">OpenMetrics</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Metric Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mysql_aborted_clients</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_aborted_connects</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_acl_cache_items_count</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_binlog_cache_disk_use</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_binlog_cache_use</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_binlog_stmt_cache_disk_use</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_binlog_stmt_cache_use</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_bytes_received</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_bytes_sent</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_admin_commands</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_alter_db</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_alter_event</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_alter_function</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_alter_instance</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_alter_procedure</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_alter_resource_group</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_alter_server</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_alter_table</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_alter_tablespace</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_alter_user</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_alter_user_default_role</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_analyze</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_assign_to_keycache</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_begin</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_binlog</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_call_procedure</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_change_db</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_change_master</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_change_repl_filter</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_change_replication_source</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_check</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_checksum</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_clone</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_commit</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_create_db</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_create_event</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_create_function</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_create_index</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_create_procedure</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_create_resource_group</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_create_role</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_create_server</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_create_spatial_reference_system</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_create_table</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_create_trigger</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_create_udf</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_create_user</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_create_view</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_dealloc_sql</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_delete</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_delete_multi</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_do</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_drop_db</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_drop_event</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_drop_function</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_drop_index</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_drop_procedure</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_drop_resource_group</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_drop_role</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_drop_server</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_drop_spatial_reference_system</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_drop_table</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_drop_trigger</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_drop_user</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_drop_view</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_empty_query</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_execute_sql</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_explain_other</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_flush</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_get_diagnostics</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_grant</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_grant_roles</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_group_replication_start</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_group_replication_stop</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_ha_close</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_ha_open</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_ha_read</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_help</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_import</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_insert</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_insert_select</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_install_component</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_install_plugin</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_kill</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_load</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_lock_instance</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_lock_tables</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_optimize</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_preload_keys</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_prepare_sql</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_purge</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_purge_before_date</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_release_savepoint</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_rename_table</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_rename_user</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_repair</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_replace</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_replace_select</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_replica_start</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_replica_stop</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_reset</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_resignal</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_restart</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_revoke</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_revoke_all</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_revoke_roles</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_rollback</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_rollback_to_savepoint</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_savepoint</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_select</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_set_option</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_set_password</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_set_resource_group</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_set_role</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_binlog_events</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_binlogs</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_charsets</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_collations</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_create_db</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_create_event</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_create_func</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_create_proc</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_create_table</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_create_trigger</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_create_user</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_databases</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_engine_logs</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_engine_mutex</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_engine_status</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_errors</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_events</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_fields</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_function_code</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_function_status</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_grants</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_keys</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_master_status</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_open_tables</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_plugins</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_privileges</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_procedure_code</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_procedure_status</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_processlist</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_profile</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_profiles</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_relaylog_events</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_replica_status</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_replicas</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_slave_hosts</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_slave_status</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_status</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_storage_engines</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_table_status</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_tables</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_triggers</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_variables</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_show_warnings</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_shutdown</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_signal</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_slave_start</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_slave_stop</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_stmt_close</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_stmt_execute</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_stmt_fetch</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_stmt_prepare</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_stmt_reprepare</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_stmt_reset</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_stmt_send_long_data</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_truncate</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_uninstall_component</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_uninstall_plugin</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_unlock_instance</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_unlock_tables</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_update</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_update_multi</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_xa_commit</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_xa_end</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_xa_prepare</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_xa_recover</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_xa_rollback</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_com_xa_start</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_connection_errors_accept</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_connection_errors_internal</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_connection_errors_max_connections</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_connection_errors_peer_address</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_connection_errors_select</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_connection_errors_tcpwrap</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_connections</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_created_tmp_disk_tables</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_created_tmp_files</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_created_tmp_tables</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_delayed_errors</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_delayed_insert_threads</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_delayed_writes</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_error_log_buffered_bytes</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_error_log_buffered_events</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_error_log_expired_events</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_error_log_latest_write</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_flush_commands</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_global_connection_memory</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_handler_commit</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_handler_delete</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_handler_discover</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_handler_external_lock</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_handler_mrr_init</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_handler_prepare</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_handler_read_first</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_handler_read_key</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_handler_read_last</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_handler_read_next</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_handler_read_prev</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_handler_read_rnd</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_handler_read_rnd_next</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_handler_rollback</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_handler_savepoint</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_handler_savepoint_rollback</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_handler_update</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_handler_write</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_buffer_pool_bytes_data</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_buffer_pool_bytes_dirty</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_buffer_pool_pages_data</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_buffer_pool_pages_dirty</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_buffer_pool_pages_flushed</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_buffer_pool_pages_free</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_buffer_pool_pages_misc</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_buffer_pool_pages_total</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_buffer_pool_read_ahead</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_buffer_pool_read_ahead_evicted</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_buffer_pool_read_ahead_rnd</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_buffer_pool_read_requests</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_buffer_pool_reads</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_buffer_pool_resize_status_code</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_buffer_pool_resize_status_progress</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_buffer_pool_wait_free</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_buffer_pool_write_requests</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_data_fsyncs</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_data_pending_fsyncs</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_data_pending_reads</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_data_pending_writes</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_data_read</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_data_reads</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_data_writes</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_data_written</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_dblwr_pages_written</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_dblwr_writes</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_log_waits</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_log_write_requests</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_log_writes</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_num_open_files</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_os_log_fsyncs</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_os_log_pending_fsyncs</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_os_log_pending_writes</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_os_log_written</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_page_size</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_pages_created</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_pages_read</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_pages_written</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_redo_log_capacity_resized</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_redo_log_checkpoint_lsn</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_redo_log_current_lsn</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_redo_log_flushed_to_disk_lsn</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_redo_log_logical_size</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_redo_log_physical_size</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_redo_log_uuid</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_row_lock_current_waits</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_row_lock_time</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_row_lock_time_avg</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_row_lock_time_max</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_row_lock_waits</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_rows_deleted</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_rows_inserted</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_rows_read</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_rows_updated</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_sampled_pages_read</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_sampled_pages_skipped</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_system_rows_deleted</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_system_rows_inserted</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_system_rows_read</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_system_rows_updated</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_truncated_status_writes</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_undo_tablespaces_active</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_undo_tablespaces_explicit</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_undo_tablespaces_implicit</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_innodb_undo_tablespaces_total</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_key_blocks_not_flushed</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_key_blocks_unused</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_key_blocks_used</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_key_read_requests</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_key_reads</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_key_write_requests</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_key_writes</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_locked_connects</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_max_execution_time_exceeded</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_max_execution_time_set</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_max_execution_time_set_failed</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_max_used_connections</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_aborted_clients</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_bytes_received</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_bytes_received_compressed_payload</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_bytes_received_uncompressed_frame</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_bytes_sent</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_bytes_sent_compressed_payload</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_bytes_sent_uncompressed_frame</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_connection_accept_errors</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_connection_errors</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_connections_accepted</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_connections_closed</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_connections_rejected</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_crud_create_view</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_crud_delete</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_crud_drop_view</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_crud_find</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_crud_insert</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_crud_modify_view</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_crud_update</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_cursor_close</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_cursor_fetch</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_cursor_open</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_errors_sent</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_errors_unknown_message_type</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_expect_close</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_expect_open</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_init_error</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_messages_sent</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_notice_global_sent</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_notice_other_sent</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_notice_warning_sent</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_notified_by_group_replication</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_port</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_prep_deallocate</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_prep_execute</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_prep_prepare</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_rows_sent</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_sessions</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_sessions_accepted</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_sessions_closed</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_sessions_fatal_error</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_sessions_killed</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_sessions_rejected</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_ssl_accepts</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_ssl_ctx_verify_depth</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_ssl_ctx_verify_mode</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_ssl_finished_accepts</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_stmt_create_collection</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_stmt_create_collection_index</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_stmt_disable_notices</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_stmt_drop_collection</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_stmt_drop_collection_index</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_stmt_enable_notices</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_stmt_ensure_collection</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_stmt_execute_mysqlx</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_stmt_execute_sql</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_stmt_execute_xplugin</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_stmt_get_collection_options</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_stmt_kill_client</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_stmt_list_clients</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_stmt_list_notices</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_stmt_list_objects</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_stmt_modify_collection_options</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_stmt_ping</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_worker_threads</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_mysqlx_worker_threads_active</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_not_flushed_delayed_rows</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ongoing_anonymous_transaction_count</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_open_files</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_open_streams</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_open_table_definitions</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_open_tables</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_opened_files</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_opened_table_definitions</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_opened_tables</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_accounts_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_cond_classes_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_cond_instances_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_digest_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_file_classes_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_file_handles_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_file_instances_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_hosts_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_index_stat_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_locker_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_memory_classes_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_metadata_lock_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_mutex_classes_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_mutex_instances_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_nested_statement_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_prepared_statements_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_program_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_rwlock_classes_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_rwlock_instances_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_session_connect_attrs_longest_seen</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_session_connect_attrs_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_socket_classes_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_socket_instances_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_stage_classes_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_statement_classes_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_table_handles_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_table_instances_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_table_lock_stat_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_thread_classes_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_thread_instances_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_performance_schema_users_lost</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_prepared_stmt_count</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_queries</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_questions</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_replica_open_temp_tables</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_secondary_engine_execution_count</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_select_full_join</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_select_full_range_join</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_select_range</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_select_range_check</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_select_scan</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_slave_open_temp_tables</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_slow_launch_threads</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_slow_queries</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_sort_merge_passes</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_sort_range</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_sort_rows</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_sort_scan</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_accept_renegotiates</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_accepts</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_callback_cache_hits</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_client_connects</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_connect_renegotiates</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_ctx_verify_depth</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_ctx_verify_mode</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_default_timeout</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_finished_accepts</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_finished_connects</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_session_cache_hits</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_session_cache_misses</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_session_cache_overflows</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_session_cache_size</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_session_cache_timeout</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_session_cache_timeouts</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_sessions_reused</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_used_session_cache_entries</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_verify_depth</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_ssl_verify_mode</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_table_locks_immediate</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_table_locks_waited</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_table_open_cache_hits</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_table_open_cache_misses</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_table_open_cache_overflows</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_tc_log_max_pages_used</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_tc_log_page_size</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_tc_log_page_waits</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_threads_cached</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_threads_connected</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_threads_created</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_threads_running</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_uptime</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+<tr>
+<td><code>mysql_uptime_since_flush_status</code></td>
+<td>Gauge</td>
+<td>???</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<h2 id="labels">Labels<a class="headerlink" href="#labels" title="Permanent link">&para;</a></h2>
+<p><code>mysql</code> collector do not appends labels</p>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="sample-output">Sample Output<a class="headerlink" href="#sample-output" title="Permanent link">&para;</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">OpenMetrics</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>
+</code></pre></div>
+</div>
+</div>
+</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../modbus_tcp/" class="md-footer__link md-footer__link--prev" aria-label="Previous: modbus_tcp" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              modbus_tcp
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../mysql_query/" class="md-footer__link md-footer__link--next" aria-label="Next: mysql_query" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              mysql_query
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2021-23, Gufo Labs
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d6c3db9e.min.js"></script>
+      
+    
+  </body>
+</html>
