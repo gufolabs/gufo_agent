@@ -136,8 +136,8 @@ mod tests {
     fn get_server_greeting() -> ServerGreeting {
         ServerGreeting {
             modes: MODE_UNAUTHENTICATED,
-            challenge: Bytes::from_static(&SERVER_GREETING1_CHALLENGE),
-            salt: Bytes::from_static(&SERVER_GREETING1_SALT),
+            challenge: Bytes::from_static(SERVER_GREETING1_CHALLENGE),
+            salt: Bytes::from_static(SERVER_GREETING1_SALT),
             count: 1024,
         }
     }

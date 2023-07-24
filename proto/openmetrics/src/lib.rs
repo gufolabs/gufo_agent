@@ -600,7 +600,7 @@ metric2 15 1686823614
             trust_timestamps: true,
         };
         assert_eq!(
-            parse(&input, &cfg).unwrap(),
+            parse(input, &cfg).unwrap(),
             vec![
                 Measure {
                     name: "metric1".into(),
@@ -634,7 +634,7 @@ metric2 15 1686823614
 # EOF"#;
         let cfg = ParseConfig::default();
         assert_eq!(
-            parse(&input, &cfg).unwrap(),
+            parse(input, &cfg).unwrap(),
             vec![
                 Measure {
                     name: "metric1".into(),
