@@ -58,7 +58,8 @@ impl Eval {
     // Resulting string, if match. None otherwise
     pub(crate) fn apply(&self, labels: &ActiveLabels) -> Option<String> {
         if self.source_labels.is_empty() {
-            return None;
+            // Add
+            return self.replacement.clone();
         }
         let mut values = Vec::with_capacity(self.source_labels.len());
         for n in self.source_labels.iter() {

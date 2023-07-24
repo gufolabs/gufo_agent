@@ -49,3 +49,52 @@ impl Relabeler for ReplaceRule {
         Ok(ActionResult::Pass)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{ActionResult, ActiveLabels, RelabelRuleConfig, Relabeler, ReplaceRule};
+    use common::Label;
+
+    #[test]
+    fn test_invalid_action() {
+        let yaml = r#"action: drop_something"#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        assert!(ReplaceRule::try_from(&cfg).is_err());
+    }
+
+    #[test]
+    fn test_add() {
+        let yaml = r#"
+action: replace
+target_label: z
+replacement: 9
+"#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        let rule = ReplaceRule::try_from(&cfg).unwrap();
+        let mut labels = ActiveLabels::new(vec![
+            Label::new("a", "1"),
+            Label::new("b", "2"),
+            Label::new("c", "3"),
+        ]);
+        assert_eq!(rule.apply(&mut labels).unwrap(), ActionResult::Pass);
+        assert_eq!(labels.get("z").unwrap(), "9");
+    }
+    #[test]
+    fn test_match1() {
+        let yaml = r#"
+action: replace
+source_labels: [a, b]
+target_label: z
+replacement: $0
+"#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        let rule = ReplaceRule::try_from(&cfg).unwrap();
+        let mut labels = ActiveLabels::new(vec![
+            Label::new("a", "1"),
+            Label::new("b", "2"),
+            Label::new("c", "3"),
+        ]);
+        assert_eq!(rule.apply(&mut labels).unwrap(), ActionResult::Pass);
+        assert_eq!(labels.get("z").unwrap(), "1;2");
+    }
+}

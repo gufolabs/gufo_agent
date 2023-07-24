@@ -61,3 +61,36 @@ impl Relabeler for LabelMapRule {
         Ok(ActionResult::Pass)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{ActionResult, ActiveLabels, LabelMapRule, RelabelRuleConfig, Relabeler};
+    use common::Label;
+
+    #[test]
+    fn test_invalid_action() {
+        let yaml = r#"action: drop_something"#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        assert!(LabelMapRule::try_from(&cfg).is_err());
+    }
+    #[test]
+    fn test_match() {
+        let yaml = r#"
+        action: labelmap
+        regex: a
+        replacement: d
+        "#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        let rule = LabelMapRule::try_from(&cfg).unwrap();
+        let mut labels = ActiveLabels::new(vec![
+            Label::new("a", "1"),
+            Label::new("b", "2"),
+            Label::new("c", "3"),
+        ]);
+        assert_eq!(rule.apply(&mut labels).unwrap(), ActionResult::Pass);
+        assert!(labels.get("a").is_none());
+        assert_eq!(labels.get("b").unwrap(), "2");
+        assert_eq!(labels.get("c").unwrap(), "3");
+        assert_eq!(labels.get("d").unwrap(), "1");
+    }
+}

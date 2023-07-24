@@ -37,3 +37,28 @@ impl Relabeler for DumpRule {
         Ok(ActionResult::Pass)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{ActionResult, ActiveLabels, DumpRule, RelabelRuleConfig, Relabeler};
+    use common::Label;
+
+    #[test]
+    fn test_invalid_action() {
+        let yaml = r#"action: drop_something"#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        assert!(DumpRule::try_from(&cfg).is_err());
+    }
+    #[test]
+    fn test_dump() {
+        let yaml = r#"action: dump"#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        let rule = DumpRule::try_from(&cfg).unwrap();
+        let mut labels = ActiveLabels::new(vec![
+            Label::new("a", "1"),
+            Label::new("b", "1"),
+            Label::new("c", "3"),
+        ]);
+        assert_eq!(rule.apply(&mut labels).unwrap(), ActionResult::Pass);
+    }
+}

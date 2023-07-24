@@ -42,3 +42,55 @@ impl Relabeler for DropRule {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{ActionResult, ActiveLabels, DropRule, RelabelRuleConfig, Relabeler};
+    use common::Label;
+
+    #[test]
+    fn test_invalid_action() {
+        let yaml = r#"action: drop_something"#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        assert!(DropRule::try_from(&cfg).is_err());
+    }
+
+    #[test]
+    fn test_no_source_labels() {
+        let yaml = r#"action: drop"#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        assert!(DropRule::try_from(&cfg).is_err());
+    }
+    #[test]
+    fn test_match() {
+        let yaml = r#"
+action: drop
+source_labels: [a, b]
+regex: "1;1"
+"#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        let rule = DropRule::try_from(&cfg).unwrap();
+        let mut labels = ActiveLabels::new(vec![
+            Label::new("a", "1"),
+            Label::new("b", "1"),
+            Label::new("c", "3"),
+        ]);
+        assert_eq!(rule.apply(&mut labels).unwrap(), ActionResult::Drop);
+    }
+    #[test]
+    fn test_not_match() {
+        let yaml = r#"
+action: drop
+source_labels: [a, b]
+regex: "1;1"
+"#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        let rule = DropRule::try_from(&cfg).unwrap();
+        let mut labels = ActiveLabels::new(vec![
+            Label::new("a", "1"),
+            Label::new("b", "2"),
+            Label::new("c", "3"),
+        ]);
+        assert_eq!(rule.apply(&mut labels).unwrap(), ActionResult::Pass);
+    }
+}

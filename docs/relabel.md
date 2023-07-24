@@ -214,11 +214,11 @@ Drop `user` and `zone` labels.
 
 ### Label Keep
 
-`labelkeep` action drops all matching labels. The configuration is:
+`labelkeep` action keeps all matching labels and drops all non-matching. The configuration is:
 
 | Parameter | Default | Description                     |
 | --------- | ------- | ------------------------------- |
-| `action`  |         | Must be `labeldrop`             |
+| `action`  |         | Must be `labelkeep`             |
 | `regex`   |         | The regular expression to match |
 
 The `labelkeep` rule perform following steps:

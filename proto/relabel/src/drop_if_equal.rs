@@ -56,3 +56,93 @@ impl Relabeler for DropIfEqualRule {
         Ok(ActionResult::Drop)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{ActionResult, ActiveLabels, DropIfEqualRule, RelabelRuleConfig, Relabeler};
+    use common::Label;
+
+    #[test]
+    fn test_invalid_action() {
+        let yaml = r#"action: drop_something"#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        assert!(DropIfEqualRule::try_from(&cfg).is_err());
+    }
+
+    #[test]
+    fn test_no_source_labels() {
+        let yaml = r#"action: drop_if_equal"#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        assert!(DropIfEqualRule::try_from(&cfg).is_err());
+    }
+    #[test]
+    fn test_short_source_labels() {
+        let yaml = r#"
+action: drop_if_equal
+source_labels: [x]
+"#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        assert!(DropIfEqualRule::try_from(&cfg).is_err());
+    }
+    #[test]
+    fn test_match2() {
+        let yaml = r#"
+action: drop_if_equal
+source_labels: [a, b]
+"#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        let rule = DropIfEqualRule::try_from(&cfg).unwrap();
+        let mut labels = ActiveLabels::new(vec![
+            Label::new("a", "1"),
+            Label::new("b", "1"),
+            Label::new("c", "3"),
+        ]);
+        assert_eq!(rule.apply(&mut labels).unwrap(), ActionResult::Drop);
+    }
+    #[test]
+
+    fn test_not_match2() {
+        let yaml = r#"
+action: drop_if_equal
+source_labels: [a, b]
+"#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        let rule = DropIfEqualRule::try_from(&cfg).unwrap();
+        let mut labels = ActiveLabels::new(vec![
+            Label::new("a", "1"),
+            Label::new("b", "2"),
+            Label::new("c", "3"),
+        ]);
+        assert_eq!(rule.apply(&mut labels).unwrap(), ActionResult::Pass);
+    }
+    #[test]
+    fn test_match3() {
+        let yaml = r#"
+action: drop_if_equal
+source_labels: [a, b, c]
+"#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        let rule = DropIfEqualRule::try_from(&cfg).unwrap();
+        let mut labels = ActiveLabels::new(vec![
+            Label::new("a", "1"),
+            Label::new("b", "1"),
+            Label::new("c", "1"),
+        ]);
+        assert_eq!(rule.apply(&mut labels).unwrap(), ActionResult::Drop);
+    }
+    #[test]
+    fn test_not_match3() {
+        let yaml = r#"
+action: drop_if_equal
+source_labels: [a, b, c]
+"#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        let rule = DropIfEqualRule::try_from(&cfg).unwrap();
+        let mut labels = ActiveLabels::new(vec![
+            Label::new("a", "1"),
+            Label::new("b", "1"),
+            Label::new("c", "3"),
+        ]);
+        assert_eq!(rule.apply(&mut labels).unwrap(), ActionResult::Pass);
+    }
+}

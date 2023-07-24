@@ -46,3 +46,34 @@ impl Relabeler for LabelKeepRule {
         Ok(ActionResult::Pass)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{ActionResult, ActiveLabels, LabelKeepRule, RelabelRuleConfig, Relabeler};
+    use common::Label;
+
+    #[test]
+    fn test_invalid_action() {
+        let yaml = r#"action: drop_something"#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        assert!(LabelKeepRule::try_from(&cfg).is_err());
+    }
+    #[test]
+    fn test_match() {
+        let yaml = r#"
+        action: labelkeep
+        regex: a|b
+        "#;
+        let cfg = serde_yaml::from_str::<RelabelRuleConfig>(yaml).unwrap();
+        let rule = LabelKeepRule::try_from(&cfg).unwrap();
+        let mut labels = ActiveLabels::new(vec![
+            Label::new("a", "1"),
+            Label::new("b", "2"),
+            Label::new("c", "3"),
+        ]);
+        assert_eq!(rule.apply(&mut labels).unwrap(), ActionResult::Pass);
+        assert_eq!(labels.get("a").unwrap(), "1");
+        assert_eq!(labels.get("b").unwrap(), "2");
+        assert!(labels.get("c").is_none());
+    }
+}

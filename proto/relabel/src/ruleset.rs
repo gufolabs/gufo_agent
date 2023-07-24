@@ -10,6 +10,7 @@ use super::{
 };
 use common::{AgentError, AgentResult, Label, Labels, Measure};
 
+#[derive(Debug, PartialEq)]
 pub enum ActionResult {
     Drop,
     Pass,
