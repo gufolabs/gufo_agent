@@ -1,0 +1,1866 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Gufo Agent Documentation">
+      
+      
+        <meta name="author" content="Gufo Labs">
+      
+      
+        <link rel="canonical" href="https://docs.gufolabs.com/gufo_agent/collectors/twamp_sender/">
+      
+      <link rel="icon" href="../../assets/logo.png">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-8.5.8">
+    
+    
+      
+        <title>twamp_sender - Gufo Agent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.20d9efc8.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.815d1a91.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#twamp_sender-collector" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Gufo Agent" class="md-header__button md-logo" aria-label="Gufo Agent" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Gufo Agent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              twamp_sender
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_3" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_3">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/gufolabs/gufo_agent/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Gufo Agent" class="md-nav__button md-logo" aria-label="Gufo Agent" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    Gufo Agent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/gufolabs/gufo_agent/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../man/" class="md-nav__link">
+        Man Pages
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        Configuration
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../relabel/" class="md-nav__link">
+        Relabeling Rules
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../config_discovery/" class="md-nav__link">
+        Config Discovery
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          Collectors Reference
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Collectors Reference" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Collectors Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../block_io/" class="md-nav__link">
+        block_io
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpu/" class="md-nav__link">
+        cpu
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dns/" class="md-nav__link">
+        dns
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exec/" class="md-nav__link">
+        exec
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fs/" class="md-nav__link">
+        fs
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../http/" class="md-nav__link">
+        http
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memory/" class="md-nav__link">
+        memory
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modbus_rtu/" class="md-nav__link">
+        modbus_rtu
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modbus_tcp/" class="md-nav__link">
+        modbus_tcp
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mysql/" class="md-nav__link">
+        mysql
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mysql_query/" class="md-nav__link">
+        mysql_query
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../network/" class="md-nav__link">
+        network
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pgbouncer/" class="md-nav__link">
+        pgbouncer
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgres/" class="md-nav__link">
+        postgres
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgres_query/" class="md-nav__link">
+        postgres_query
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../procstat/" class="md-nav__link">
+        procstat
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../redis/" class="md-nav__link">
+        redis
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../scrape/" class="md-nav__link">
+        scrape
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sockets/" class="md-nav__link">
+        sockets
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spool/" class="md-nav__link">
+        spool
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../twamp_reflector/" class="md-nav__link">
+        twamp_reflector
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          twamp_sender
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        twamp_sender
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    Configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#traffic-models" class="md-nav__link">
+    Traffic Models
+  </a>
+  
+    <nav class="md-nav" aria-label="Traffic Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#g711" class="md-nav__link">
+    g711
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g729" class="md-nav__link">
+    g729
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cbr" class="md-nav__link">
+    cbr
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imix" class="md-nav__link">
+    imix
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#collected-metrics" class="md-nav__link">
+    Collected Metrics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#labels" class="md-nav__link">
+    Labels
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mos-calculation" class="md-nav__link">
+    MOS Calculation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuring-reflectors" class="md-nav__link">
+    Configuring Reflectors
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuring Reflectors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gufo-agent" class="md-nav__link">
+    Gufo Agent
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#juniper-junos" class="md-nav__link">
+    Juniper JUNOS
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cisco-ios" class="md-nav__link">
+    Cisco IOS
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sample-output" class="md-nav__link">
+    Sample Output
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uptime/" class="md-nav__link">
+        uptime
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../metrics/" class="md-nav__link">
+        Metrics Reference
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          Developers' Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Developers' Guide" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Developers' Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../environment/" class="md-nav__link">
+        Developer's Environment
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/" class="md-nav__link">
+        Building and Testing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../creating_new_collector/" class="md-nav__link">
+        Creating New Collector
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openmetrics/" class="md-nav__link">
+        OpenMetrics Format
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../devcommon/" class="md-nav__link">
+        Common Tasks
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../devtools/" class="md-nav__link">
+        Developer's Tools
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../codebase/" class="md-nav__link">
+        Code Base
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CONTRIBUTING/" class="md-nav__link">
+        Contributing Guide
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CODE_OF_CONDUCT/" class="md-nav__link">
+        Code of Conduct
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        FAQ
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CHANGELOG/" class="md-nav__link">
+        Changelog
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../LICENSE/" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    Configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#traffic-models" class="md-nav__link">
+    Traffic Models
+  </a>
+  
+    <nav class="md-nav" aria-label="Traffic Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#g711" class="md-nav__link">
+    g711
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g729" class="md-nav__link">
+    g729
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cbr" class="md-nav__link">
+    cbr
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#imix" class="md-nav__link">
+    imix
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#collected-metrics" class="md-nav__link">
+    Collected Metrics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#labels" class="md-nav__link">
+    Labels
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mos-calculation" class="md-nav__link">
+    MOS Calculation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuring-reflectors" class="md-nav__link">
+    Configuring Reflectors
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuring Reflectors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gufo-agent" class="md-nav__link">
+    Gufo Agent
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#juniper-junos" class="md-nav__link">
+    Juniper JUNOS
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cisco-ios" class="md-nav__link">
+    Cisco IOS
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sample-output" class="md-nav__link">
+    Sample Output
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/gufolabs/gufo_agent/edit/master/docs/collectors/twamp_sender.md" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="twamp_sender-collector">twamp_sender collector<a class="headerlink" href="#twamp_sender-collector" title="Permanent link">&para;</a></h1>
+<p><code>twamp_sender</code> is the <a href="https://www.juniper.net/documentation/us/en/software/junos/flow-monitoring/topics/concept/twamp-overview.html">Two-way Active Measurement Protocol(TWAMP)</a>
+client which is used along with a TWAMP reflector to perform the channel quality measurements, including delay, jitter, and packet loss in both directions.</p>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<p>The common collector's configuration is:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>String</td>
+<td></td>
+<td>Collector's ID. Must be unique per agent instance.</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>String</td>
+<td></td>
+<td>Must be <code>twamp_sender</code></td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td>Integer</td>
+<td><code>agent.defaults.interval</code></td>
+<td>Repetition interval in seconds</td>
+</tr>
+<tr>
+<td><code>labels</code></td>
+<td>Object</td>
+<td></td>
+<td>Additional collector-level labels</td>
+</tr>
+<tr>
+<td><code>relabel</code></td>
+<td>Array</td>
+<td></td>
+<td>Optional relabeling rules. See <a href="../../relabel/">Relabeling Rules</a> for details</td>
+</tr>
+</tbody>
+</table>
+<p>The collector-specific configuration is:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>reflector</code></td>
+<td>String</td>
+<td></td>
+<td>IP address of the reflector</td>
+</tr>
+<tr>
+<td><code>port</code></td>
+<td>Integer</td>
+<td><code>862</code></td>
+<td>Port of the reflector's control channel</td>
+</tr>
+<tr>
+<td><code>reflector_port</code></td>
+<td>Integer</td>
+<td><code>0</code></td>
+<td>Demand explicit reflector port, if not <code>0</code>. Used to fix weird TWAMP reflector implentations</td>
+</tr>
+<tr>
+<td><code>dscp</code></td>
+<td>String</td>
+<td><code>be</code></td>
+<td>Mark outgoing test packets with appropriate DSCP label</td>
+</tr>
+<tr>
+<td><code>n_packets</code></td>
+<td>Integer</td>
+<td></td>
+<td>Number of packets to send</td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td>String</td>
+<td></td>
+<td>Traffic model. See for <a href="#traffic_models">Traffic Models</a> for details.</td>
+</tr>
+</tbody>
+</table>
+<p>Config example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Twamp Sender</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">twamp_sender</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">reflector</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">127.0.0.1</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">n_packets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">g711</span>
+</code></pre></div>
+<h2 id="traffic-models">Traffic Models<a class="headerlink" href="#traffic-models" title="Permanent link">&para;</a></h2>
+<p>Traffic models define the profile of outgoing packets and mimics the usage
+of the real-world traffic. The following traffic models are supported:</p>
+<ul>
+<li><code>g711</code> - G.711 codec.</li>
+<li><code>g729</code> - G.729 codec.</li>
+<li><code>cbr</code> - Constant bitrate.</li>
+<li><code>imix</code> - IMIX profile.</li>
+</ul>
+<h3 id="g711">g711<a class="headerlink" href="#g711" title="Permanent link">&para;</a></h3>
+<p><code>g711</code> traffic model mimics the VoIP RTP stream of the G.711 codec. It doesn't requre an additional
+configuration.</p>
+<p>Config example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Twamp Sender</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">twamp_sender</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">reflector</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">127.0.0.1</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">n_packets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">g711</span>
+</code></pre></div>
+<p>Selecting <code>g711</code> model enables <a href="#mos-calculation">MOS calculation</a>.</p>
+<h3 id="g729">g729<a class="headerlink" href="#g729" title="Permanent link">&para;</a></h3>
+<p><code>g729</code> traffic model mimics the VoIP RTP stream of the G.729 codec. It doesn't requre an additional
+configuration.</p>
+<p>Config example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Twamp Sender</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">twamp_sender</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">reflector</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">127.0.0.1</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">n_packets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">g729</span>
+</code></pre></div>
+<p>Selecting <code>g729</code> model enables <a href="#mos-calculation">MOS calculation</a>.</p>
+<h3 id="cbr">cbr<a class="headerlink" href="#cbr" title="Permanent link">&para;</a></h3>
+<p><code>cbr</code> traffic model generates constant load with given bitrate and packet size.</p>
+<p>Configuration:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bandwidth</code></td>
+<td>Integer</td>
+<td>Used bandwidth, in bit/s</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td>Integer</td>
+<td>Packet size, including IP header</td>
+</tr>
+</tbody>
+</table>
+<p>Config example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Twamp Sender</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">twamp_sender</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">reflector</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">127.0.0.1</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="nt">n_packets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cbr</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nt">bandwidth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000000</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256</span>
+</code></pre></div>
+<h3 id="imix">imix<a class="headerlink" href="#imix" title="Permanent link">&para;</a></h3>
+<p><code>imix</code> mimics Internet MIX (IMIX) packet model and fills the required 
+bandwidth by most-commonly observed packets sizes.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bandwidth</code></td>
+<td>Integer</td>
+<td>Used bandwidth, in bit/s</td>
+</tr>
+</tbody>
+</table>
+<p>Packet distribution:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Packet size</th>
+<th style="text-align: right;">Packets</th>
+<th style="text-align: right;">Distribution (packets)</th>
+<th style="text-align: right;">Bytes</th>
+<th style="text-align: right;">Distribution (bytes)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">58.33%</td>
+<td style="text-align: right;">490</td>
+<td style="text-align: right;">11.41%</td>
+</tr>
+<tr>
+<td style="text-align: right;">576</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">33.33%</td>
+<td style="text-align: right;">2304</td>
+<td style="text-align: right;">53.65%</td>
+</tr>
+<tr>
+<td style="text-align: right;">1500</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8.33%</td>
+<td style="text-align: right;">1500</td>
+<td style="text-align: right;">34.94%</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>TWAMP protocol doesn't allow test packets under the 70 octets.
+So provided model uses small packets of bigger size and
+resulting distribution slightly differs from commonly used
+IMIX models.</p>
+</div>
+<p>Config example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Twamp Sender</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">twamp_sender</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">reflector</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">127.0.0.1</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nt">n_packets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">imix</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nt">bandwidth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000000</span>
+</code></pre></div>
+<h2 id="collected-metrics">Collected Metrics<a class="headerlink" href="#collected-metrics" title="Permanent link">&para;</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">OpenMetrics</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block"></div>
+</div>
+</div>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>twamp_tx_packets</code></td>
+<td>Gauge</td>
+<td>Transmitted packets</td>
+</tr>
+<tr>
+<td><code>twamp_rx_packets</code></td>
+<td>Gauge</td>
+<td>Received packets</td>
+</tr>
+<tr>
+<td><code>twamp_tx_bytes</code></td>
+<td>Gauge</td>
+<td>Transmitted octets</td>
+</tr>
+<tr>
+<td><code>twamp_rx_bytes</code></td>
+<td>Gauge</td>
+<td>Received octets</td>
+</tr>
+<tr>
+<td><code>twamp_duration_ns</code></td>
+<td>Gauge</td>
+<td>Session duration in nanoseconds</td>
+</tr>
+<tr>
+<td><code>twamp_tx_pps</code></td>
+<td>Gauge</td>
+<td>Transmitted packets-per-second rate</td>
+</tr>
+<tr>
+<td><code>twamp_rx_pps</code></td>
+<td>Gauge</td>
+<td>Received packet-per-second rate</td>
+</tr>
+<tr>
+<td><code>twamp_tx_bitrate</code></td>
+<td>Gauge</td>
+<td>Transmitted bitrate</td>
+</tr>
+<tr>
+<td><code>twamp_rx_bitrate</code></td>
+<td>Gauge</td>
+<td>Received bitrate</td>
+</tr>
+<tr>
+<td><strong>Inbound</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>twamp_in_min_delay_ns</code></td>
+<td>Gauge</td>
+<td>Minimum inbound delay in nanoseconds</td>
+</tr>
+<tr>
+<td><code>twamp_in_max_delay_ns</code></td>
+<td>Gauge</td>
+<td>Maximum inbound delay in nanoseconds</td>
+</tr>
+<tr>
+<td><code>twamp_in_avg_delay_ns</code></td>
+<td>Gauge</td>
+<td>Average inbound delay in nanoseconds</td>
+</tr>
+<tr>
+<td><code>twamp_in_jitter_ns</code></td>
+<td>Gauge</td>
+<td>Jitter of the inbound delay in nanoseconds</td>
+</tr>
+<tr>
+<td><code>twamp_in_loss</code></td>
+<td>Gauge</td>
+<td>Packet loss in inbound direction</td>
+</tr>
+<tr>
+<td><code>twamp_in_mos</code></td>
+<td>Gauge</td>
+<td>eMOS for local end</td>
+</tr>
+<tr>
+<td><strong>Outbound</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>twamp_out_min_delay_ns</code></td>
+<td>Gauge</td>
+<td>Minimum outbound delay in nanoseconds</td>
+</tr>
+<tr>
+<td><code>twamp_out_max_delay_ns</code></td>
+<td>Gauge</td>
+<td>Maximum outbound delay in nanoseconds</td>
+</tr>
+<tr>
+<td><code>twamp_out_avg_delay_ns</code></td>
+<td>Gauge</td>
+<td>Average outbound delay in nanoseconds</td>
+</tr>
+<tr>
+<td><code>twamp_out_jitter_ns</code></td>
+<td>Gauge</td>
+<td>Jitter of the outbound delay in nanoseconds</td>
+</tr>
+<tr>
+<td><code>twamp_out_loss</code></td>
+<td>Gauge</td>
+<td>Packet loss in outbound direction</td>
+</tr>
+<tr>
+<td><code>twamp_out_mos</code></td>
+<td>Gauge</td>
+<td>eMOS for remote end</td>
+</tr>
+<tr>
+<td><strong>Round-trip</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>twamp_rt_min_delay_ns</code></td>
+<td>Gauge</td>
+<td>Minimum round-trip delay in nanoseconds</td>
+</tr>
+<tr>
+<td><code>twamp_rt_max_delay_ns</code></td>
+<td>Gauge</td>
+<td>Maximum round-trip delay in nanoseconds</td>
+</tr>
+<tr>
+<td><code>twamp_rt_avg_delay_ns</code></td>
+<td>Gauge</td>
+<td>Average round-trip delay in nanoseconds</td>
+</tr>
+<tr>
+<td><code>twamp_rt_jitter_ns</code></td>
+<td>Gauge</td>
+<td>Jitter of the round-trip delay in nanoseconds</td>
+</tr>
+<tr>
+<td><code>twamp_rt_loss</code></td>
+<td>Gauge</td>
+<td>Packet loss in both directions</td>
+</tr>
+</tbody>
+</table>
+<h2 id="labels">Labels<a class="headerlink" href="#labels" title="Permanent link">&para;</a></h2>
+<p><code>twamp_sender</code> collector doesn't append its labels, though they can be configured
+via <code>labels</code> option.</p>
+<h2 id="mos-calculation">MOS Calculation<a class="headerlink" href="#mos-calculation" title="Permanent link">&para;</a></h2>
+<p>Gufo Agent automatically calculates the Mean-Opinion Score (MOS) for VoIP packet models.
+MOS calculated according to ITU-T G.107 recommendations using default conditions.</p>
+<p>MOS calculated for both directions:</p>
+<ul>
+<li><code>in_mos</code> is for inbound traffic and means the voice quality expectation for the user
+  at the TWAMP sender's side.</li>
+<li><code>out_mos</code> is for outbound traffic and shows the voice quality expectation from the user
+  at the TWAMP reflector's side.</li>
+</ul>
+<h2 id="configuring-reflectors">Configuring Reflectors<a class="headerlink" href="#configuring-reflectors" title="Permanent link">&para;</a></h2>
+<h3 id="gufo-agent">Gufo Agent<a class="headerlink" href="#gufo-agent" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">collectors</span><span class="p">:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TWAMP Reflector</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">twamp_reflector</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">      </span><span class="nt">listen</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0.0.0.0&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">862</span>
+</code></pre></div>
+<p>See <a href="../twamp_reflector/">twamp_reflector</a> for configuration options details.</p>
+<h3 id="juniper-junos">Juniper JUNOS<a class="headerlink" href="#juniper-junos" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>chassis {
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    fpc 0 {
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>        pic 0 {
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>            inline-services {
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>                bandwidth 1g;
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>            }
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        }
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    }
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>}
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>services {
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    rpm {
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>            server {
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>                authentication-mode none;
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>                port 862;
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>                client-list Client1 {
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>                    address {
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>                        10.1.0.1/24;
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>                        10.1.0.2/24;
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>                    }
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>                }
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>            }
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>        }
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>    }
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>}
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>interfaces {
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>    si-0/0/0 {
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>        unit 0 {
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>            family inet;
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>        }
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>        unit 10 {
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>            rpm twamp-server;
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>            family inet {
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a>                address 10.0.0.1/32;
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a>            }
+<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a>        }
+<a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a>    }
+<a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a>}
+</code></pre></div>
+<p>Where <code>10.0.0.1</code> is the reflector address, and the allowed clients
+are in <code>Client1</code> list.</p>
+<h3 id="cisco-ios">Cisco IOS<a class="headerlink" href="#cisco-ios" title="Permanent link">&para;</a></h3>
+<p>IOS implementation demands explicit reflector port number in session request.
+Sender must be configured using <code>reflector_port</code> parameters:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">reflector_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9447</span>
+</code></pre></div>
+<p>IOS configuration for reflector:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ip sla server twamp
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  exit
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ip sla responder twamp
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  exit
+</code></pre></div>
+<h2 id="sample-output">Sample Output<a class="headerlink" href="#sample-output" title="Permanent link">&para;</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">OpenMetrics</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>twamp_sender_duration_ns 1981100036 1682595808
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a># HELP twamp_sender_in_avg_delay Average inbound delay in nanoseconds
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a># TYPE twamp_sender_in_avg_delay gauge
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>twamp_sender_in_avg_delay 37879 1682595808
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a># HELP twamp_sender_in_jitter itter of the inbound delay in nanoseconds
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a># TYPE twamp_sender_in_jitter gauge
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>twamp_sender_in_jitter 26857 1682595808
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a># HELP twamp_sender_in_loss Packet loss in inbound direction
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a># TYPE twamp_sender_in_loss gauge
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>twamp_sender_in_loss 0 1682595808
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a># HELP twamp_sender_in_max_delay Maximum inbound delay in nanoseconds
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a># TYPE twamp_sender_in_max_delay gauge
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>twamp_sender_in_max_delay 172580 1682595808
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a># HELP twamp_sender_in_min_delay Minimum inbound delay in nanoseconds
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a># TYPE twamp_sender_in_min_delay gauge
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>twamp_sender_in_min_delay 18112 1682595808
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a># HELP in_mos eMOS for local end
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a># TYPE in_mos gauge
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>in_mos 4.4043684 1682595808    
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a># HELP twamp_sender_out_avg_delay Average outbound delay in nanoseconds
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a># TYPE twamp_sender_out_avg_delay gauge
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>twamp_sender_out_avg_delay 90004 1682595808
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a># HELP twamp_sender_out_jitter Jitter of the outbound delay in nanoseconds
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a># TYPE twamp_sender_out_jitter gauge
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>twamp_sender_out_jitter 22222 1682595808
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a># HELP twamp_sender_out_loss Packet loss in outbound direction
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a># TYPE twamp_sender_out_loss gauge
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>twamp_sender_out_loss 0 1682595808
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a># HELP twamp_sender_out_max_delay Maximum outbound delay in nanoseconds
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a># TYPE twamp_sender_out_max_delay gauge
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>twamp_sender_out_max_delay 211155 1682595808
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a># HELP twamp_sender_out_min_delay Minimum outbound delay in nanoseconds
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a># TYPE twamp_sender_out_min_delay gauge
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>twamp_sender_out_min_delay 29212 1682595808
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a># HELP out_mos eMOS for remote end
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a># TYPE out_mos gauge
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>out_mos 4.4043336 1682595808    
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a># HELP twamp_sender_rt_avg_delay Average round-trip delay in nanoseconds
+<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a># TYPE twamp_sender_rt_avg_delay gauge    
+<a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a>twamp_sender_rt_avg_delay 127884 1682595808
+<a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a># HELP twamp_sender_rt_jitter Jitter of the round-trip delay in nanoseconds
+<a id="__codelineno-9-42" name="__codelineno-9-42" href="#__codelineno-9-42"></a># TYPE twamp_sender_rt_jitter gauge
+<a id="__codelineno-9-43" name="__codelineno-9-43" href="#__codelineno-9-43"></a>twamp_sender_rt_jitter 43653 1682595808
+<a id="__codelineno-9-44" name="__codelineno-9-44" href="#__codelineno-9-44"></a># HELP twamp_sender_rt_loss Packet loss in both directions
+<a id="__codelineno-9-45" name="__codelineno-9-45" href="#__codelineno-9-45"></a># TYPE twamp_sender_rt_loss gauge
+<a id="__codelineno-9-46" name="__codelineno-9-46" href="#__codelineno-9-46"></a>twamp_sender_rt_loss 0 1682595808
+<a id="__codelineno-9-47" name="__codelineno-9-47" href="#__codelineno-9-47"></a># HELP twamp_sender_rt_max_delay Maximum round-trip delay in nanoseconds
+<a id="__codelineno-9-48" name="__codelineno-9-48" href="#__codelineno-9-48"></a># TYPE twamp_sender_rt_max_delay gauge
+<a id="__codelineno-9-49" name="__codelineno-9-49" href="#__codelineno-9-49"></a>twamp_sender_rt_max_delay 262171 1682595808
+<a id="__codelineno-9-50" name="__codelineno-9-50" href="#__codelineno-9-50"></a># HELP twamp_sender_rt_min_delay Minimum round-trip delay in nanoseconds
+<a id="__codelineno-9-51" name="__codelineno-9-51" href="#__codelineno-9-51"></a># TYPE twamp_sender_rt_min_delay gauge
+<a id="__codelineno-9-52" name="__codelineno-9-52" href="#__codelineno-9-52"></a>twamp_sender_rt_min_delay 58006 1682595808
+<a id="__codelineno-9-53" name="__codelineno-9-53" href="#__codelineno-9-53"></a># HELP twamp_sender_rx_bitrate Received bitrate
+<a id="__codelineno-9-54" name="__codelineno-9-54" href="#__codelineno-9-54"></a># TYPE twamp_sender_rx_bitrate gauge
+<a id="__codelineno-9-55" name="__codelineno-9-55" href="#__codelineno-9-55"></a>twamp_sender_rx_bitrate 80242 1682595808
+<a id="__codelineno-9-56" name="__codelineno-9-56" href="#__codelineno-9-56"></a># HELP twamp_sender_rx_bytes Received octets
+<a id="__codelineno-9-57" name="__codelineno-9-57" href="#__codelineno-9-57"></a># TYPE twamp_sender_rx_bytes gauge
+<a id="__codelineno-9-58" name="__codelineno-9-58" href="#__codelineno-9-58"></a>twamp_sender_rx_bytes 19872 1682595808
+<a id="__codelineno-9-59" name="__codelineno-9-59" href="#__codelineno-9-59"></a># HELP twamp_sender_rx_packets Received packets
+<a id="__codelineno-9-60" name="__codelineno-9-60" href="#__codelineno-9-60"></a># TYPE twamp_sender_rx_packets counter
+<a id="__codelineno-9-61" name="__codelineno-9-61" href="#__codelineno-9-61"></a>twamp_sender_rx_packets 100 1682595808
+<a id="__codelineno-9-62" name="__codelineno-9-62" href="#__codelineno-9-62"></a># HELP twamp_sender_rx_pps Received packet-per-second rate
+<a id="__codelineno-9-63" name="__codelineno-9-63" href="#__codelineno-9-63"></a># TYPE twamp_sender_rx_pps gauge
+<a id="__codelineno-9-64" name="__codelineno-9-64" href="#__codelineno-9-64"></a>twamp_sender_rx_pps 50 1682595808
+<a id="__codelineno-9-65" name="__codelineno-9-65" href="#__codelineno-9-65"></a># HELP twamp_sender_tx_bitrate Transmitted bitrate
+<a id="__codelineno-9-66" name="__codelineno-9-66" href="#__codelineno-9-66"></a># TYPE twamp_sender_tx_bitrate gauge
+<a id="__codelineno-9-67" name="__codelineno-9-67" href="#__codelineno-9-67"></a>twamp_sender_tx_bitrate 80763 1682595808
+<a id="__codelineno-9-68" name="__codelineno-9-68" href="#__codelineno-9-68"></a># HELP twamp_sender_tx_bytes Transmitted octets
+<a id="__codelineno-9-69" name="__codelineno-9-69" href="#__codelineno-9-69"></a># TYPE twamp_sender_tx_bytes counter
+<a id="__codelineno-9-70" name="__codelineno-9-70" href="#__codelineno-9-70"></a>twamp_sender_tx_bytes 20000 1682595808
+<a id="__codelineno-9-71" name="__codelineno-9-71" href="#__codelineno-9-71"></a># HELP twamp_sender_tx_packets Transmitted packets
+<a id="__codelineno-9-72" name="__codelineno-9-72" href="#__codelineno-9-72"></a># TYPE twamp_sender_tx_packets counter
+<a id="__codelineno-9-73" name="__codelineno-9-73" href="#__codelineno-9-73"></a>twamp_sender_tx_packets 100 1682595808
+<a id="__codelineno-9-74" name="__codelineno-9-74" href="#__codelineno-9-74"></a># HELP twamp_sender_tx_pps Transmitted packets-per-second rate
+<a id="__codelineno-9-75" name="__codelineno-9-75" href="#__codelineno-9-75"></a># TYPE twamp_sender_tx_pps gauge
+<a id="__codelineno-9-76" name="__codelineno-9-76" href="#__codelineno-9-76"></a>twamp_sender_tx_pps 50 1682595808
+</code></pre></div>
+</div>
+</div>
+</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../twamp_reflector/" class="md-footer__link md-footer__link--prev" aria-label="Previous: twamp_reflector" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              twamp_reflector
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../uptime/" class="md-footer__link md-footer__link--next" aria-label="Next: uptime" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              uptime
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2021-23, Gufo Labs
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d6c3db9e.min.js"></script>
+      
+    
+  </body>
+</html>

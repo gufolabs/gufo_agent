@@ -1,0 +1,3319 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Gufo Agent Documentation">
+      
+      
+        <meta name="author" content="Gufo Labs">
+      
+      
+        <link rel="canonical" href="https://docs.gufolabs.com/gufo_agent/metrics/">
+      
+      <link rel="icon" href="../assets/logo.png">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-8.5.8">
+    
+    
+      
+        <title>Metrics Reference - Gufo Agent</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.20d9efc8.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.815d1a91.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#metrics-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Gufo Agent" class="md-header__button md-logo" aria-label="Gufo Agent" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Gufo Agent
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Metrics Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_3" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_3">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/gufolabs/gufo_agent/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Gufo Agent" class="md-nav__button md-logo" aria-label="Gufo Agent" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    Gufo Agent
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/gufolabs/gufo_agent/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../man/" class="md-nav__link">
+        Man Pages
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        Configuration
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../relabel/" class="md-nav__link">
+        Relabeling Rules
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config_discovery/" class="md-nav__link">
+        Config Discovery
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          Collectors Reference
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Collectors Reference" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Collectors Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/block_io/" class="md-nav__link">
+        block_io
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/cpu/" class="md-nav__link">
+        cpu
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/dns/" class="md-nav__link">
+        dns
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/exec/" class="md-nav__link">
+        exec
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/fs/" class="md-nav__link">
+        fs
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/http/" class="md-nav__link">
+        http
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/memory/" class="md-nav__link">
+        memory
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/modbus_rtu/" class="md-nav__link">
+        modbus_rtu
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/modbus_tcp/" class="md-nav__link">
+        modbus_tcp
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/mysql/" class="md-nav__link">
+        mysql
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/mysql_query/" class="md-nav__link">
+        mysql_query
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/network/" class="md-nav__link">
+        network
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/pgbouncer/" class="md-nav__link">
+        pgbouncer
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/postgres/" class="md-nav__link">
+        postgres
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/postgres_query/" class="md-nav__link">
+        postgres_query
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/procstat/" class="md-nav__link">
+        procstat
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/redis/" class="md-nav__link">
+        redis
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/scrape/" class="md-nav__link">
+        scrape
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/sockets/" class="md-nav__link">
+        sockets
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/spool/" class="md-nav__link">
+        spool
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/twamp_reflector/" class="md-nav__link">
+        twamp_reflector
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/twamp_sender/" class="md-nav__link">
+        twamp_sender
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collectors/uptime/" class="md-nav__link">
+        uptime
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Metrics Reference
+      </a>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9">
+          Developers' Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Developers' Guide" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Developers' Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../environment/" class="md-nav__link">
+        Developer's Environment
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        Building and Testing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../creating_new_collector/" class="md-nav__link">
+        Creating New Collector
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openmetrics/" class="md-nav__link">
+        OpenMetrics Format
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../devcommon/" class="md-nav__link">
+        Common Tasks
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../devtools/" class="md-nav__link">
+        Developer's Tools
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../codebase/" class="md-nav__link">
+        Code Base
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        Contributing Guide
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CODE_OF_CONDUCT/" class="md-nav__link">
+        Code of Conduct
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        FAQ
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        Changelog
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LICENSE/" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/gufolabs/gufo_agent/edit/master/docs/metrics.md" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="metrics-reference">Metrics Reference<a class="headerlink" href="#metrics-reference" title="Permanent link">&para;</a></h1>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Type</th>
+<th>Collector</th>
+<th>Labels</th>
+<th>Help</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>avg_ns</td>
+<td>Gauge</td>
+<td><a href="../collectors/dns/">dns</a></td>
+<td>query, type</td>
+<td>Average response delay of the serie in nanoseconds</td>
+</tr>
+<tr>
+<td>bytes</td>
+<td>Gauge</td>
+<td><a href="../collectors/http/">http</a></td>
+<td></td>
+<td>Response size in bytes</td>
+</tr>
+<tr>
+<td>compressed_bytes</td>
+<td>Gauge</td>
+<td><a href="../collectors/http/">http</a></td>
+<td></td>
+<td>Compressed response size in bytes</td>
+</tr>
+<tr>
+<td>cpu_idle</td>
+<td>Gauge</td>
+<td><a href="../collectors/cpu/">cpu</a></td>
+<td>cpu</td>
+<td>CPU Idle time, %</td>
+</tr>
+<tr>
+<td>cpu_interrupt</td>
+<td>Gauge</td>
+<td><a href="../collectors/cpu/">cpu</a></td>
+<td>cpu</td>
+<td>CPU Interrupt time, %</td>
+</tr>
+<tr>
+<td>cpu_iowait</td>
+<td>Gauge</td>
+<td><a href="../collectors/cpu/">cpu</a></td>
+<td>cpu</td>
+<td>CPU IOwait time, %</td>
+</tr>
+<tr>
+<td>cpu_nice</td>
+<td>Gauge</td>
+<td><a href="../collectors/cpu/">cpu</a></td>
+<td>cpu</td>
+<td>CPU Nice time, %</td>
+</tr>
+<tr>
+<td>cpu_system</td>
+<td>Gauge</td>
+<td><a href="../collectors/cpu/">cpu</a></td>
+<td>cpu</td>
+<td>CPU System time, %</td>
+</tr>
+<tr>
+<td>cpu_user</td>
+<td>Gauge</td>
+<td><a href="../collectors/cpu/">cpu</a></td>
+<td>cpu</td>
+<td>CPU User time, %</td>
+</tr>
+<tr>
+<td>exec_parsed</td>
+<td>Counter</td>
+<td><a href="../collectors/exec/">exec</a></td>
+<td>script</td>
+<td>Parsed metric items</td>
+</tr>
+<tr>
+<td>fs_available</td>
+<td>Gauge</td>
+<td><a href="../collectors/fs/">fs</a></td>
+<td>dev, mount, type</td>
+<td>Available disk space, bytes</td>
+</tr>
+<tr>
+<td>fs_free</td>
+<td>Gauge</td>
+<td><a href="../collectors/fs/">fs</a></td>
+<td>dev, mount, type</td>
+<td>Free disk space, bytes</td>
+</tr>
+<tr>
+<td>fs_inodes</td>
+<td>Gauge</td>
+<td><a href="../collectors/fs/">fs</a></td>
+<td>dev, mount, type</td>
+<td>Inodes used</td>
+</tr>
+<tr>
+<td>fs_inodes_available</td>
+<td>Gauge</td>
+<td><a href="../collectors/fs/">fs</a></td>
+<td>dev, mount, type</td>
+<td>Inodes available</td>
+</tr>
+<tr>
+<td>fs_inodes_total</td>
+<td>Gauge</td>
+<td><a href="../collectors/fs/">fs</a></td>
+<td>dev, mount, type</td>
+<td>Total inodes count</td>
+</tr>
+<tr>
+<td>fs_total</td>
+<td>Gauge</td>
+<td><a href="../collectors/fs/">fs</a></td>
+<td>dev, mount, type</td>
+<td>Total disk space, bytes</td>
+</tr>
+<tr>
+<td>io_in_flight</td>
+<td>Gauge</td>
+<td><a href="../collectors/block_io/">block_io</a></td>
+<td>dev</td>
+<td>Number of I/Os currently in flight, requests</td>
+</tr>
+<tr>
+<td>io_read_ios</td>
+<td>Counter</td>
+<td><a href="../collectors/block_io/">block_io</a></td>
+<td>dev</td>
+<td>Number of read I/Os processed</td>
+</tr>
+<tr>
+<td>io_read_merges</td>
+<td>Counter</td>
+<td><a href="../collectors/block_io/">block_io</a></td>
+<td>dev</td>
+<td>Number of read I/Os merged with in-queue I/O</td>
+</tr>
+<tr>
+<td>io_read_sectors</td>
+<td>Counter</td>
+<td><a href="../collectors/block_io/">block_io</a></td>
+<td>dev</td>
+<td>Number of sectors read</td>
+</tr>
+<tr>
+<td>io_read_ticks</td>
+<td>Counter</td>
+<td><a href="../collectors/block_io/">block_io</a></td>
+<td>dev</td>
+<td>Total wait time for read requests, ms</td>
+</tr>
+<tr>
+<td>io_ticks</td>
+<td>Gauge</td>
+<td><a href="../collectors/block_io/">block_io</a></td>
+<td>dev</td>
+<td>Total time this block device has been active, ms</td>
+</tr>
+<tr>
+<td>io_time_in_queue</td>
+<td>Gauge</td>
+<td><a href="../collectors/block_io/">block_io</a></td>
+<td>dev</td>
+<td>Total wait time for all requests, ms</td>
+</tr>
+<tr>
+<td>io_write_ios</td>
+<td>Counter</td>
+<td><a href="../collectors/block_io/">block_io</a></td>
+<td>dev</td>
+<td>Number of write I/Os processed</td>
+</tr>
+<tr>
+<td>io_write_merges</td>
+<td>Counter</td>
+<td><a href="../collectors/block_io/">block_io</a></td>
+<td>dev</td>
+<td>Number of write I/Os merged with in-queue I/O</td>
+</tr>
+<tr>
+<td>io_write_sectors</td>
+<td>Counter</td>
+<td><a href="../collectors/block_io/">block_io</a></td>
+<td>dev</td>
+<td>Number of sectors written</td>
+</tr>
+<tr>
+<td>io_write_ticks</td>
+<td>Counter</td>
+<td><a href="../collectors/block_io/">block_io</a></td>
+<td>dev</td>
+<td>Total wait time for write requests, ms</td>
+</tr>
+<tr>
+<td>jitter_ns</td>
+<td>Gauge</td>
+<td><a href="../collectors/dns/">dns</a></td>
+<td>query, type</td>
+<td>Jitter of the response delay of the serie in nanoseconds</td>
+</tr>
+<tr>
+<td>max_ns</td>
+<td>Gauge</td>
+<td><a href="../collectors/dns/">dns</a></td>
+<td>query, type</td>
+<td>Maximal response delay of the serie in nanoseconds</td>
+</tr>
+<tr>
+<td>mem_active</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Active memory, bytes</td>
+</tr>
+<tr>
+<td>mem_active</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_active</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_active</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_active_anon</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Active anonymous memory, bytes</td>
+</tr>
+<tr>
+<td>mem_active_file</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Active pagecache memory, bytes</td>
+</tr>
+<tr>
+<td>mem_anon_huge_pages</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Non-file backed huge pages mapped into userspace page tables</td>
+</tr>
+<tr>
+<td>mem_anon_pages</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Non-file backed pages mapped into userspace page tables</td>
+</tr>
+<tr>
+<td>mem_avail_ext</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_avail_pagefile</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_avail_phys</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_avail_virt</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_available</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>estimate of how much memory is available for starting new applications</td>
+</tr>
+<tr>
+<td>mem_bounce</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Memory used for block device 'bounce buffers'</td>
+</tr>
+<tr>
+<td>mem_buffers</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Memory in buffer cache</td>
+</tr>
+<tr>
+<td>mem_cache</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_cache</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_cache</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_cached</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Memory in the pagecache</td>
+</tr>
+<tr>
+<td>mem_commit_limit</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Total amount of memory currently available to be allocated on the system</td>
+</tr>
+<tr>
+<td>mem_committed_as</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>The amount of memory presently allocated on the system</td>
+</tr>
+<tr>
+<td>mem_direct_map_1g</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>The amount of memory being mapped into the kernel space with 1GB size pages</td>
+</tr>
+<tr>
+<td>mem_direct_map_2m</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>The amount of memory being mapped into the kernel space with 2MB size pages</td>
+</tr>
+<tr>
+<td>mem_direct_map_4k</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>The amount of memory being mapped into the kernel space with 4k size pages</td>
+</tr>
+<tr>
+<td>mem_dirty</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Memory waiting to be written back to disk</td>
+</tr>
+<tr>
+<td>mem_file_huge_pages</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Memory used for filesystem data (page cache) allocated with huge pages</td>
+</tr>
+<tr>
+<td>mem_file_pmd_mapped</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Page cache mapped into userspace with huge pages</td>
+</tr>
+<tr>
+<td>mem_free</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Free memory in bytes</td>
+</tr>
+<tr>
+<td>mem_huge_page_size</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>default hugepage size (in kB)</td>
+</tr>
+<tr>
+<td>mem_huge_tlb</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>total amount of memory (in kB), consumed by huge pages of all sizes</td>
+</tr>
+<tr>
+<td>mem_inactive</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Memory which has been less recently used</td>
+</tr>
+<tr>
+<td>mem_inactive</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_inactive</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_inactive</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_inactive_anon</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Anonymous memory that has not been used recently and can be swapped out</td>
+</tr>
+<tr>
+<td>mem_inactive_file</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Pagecache memory that can be reclaimed without huge performance impact</td>
+</tr>
+<tr>
+<td>mem_k_reclaimable</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Kernel allocations that the kernel will attempt to reclaim under memory pressure</td>
+</tr>
+<tr>
+<td>mem_kernel_stack</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Memory consumed by the kernel stacks of all tasks</td>
+</tr>
+<tr>
+<td>mem_load</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_m_locked</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Memory locked with mlock()</td>
+</tr>
+<tr>
+<td>mem_mapped</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>files which have been mmaped, such as libraries</td>
+</tr>
+<tr>
+<td>mem_nfs_unstable</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Always zero. Previous counted pages which had been written to the server, but has not been committed to stable storage</td>
+</tr>
+<tr>
+<td>mem_page_tables</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Memory consumed by userspace page tables</td>
+</tr>
+<tr>
+<td>mem_paging</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_per_cpu</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Memory allocated to the percpu allocator used to back percpu allocations. This stat excludes the cost of metadata</td>
+</tr>
+<tr>
+<td>mem_s_reclaimable</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Part of Slab, that might be reclaimed, such as caches</td>
+</tr>
+<tr>
+<td>mem_s_unreclaim</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Part of Slab, that cannot be reclaimed on memory pressure</td>
+</tr>
+<tr>
+<td>mem_sh_mem</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Total memory used by shared memory (shmem) and tmpfs</td>
+</tr>
+<tr>
+<td>mem_sh_mem_huge_pages</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Memory used by shared memory (shmem) and tmpfs allocated with huge pages</td>
+</tr>
+<tr>
+<td>mem_sh_mem_pmd_mapped</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Shared memory mapped into userspace with huge pages</td>
+</tr>
+<tr>
+<td>mem_slab</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>in-kernel data structures cache</td>
+</tr>
+<tr>
+<td>mem_total</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Total memory in bytes</td>
+</tr>
+<tr>
+<td>mem_total_pagefile</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_total_phys</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_total_virt</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_unevictable</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Memory allocated for userspace which cannot be reclaimed</td>
+</tr>
+<tr>
+<td>mem_vmalloc_chunk</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>largest contiguous block of vmalloc area which is free</td>
+</tr>
+<tr>
+<td>mem_vmalloc_total</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>total size of vmalloc virtual address space</td>
+</tr>
+<tr>
+<td>mem_vmalloc_used</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>amount of vmalloc area which is used</td>
+</tr>
+<tr>
+<td>mem_wired</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_wired</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_wired</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>mem_writeback</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Memory which is actively being written back to the disk</td>
+</tr>
+<tr>
+<td>mem_writeback_tmp</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Memory used by FUSE for temporary writeback buffers</td>
+</tr>
+<tr>
+<td>mem_zfs_arc</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>???</td>
+</tr>
+<tr>
+<td>min_ns</td>
+<td>Gauge</td>
+<td><a href="../collectors/dns/">dns</a></td>
+<td>query, type</td>
+<td>Minimal response delay of the serie in nanoseconds</td>
+</tr>
+<tr>
+<td>net_rx_errors</td>
+<td>Counter</td>
+<td><a href="../collectors/network/">network</a></td>
+<td>iface</td>
+<td>Total number of receive errors</td>
+</tr>
+<tr>
+<td>net_rx_octets</td>
+<td>Counter</td>
+<td><a href="../collectors/network/">network</a></td>
+<td>iface</td>
+<td>Total number of octets received</td>
+</tr>
+<tr>
+<td>net_rx_packets</td>
+<td>Counter</td>
+<td><a href="../collectors/network/">network</a></td>
+<td>iface</td>
+<td>Total number of packets received</td>
+</tr>
+<tr>
+<td>net_tx_errors</td>
+<td>Counter</td>
+<td><a href="../collectors/network/">network</a></td>
+<td>iface</td>
+<td>Total number of transmit errors</td>
+</tr>
+<tr>
+<td>net_tx_octets</td>
+<td>Counter</td>
+<td><a href="../collectors/network/">network</a></td>
+<td>iface</td>
+<td>Total number of octets sent</td>
+</tr>
+<tr>
+<td>net_tx_packets</td>
+<td>Counter</td>
+<td><a href="../collectors/network/">network</a></td>
+<td>iface</td>
+<td>Total number of packets sent</td>
+</tr>
+<tr>
+<td>pg_blks_hit</td>
+<td>Counter</td>
+<td><a href="../collectors/postgres/">postgres</a></td>
+<td>db</td>
+<td>Number of times disk blocks were found already in the buffer cache, so that a read was not necessary</td>
+</tr>
+<tr>
+<td>pg_blks_read</td>
+<td>Counter</td>
+<td><a href="../collectors/postgres/">postgres</a></td>
+<td>db</td>
+<td>Number of disk blocks read in this database.</td>
+</tr>
+<tr>
+<td>pg_checksum_failures</td>
+<td>Counter</td>
+<td><a href="../collectors/postgres/">postgres</a></td>
+<td>db</td>
+<td>Number of data page checksum failures detected in this database</td>
+</tr>
+<tr>
+<td>pg_conflicts</td>
+<td>Counter</td>
+<td><a href="../collectors/postgres/">postgres</a></td>
+<td>db</td>
+<td>Number of queries canceled due to conflicts with recovery in this database</td>
+</tr>
+<tr>
+<td>pg_deadlocks</td>
+<td>Counter</td>
+<td><a href="../collectors/postgres/">postgres</a></td>
+<td>db</td>
+<td>Number of deadlocks detected in this database.</td>
+</tr>
+<tr>
+<td>pg_numbackends</td>
+<td>Gauge</td>
+<td><a href="../collectors/postgres/">postgres</a></td>
+<td>db</td>
+<td>Number of backends currently connected to this database.</td>
+</tr>
+<tr>
+<td>pg_sessions</td>
+<td>Counter</td>
+<td><a href="../collectors/postgres/">postgres</a></td>
+<td>db</td>
+<td>Total number of sessions established to this database.</td>
+</tr>
+<tr>
+<td>pg_sessions_abandoned</td>
+<td>Counter</td>
+<td><a href="../collectors/postgres/">postgres</a></td>
+<td>db</td>
+<td>Number of database sessions to this database that were terminated because connection to the client was lost.</td>
+</tr>
+<tr>
+<td>pg_sessions_fatal</td>
+<td>Counter</td>
+<td><a href="../collectors/postgres/">postgres</a></td>
+<td>db</td>
+<td>Number of database sessions to this database that were terminated by fatal errors.</td>
+</tr>
+<tr>
+<td>pg_sessions_killed</td>
+<td>Counter</td>
+<td><a href="../collectors/postgres/">postgres</a></td>
+<td>db</td>
+<td>Number of database sessions to this database that were terminated by operator intervention.</td>
+</tr>
+<tr>
+<td>pg_temp_bytes</td>
+<td>Counter</td>
+<td><a href="../collectors/postgres/">postgres</a></td>
+<td>db</td>
+<td>Total amount of data written to temporary files by queries in this database</td>
+</tr>
+<tr>
+<td>pg_temp_files</td>
+<td>Counter</td>
+<td><a href="../collectors/postgres/">postgres</a></td>
+<td>db</td>
+<td>Number of temporary files created by queries in this database</td>
+</tr>
+<tr>
+<td>pg_tup_deleted</td>
+<td>Counter</td>
+<td><a href="../collectors/postgres/">postgres</a></td>
+<td>db</td>
+<td>Number of rows deleted by queries in this database.</td>
+</tr>
+<tr>
+<td>pg_tup_fetched</td>
+<td>Counter</td>
+<td><a href="../collectors/postgres/">postgres</a></td>
+<td>db</td>
+<td>Number of live rows fetched by index scans in this database.</td>
+</tr>
+<tr>
+<td>pg_tup_inserted</td>
+<td>Counter</td>
+<td><a href="../collectors/postgres/">postgres</a></td>
+<td>db</td>
+<td>Number of rows inserted by queries in this database.</td>
+</tr>
+<tr>
+<td>pg_tup_returned</td>
+<td>Counter</td>
+<td><a href="../collectors/postgres/">postgres</a></td>
+<td>db</td>
+<td>Number of live rows fetched by sequential scans and index entries returned by index scans in this database.</td>
+</tr>
+<tr>
+<td>pg_tup_updated</td>
+<td>Counter</td>
+<td><a href="../collectors/postgres/">postgres</a></td>
+<td>db</td>
+<td>Number of rows updated by queries in this database.</td>
+</tr>
+<tr>
+<td>pg_xact_commit</td>
+<td>Counter</td>
+<td><a href="../collectors/postgres/">postgres</a></td>
+<td>db</td>
+<td>Number of transactions in this database that have been committed.</td>
+</tr>
+<tr>
+<td>pg_xact_rollback</td>
+<td>Counter</td>
+<td><a href="../collectors/postgres/">postgres</a></td>
+<td>db</td>
+<td>Number of transactions in this database that have been rolled back.</td>
+</tr>
+<tr>
+<td>pgb_total_query_count</td>
+<td>Counter</td>
+<td><a href="../collectors/pgbouncer/">pgbouncer</a></td>
+<td>db</td>
+<td>Total number of SQL queries pooled by pgbouncer</td>
+</tr>
+<tr>
+<td>pgb_total_received</td>
+<td>Counter</td>
+<td><a href="../collectors/pgbouncer/">pgbouncer</a></td>
+<td>db</td>
+<td>Total volume in bytes of network traffic received by pgbouncer</td>
+</tr>
+<tr>
+<td>pgb_total_sent</td>
+<td>Counter</td>
+<td><a href="../collectors/pgbouncer/">pgbouncer</a></td>
+<td>db</td>
+<td>Total volume in bytes of network traffic sent by pgbouncer</td>
+</tr>
+<tr>
+<td>pgb_total_xact_count</td>
+<td>Counter</td>
+<td><a href="../collectors/pgbouncer/">pgbouncer</a></td>
+<td>db</td>
+<td>Total number of SQL transactions pooled by pgbouncer</td>
+</tr>
+<tr>
+<td>ps_child_major_faults</td>
+<td>Counter</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Total number of major faults that process waited-for children made</td>
+</tr>
+<tr>
+<td>ps_child_minor_faults</td>
+<td>Counter</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Total number of minor faults that process waited-for children made</td>
+</tr>
+<tr>
+<td>ps_cpu_usage</td>
+<td>Gauge</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Total CPU usage in percents</td>
+</tr>
+<tr>
+<td>ps_involuntary_context_switches</td>
+<td>Counter</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Total involuntary context switches</td>
+</tr>
+<tr>
+<td>ps_major_faults</td>
+<td>Counter</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Total number of major faults which require loading memory from disk</td>
+</tr>
+<tr>
+<td>ps_mem_data</td>
+<td>Gauge</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Data segment size</td>
+</tr>
+<tr>
+<td>ps_mem_lib</td>
+<td>Gauge</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Shared library code size</td>
+</tr>
+<tr>
+<td>ps_mem_locked</td>
+<td>Gauge</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Locked memory size</td>
+</tr>
+<tr>
+<td>ps_mem_rss</td>
+<td>Gauge</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Resident set size</td>
+</tr>
+<tr>
+<td>ps_mem_stack</td>
+<td>Gauge</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Stack segment size</td>
+</tr>
+<tr>
+<td>ps_mem_swap</td>
+<td>Gauge</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Swapped-out virtual memory size</td>
+</tr>
+<tr>
+<td>ps_mem_text</td>
+<td>Gauge</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Text segment size</td>
+</tr>
+<tr>
+<td>ps_mem_total</td>
+<td>Gauge</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Total memory</td>
+</tr>
+<tr>
+<td>ps_minor_faults</td>
+<td>Counter</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Total number of minor faults which do not requirie loading memory from disk</td>
+</tr>
+<tr>
+<td>ps_num_fds</td>
+<td>Gauge</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Number of open files</td>
+</tr>
+<tr>
+<td>ps_num_threads</td>
+<td>Gauge</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Number of threads</td>
+</tr>
+<tr>
+<td>ps_read_bytes</td>
+<td>Counter</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Total bytes read</td>
+</tr>
+<tr>
+<td>ps_read_count</td>
+<td>Counter</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Total read I/O operations</td>
+</tr>
+<tr>
+<td>ps_voluntary_context_switches</td>
+<td>Counter</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Total voluntary context switches</td>
+</tr>
+<tr>
+<td>ps_write_bytes</td>
+<td>Counter</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Total bytes written</td>
+</tr>
+<tr>
+<td>ps_write_count</td>
+<td>Counter</td>
+<td><a href="../collectors/procstat/">procstat</a></td>
+<td>Labels</td>
+<td>Total write I/O operations</td>
+</tr>
+<tr>
+<td>redis_active_defrag_hits</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_active_defrag_key_hits</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_active_defrag_key_misses</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_active_defrag_misses</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_active_defrag_running</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_allocator_active</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_allocator_allocated</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_allocator_frag_bytes</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_allocator_frag_ratio</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_allocator_resident</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_allocator_rss_bytes</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_allocator_rss_ratio</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_aof_current_rewrite_time_sec</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_aof_enabled</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_aof_last_cow_size</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_aof_last_rewrite_time_sec</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_aof_rewrite_in_progress</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_aof_rewrite_scheduled</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_aof_rewrites</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_aof_rewrites_consecutive_failures</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_async_loading</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_blocked_clients</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_client_recent_max_input_buffer</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_client_recent_max_output_buffer</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_clients_in_timeout_table</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_cluster_connections</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_connected_clients</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_connected_slaves</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_current_active_defrag_time</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_current_cow_peak</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_current_cow_size</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_current_cow_size_age</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_current_eviction_exceeded_time</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_current_save_keys_processed</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_current_save_keys_total</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_dump_payload_sanitizations</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_evicted_clients</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_evicted_keys</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_expire_cycle_cpu_milliseconds</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_expired_keys</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_expired_stale_perc</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_expired_time_cap_reached_count</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_instantaneous_input_kbps</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_instantaneous_input_repl_kbps</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_instantaneous_ops_per_sec</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_instantaneous_output_kbps</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_instantaneous_output_repl_kbps</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_io_threaded_reads_processed</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_io_threaded_writes_processed</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_io_threads_active</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_keyspace_hits</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_keyspace_misses</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_latest_fork_usec</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_lazyfree_pending_objects</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_lazyfreed_objects</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_loading</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_master_repl_offset</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_master_replid2</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_maxclients</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_maxmemory</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_mem_aof_buffer</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_mem_clients_normal</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_mem_clients_slaves</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_mem_cluster_links</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_mem_fragmentation_bytes</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_mem_fragmentation_ratio</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_mem_not_counted_for_evict</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_mem_replication_backlog</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_mem_total_replication_buffers</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_migrate_cached_sockets</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_module_fork_in_progress</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_module_fork_last_cow_size</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_number_of_cached_scripts</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_number_of_functions</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_number_of_libraries</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_pubsub_channels</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_pubsub_patterns</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_pubsubshard_channels</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_rdb_bgsave_in_progress</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_rdb_changes_since_last_save</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_rdb_current_bgsave_time_sec</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_rdb_last_bgsave_time_sec</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_rdb_last_cow_size</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_rdb_last_load_keys_expired</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_rdb_last_load_keys_loaded</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_rdb_last_save_time</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_rdb_saves</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_rejected_connections</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_repl_backlog_active</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_repl_backlog_first_byte_offset</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_repl_backlog_histlen</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_repl_backlog_size</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_reply_buffer_expands</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_reply_buffer_shrinks</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_rss_overhead_bytes</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_rss_overhead_ratio</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_second_repl_offset</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_slave_expires_tracked_keys</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_sync_full</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_sync_partial_err</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_sync_partial_ok</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_total_active_defrag_time</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_total_commands_processed</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_total_connections_received</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_total_error_replies</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_total_eviction_exceeded_time</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_total_forks</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_total_net_input_bytes</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_total_net_output_bytes</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_total_net_repl_input_bytes</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_total_net_repl_output_bytes</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_total_reads_processed</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_total_system_memory</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_total_writes_processed</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_tracking_clients</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_tracking_total_items</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_tracking_total_keys</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_tracking_total_prefixes</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_unexpected_error_replies</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_uptime_in_seconds</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_used_cpu_sys</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_used_cpu_sys_children</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_used_cpu_sys_main_thread</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_used_cpu_user</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_used_cpu_user_children</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_used_cpu_user_main_thread</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_used_memory</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_used_memory_dataset</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_used_memory_functions</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_used_memory_lua</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_used_memory_overhead</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_used_memory_peak</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_used_memory_rss</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_used_memory_scripts</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_used_memory_scripts_eval</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_used_memory_startup</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_used_memory_vm_eval</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_used_memory_vm_functions</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>redis_used_memory_vm_total</td>
+<td>Gauge</td>
+<td><a href="../collectors/redis/">redis</a></td>
+<td>host, port</td>
+<td>???</td>
+</tr>
+<tr>
+<td>requests_failed</td>
+<td>Counter</td>
+<td><a href="../collectors/dns/">dns</a></td>
+<td>query, type</td>
+<td>Failed DNS requests</td>
+</tr>
+<tr>
+<td>requests_success</td>
+<td>Counter</td>
+<td><a href="../collectors/dns/">dns</a></td>
+<td>query, type</td>
+<td>Successful DNS requests</td>
+</tr>
+<tr>
+<td>requests_total</td>
+<td>Counter</td>
+<td><a href="../collectors/dns/">dns</a></td>
+<td>query, type</td>
+<td>Total DNS requests performed</td>
+</tr>
+<tr>
+<td>spool_jobs</td>
+<td>Counter</td>
+<td><a href="../collectors/spool/">spool</a></td>
+<td>path</td>
+<td>Total spool jobs processed</td>
+</tr>
+<tr>
+<td>spool_jobs_failed</td>
+<td>Counter</td>
+<td><a href="../collectors/spool/">spool</a></td>
+<td>path</td>
+<td>Spool jobs failed to process</td>
+</tr>
+<tr>
+<td>spool_jobs_success</td>
+<td>Counter</td>
+<td><a href="../collectors/spool/">spool</a></td>
+<td>path</td>
+<td>Spool jobs processed successfully</td>
+</tr>
+<tr>
+<td>spool_parsed</td>
+<td>Counter</td>
+<td><a href="../collectors/spool/">spool</a></td>
+<td>path</td>
+<td>Parsed metric items</td>
+</tr>
+<tr>
+<td>swap_cached</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Memory that once was swapped out, is swapped back in but still also is in the swapfile</td>
+</tr>
+<tr>
+<td>swap_free</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>Memory which has been evicted from RAM, and is temporarily on the disk</td>
+</tr>
+<tr>
+<td>swap_total</td>
+<td>Gauge</td>
+<td><a href="../collectors/memory/">memory</a></td>
+<td></td>
+<td>total amount of swap space available</td>
+</tr>
+<tr>
+<td>tcp4_sockets_used</td>
+<td>Gauge</td>
+<td><a href="../collectors/sockets/">sockets</a></td>
+<td></td>
+<td>Total amount of IPv4 TCP sockets used</td>
+</tr>
+<tr>
+<td>tcp6_sockets_used</td>
+<td>Gauge</td>
+<td><a href="../collectors/sockets/">sockets</a></td>
+<td></td>
+<td>Total amount of IPv6 TCP sockets used</td>
+</tr>
+<tr>
+<td>time_ns</td>
+<td>Gauge</td>
+<td><a href="../collectors/http/">http</a></td>
+<td></td>
+<td>Response time in nanoseconds</td>
+</tr>
+<tr>
+<td>twamp_duration_ns</td>
+<td>Gauge</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>Session duration in nanoseconds</td>
+</tr>
+<tr>
+<td>twamp_in_avg_delay</td>
+<td>Gauge</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>Average inbound delay in nanoseconds</td>
+</tr>
+<tr>
+<td>twamp_in_jitter</td>
+<td>Gauge</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>itter of the inbound delay in nanoseconds</td>
+</tr>
+<tr>
+<td>twamp_in_loss</td>
+<td>Gauge</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>Packet loss in inbound direction</td>
+</tr>
+<tr>
+<td>twamp_in_max_delay</td>
+<td>Gauge</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>Maximum inbound delay in nanoseconds</td>
+</tr>
+<tr>
+<td>twamp_in_min_delay</td>
+<td>Gauge</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>Minimum inbound delay in nanoseconds</td>
+</tr>
+<tr>
+<td>twamp_in_mos</td>
+<td>Gauge</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>eMOS for local end</td>
+</tr>
+<tr>
+<td>twamp_out_avg_delay</td>
+<td>Gauge</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>Average outbound delay in nanoseconds</td>
+</tr>
+<tr>
+<td>twamp_out_loss</td>
+<td>Gauge</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>Packet loss in outbound direction</td>
+</tr>
+<tr>
+<td>twamp_out_max_delay</td>
+<td>Gauge</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>Maximum outbound delay in nanoseconds</td>
+</tr>
+<tr>
+<td>twamp_out_min_delay</td>
+<td>Gauge</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>Minimum outbound delay in nanoseconds</td>
+</tr>
+<tr>
+<td>twamp_out_mos</td>
+<td>Gauge</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>eMOS for remote end</td>
+</tr>
+<tr>
+<td>twamp_reflected_pkt</td>
+<td>Counter</td>
+<td><a href="../collectors/twamp_reflector/">twamp_reflector</a></td>
+<td></td>
+<td>Total amount of the reflected packets</td>
+</tr>
+<tr>
+<td>twamp_rt_loss</td>
+<td>Gauge</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>Packet loss in both directions</td>
+</tr>
+<tr>
+<td>twamp_rx_bitrate</td>
+<td>Gauge</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>Received bitrate</td>
+</tr>
+<tr>
+<td>twamp_rx_bytes</td>
+<td>Gauge</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>Received octets</td>
+</tr>
+<tr>
+<td>twamp_rx_packets</td>
+<td>Counter</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>Received packets</td>
+</tr>
+<tr>
+<td>twamp_rx_pps</td>
+<td>Gauge</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>Received packet-per-second rate</td>
+</tr>
+<tr>
+<td>twamp_tx_bitrate</td>
+<td>Gauge</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>Transmitted bitrate</td>
+</tr>
+<tr>
+<td>twamp_tx_bytes</td>
+<td>Counter</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>Transmitted octets</td>
+</tr>
+<tr>
+<td>twamp_tx_packets</td>
+<td>Counter</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>Transmitted packets</td>
+</tr>
+<tr>
+<td>twamp_tx_pps</td>
+<td>Gauge</td>
+<td><a href="../collectors/twamp_sender/">twamp_sender</a></td>
+<td></td>
+<td>Transmitted packets-per-second rate</td>
+</tr>
+<tr>
+<td>udp4_sockets_used</td>
+<td>Gauge</td>
+<td><a href="../collectors/sockets/">sockets</a></td>
+<td></td>
+<td>Total amount of IPv4 UDP sockets used</td>
+</tr>
+<tr>
+<td>udp6_sockets_used</td>
+<td>Gauge</td>
+<td><a href="../collectors/sockets/">sockets</a></td>
+<td></td>
+<td>Total amount of IPv6 UDP sockets used</td>
+</tr>
+<tr>
+<td>uptime</td>
+<td>Counter</td>
+<td><a href="../collectors/uptime/">uptime</a></td>
+<td></td>
+<td>System uptime</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../collectors/uptime/" class="md-footer__link md-footer__link--prev" aria-label="Previous: uptime" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              uptime
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../environment/" class="md-footer__link md-footer__link--next" aria-label="Next: Developer&#39;s Environment" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Developer's Environment
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2021-23, Gufo Labs
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d6c3db9e.min.js"></script>
+      
+    
+  </body>
+</html>
