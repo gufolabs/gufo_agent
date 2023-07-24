@@ -5,6 +5,7 @@
 // --------------------------------------------------------------------
 
 use super::{ActiveLabels, RelabelRuleConfig};
+use aho_corasick::AhoCorasick;
 use common::{AgentError, AgentResult};
 use regex::Regex;
 use std::sync::OnceLock;
@@ -18,6 +19,7 @@ pub(crate) struct Eval {
 }
 
 static CAP_RX: OnceLock<Regex> = OnceLock::new();
+static AC_PATTERNS: &[&str; 4] = &["$0", "${0}", "$1", "${1}"];
 
 impl TryFrom<&RelabelRuleConfig> for Eval {
     type Error = AgentError;
@@ -85,8 +87,15 @@ impl Eval {
                 }
             }
             None => {
+                // $0, $1
                 if let Some(repl) = &self.replacement {
-                    r = repl.replace("$0", r.as_str());
+                    let ac = AhoCorasick::new(AC_PATTERNS).unwrap();
+                    let mut x = String::new();
+                    ac.replace_all_with(repl, &mut x, |_, _, dst| {
+                        dst.push_str(&r);
+                        true
+                    });
+                    r = x;
                 }
             }
         }
