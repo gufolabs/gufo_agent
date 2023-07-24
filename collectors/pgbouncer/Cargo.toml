@@ -9,4 +9,4 @@ bigdecimal = "0.3"
 common = {path = "../../common"}
 log = "0.4"
 serde = {version = "1.0", features = ["derive"]}
-sqlx = {git = "https://github.com/launchbadge/sqlx.git", tag = "v0.7.0-alpha.3", features = ["runtime-tokio", "tls-rustls", "postgres", "bigdecimal"]}
+sqlx = {version = "0.7", features = ["runtime-tokio", "tls-rustls", "postgres", "bigdecimal"]}
