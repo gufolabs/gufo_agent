@@ -13,6 +13,7 @@ RUN \
     git\
     ca-certificates\
     curl\
+    build-essential\
     && /tmp/setup-rust.sh \
     && rustup component add\
     rust-analysis\

@@ -6,7 +6,8 @@
 {
     "name": "Gufo Agent",
     "runArgs": [
-        "--init",
+        "--init" //, Uncomment --priveleged to run profiling
+        // "--privileged"
     ],
     "build": {
         // Sets the run context to one level up instead of the .devcontainer folder.
@@ -45,6 +46,9 @@
         "rust-lang.rust-analyzer",
         "charliermarsh.ruff",
     ],
-    "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/gufo_agent,type=bind",
-    "workspaceFolder": "/workspaces/gufo_agent"
+    "mounts": [
+        // mount `target` as volume to mitigate transient errors on MacOS
+        "source=${localWorkspaceFolderBasename}-target,target=${containerWorkspaceFolder}/target,type=volume"
+    ]
+    // "workspaceFolder": "/workspaces/gufo_agent"
 }
