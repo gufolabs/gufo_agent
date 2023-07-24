@@ -107,7 +107,7 @@ __EOF__
     # Move to dist
     mv dist/rpmbuild/RPMS/${arch}/*.rpm dist/
 }
-# Build x86_64-unknown-linux-gnu + deb
+# Build x86_64-unknown-linux-gnu + deb + rpm
 build_target_tgz x86_64-unknown-linux-gnu linux_amd64
 build_deb amd64
 build_rpm amd64 x86_64
