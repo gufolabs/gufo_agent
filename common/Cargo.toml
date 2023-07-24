@@ -9,4 +9,4 @@ paste = "1.0"
 serde = "1.0"
 serde_yaml = "0.9"
 thiserror = "1.0"
-tokio = {version = "1.28", features = ["time"]}
+tokio = {version = "1.29", features = ["time"]}

@@ -34,7 +34,7 @@ serde = {version = "1.0", features = ["derive"]}
 serde_yaml = "0.9"
 sockets = {path = "../collectors/sockets"}
 spool = {path = "../collectors/spool"}
-tokio = {version = "1.28", features = ["full"]}
+tokio = {version = "1.29", features = ["full"]}
 twamp_reflector = {path = "../collectors/twamp_reflector"}
 twamp_sender = {path = "../collectors/twamp_sender"}
 uptime = {path = "../collectors/uptime"}
